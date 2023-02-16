@@ -60,9 +60,11 @@
             ﻿$(function () {
                 var table, typeTable;
                 var typeOptions = [];
+                var lineTypeOptions = [];
                 var standardTimeEditable = '${isAdmin || isMfgOper || isBackDoor4876 || isIeOper}';
 
                 setTypeOptions();
+                setLineTypeOptions();
 
                 //This function will load the datatable
                 loadTable();
@@ -181,7 +183,8 @@
                             dataType: "html",
                             data: {
                                 id: $("#currentID2").val(),
-                                name: name
+                                name: name,
+                                "lineType.id": $("#lineType\\.id").val()
                             },
                             success: function (response) {
                                 if (response == "success") {
@@ -219,6 +222,7 @@
 
                     $("#currentID2").val(data.id);
                     $("#preAssyModuleType\\.name").val(data.name);
+                    $("#lineType\\.id").val(data.lineType.id);
 
                     $('#addEditRemark3').modal('show');
                 });
@@ -342,11 +346,18 @@
                             {//this definition is set so the column with the action buttons is not sortable
                                 "targets": -1, //this references the last column of the data
                                 "orderable": false
+                            },
+                            {
+                                "targets": [2],
+                                'render': function (data, type, full, meta) {
+                                    return lineTypeOptions[data];
+                                }
                             }
                         ],
                         "columns": [
-                            {data: "id", title: "id"},
-                            {data: "name", title: "機種"},
+                            {data: "id", title: "id", visible: false},
+                            {data: "name", title: "模組"},
+                            {data: "lineType.id", title: "製程"},
                             {
                                 "data": "id",
                                 "width": "20%",
@@ -374,6 +385,27 @@
                                 var obj = arr[i];
                                 sel.append("<option value=" + obj.id + ">" + obj.name + "</option>");
                                 typeOptions[obj.id] = obj.name;
+                            }
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            console.log(xhr.responseText);
+                        }
+                    });
+                }
+
+                function setLineTypeOptions() {
+                    var sel = $("#lineType\\.id");
+                    $.ajax({
+                        url: "<c:url value="/PreAssyModuleTypeController/findLineTypeAll" />",
+                        type: "GET",
+                        dataType: "json",
+                        async: false,
+                        success: function (response) {
+                            var arr = response.data;
+                            for (var i = 0, j = arr.length; i < j; i++) {
+                                var obj = arr[i];
+                                sel.append("<option value=" + obj.id + ">" + obj.name + "</option>");
+                                lineTypeOptions[obj.id] = obj.name;
                             }
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
@@ -562,6 +594,12 @@
                                         <td>名稱</td>
                                         <td>
                                             <input id="preAssyModuleType.name" name="preAssyModuleType.name" type="text" class="form-control">
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td>製程</td>
+                                        <td>
+                                            <select id="lineType.id" name="lineType.id" class="form-control"></select>
                                         </td>
                                     </tr>
                                 </table>       

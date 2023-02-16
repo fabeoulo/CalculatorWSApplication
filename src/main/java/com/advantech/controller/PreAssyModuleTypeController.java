@@ -55,10 +55,15 @@ public class PreAssyModuleTypeController {
         return new DataTableResponse(service.findByModelNameAndLineType(modelName, lt));
     }
 
+    @RequestMapping(value = "/findLineTypeAll", method = {RequestMethod.GET})
+    @ResponseBody
+    protected DataTableResponse findLineType() {
+        return new DataTableResponse(lineTypeService.findAll());
+    }
+
     @RequestMapping(value = "/saveOrUpdate", method = {RequestMethod.POST})
     @ResponseBody
     protected String saveOrUpdate(@Valid @ModelAttribute PreAssyModuleType pojo) {
-//        service.checkIsPreAssyModuleTypeExists(pojo);
         if (pojo.getId() == 0) {
             service.insert(pojo);
         } else {
