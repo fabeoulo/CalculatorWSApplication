@@ -12,12 +12,21 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 /**
  *
  * @author Wei.Cheng
  */
+@WebAppConfiguration
+@ContextConfiguration(locations = {
+    "classpath:servlet-context.xml"
+})
+@RunWith(SpringJUnit4ClassRunner.class)
 public class WebServiceTXTest {
     
     @Autowired
@@ -30,7 +39,7 @@ public class WebServiceTXTest {
     @AfterClass
     public static void tearDownClass() {
     }
-    String testJobnumber = "A-P03297";
+    String testJobnumber = "A-F0087";
 
     public WebServiceTXTest() {
     }
@@ -47,12 +56,12 @@ public class WebServiceTXTest {
     /**
      * Test of getMESUser method, of class WebServiceRV.
      */
-//    @Test
-//    public void testLogin() {
-//        out.println("testLogin");
-//        String result = WebServiceTX.getInstance().kanbanUserLogin(testJobnumber);
-//        out.println(result);
-//    }
+    @Test
+    public void testLogin() {
+        out.println("testLogin");
+        tx.kanbanUserLogin(testJobnumber);
+        //out.println(result);
+    }
     /**
      * Test of getMESUser method, of class WebServiceRV.
      */

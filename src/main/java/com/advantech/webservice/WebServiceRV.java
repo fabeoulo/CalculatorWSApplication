@@ -65,7 +65,7 @@ public class WebServiceRV {
         return this.getWebServiceData(queryString);
     }
 
-    public List<String> getKanbanUsersForString() throws IOException, TransformerConfigurationException, TransformerException{
+    public List<String> getKanbanUsersForString() throws IOException, TransformerConfigurationException, TransformerException {
         String queryString = "<root>"
                 + "<METHOD ID='Advantech.ETL.ETL.BLL.QryProductionKanban4Test'/>"
                 + "<KANBANTEST>"
@@ -75,7 +75,7 @@ public class WebServiceRV {
         return client.getFormatWebServiceData(queryString);
     }
 
-    public String getKanbanWorkId(String jobnumber) {
+    public String getKanbanWorkId(String jobnumber) { // OK
         String today = getToday();
         String queryString = "<root><METHOD ID='Advantech.SFC.PBD.BLL.QryWorkManPowerCard001'/><WORK_MANPOWER_CARD><WORK_ID>-1</WORK_ID><LINE_ID>-1</LINE_ID><STATION_ID>-1</STATION_ID><FACTORY_NO></FACTORY_NO><UNIT_NO></UNIT_NO>"
                 + "<USER_NO>" + jobnumber + "</USER_NO>"
@@ -91,7 +91,7 @@ public class WebServiceRV {
         return requestQueueName;
     }
 
-    public String getModelnameByPo(String po) {
+    public String getModelnameByPo(String po) {// OK
         String queryString = "<root><METHOD ID='Advantech.QAM.IPQ.BLL.QryWipAtt001'/><WIP_ATT><WIP_NO>"
                 + po
                 + "</WIP_NO><ITEM_NO></ITEM_NO></WIP_ATT></root>";
@@ -102,7 +102,7 @@ public class WebServiceRV {
         return requestQueueName;
     }
 
-    public UserOnMes getMESUser(String jobnumber) {
+    public UserOnMes getMESUser(String jobnumber) {// OK
         try {
             String queryString = "<root><METHOD ID='Advantech.SFC.SNM.BLL.QryLogion'/><USER_INFO><USER_NO>"
                     + jobnumber
@@ -122,7 +122,7 @@ public class WebServiceRV {
         }
     }
 
-    public List<PassStation> getPassStationRecords(String po, String type) {
+    public List<PassStation> getPassStationRecords(String po, String type) {// OK
         String stations;
         if (CellLineType.BAB.toString().equals(type)) {
             stations = "'2','20'";

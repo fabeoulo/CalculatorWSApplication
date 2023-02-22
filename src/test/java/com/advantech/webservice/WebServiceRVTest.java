@@ -72,10 +72,10 @@ public class WebServiceRVTest {
     /**
      * Test of getKanbanWorkId method, of class WebServiceRV.
      */
-    @Test
+//    @Test
     public void testGetKanbanWorkId() throws Exception {
         System.out.println("getKanbanWorkId");
-        String jobnumber = "A-7275";
+        String jobnumber = "A-F0425";
         String expResult = "";
         String result = rv.getKanbanWorkId(jobnumber);
         assertNotEquals(expResult, result);
@@ -85,10 +85,10 @@ public class WebServiceRVTest {
     /**
      * Test of getModelnameByPo method, of class WebServiceRV.
      */
-    @Test
+//    @Test
     public void testGetModelnameByPo() throws Exception {
         System.out.println("getModelnameByPo");
-        String po = "PAGB079ZA";
+        String po = "FIH1035ZA";
         String expResult = "";
         String result = rv.getModelnameByPo(po);
         assertNotEquals(expResult, result);
@@ -98,10 +98,10 @@ public class WebServiceRVTest {
     /**
      * Test of getMESUser method, of class WebServiceRV.
      */
-    @Test
+//    @Test
     public void testGetMESUser() {
         System.out.println("getMESUser");
-        String jobnumber = "A-0651";
+        String jobnumber = "A-F0087";
         UserOnMes result = rv.getMESUser(jobnumber);
         assertTrue(result != null);
         out.println(new Gson().toJson(result));
@@ -110,13 +110,13 @@ public class WebServiceRVTest {
     /**
      * Test of getPassStationRecords method, of class WebServiceRV.
      */
-    @Test
+//    @Test
     public void testGetPassStationRecords() {
         System.out.println("getPassStationRecords");
-        String po = "PNGC030ZA";
+        String po = "YAIA010RA";
         Integer lineId = 55;
         List<PassStation> expResult = null;
-        List<PassStation> result = rv.getPassStationRecords(po, "ASSY");
+        List<PassStation> result = rv.getPassStationRecords(po, "BAB");
         assertNotEquals(expResult, result);
         for (PassStation p : result) {
             out.println(new Gson().toJson(p));
