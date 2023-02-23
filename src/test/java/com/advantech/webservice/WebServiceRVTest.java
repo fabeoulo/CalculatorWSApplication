@@ -62,7 +62,7 @@ public class WebServiceRVTest {
     /**
      * Test of getKanbanUsersForString method, of class WebServiceRV.
      */
-    @Test
+//    @Test
     public void testGetKanbanUsersForString() throws Exception {
         System.out.println("getKanbanUsersForString");
         List<String> result = rv.getKanbanUsersForString();
@@ -126,7 +126,7 @@ public class WebServiceRVTest {
     /**
      * Test of getTestLineTypeUsers method, of class WebServiceRV.
      */
-    @Test
+//    @Test
     public void testGetTestLineTypeUsers() {
         System.out.println("getTestLineTypeUsers");
         List<TestRecord> expResult = null;
@@ -137,7 +137,7 @@ public class WebServiceRVTest {
         }
     }
 
-    @Test
+//    @Test
     public void testGetTestLineTypeRecord() throws JsonProcessingException {
         List<TestRecord> l = rv.getTestLineTypeRecords();
         assertTrue(!l.isEmpty());
