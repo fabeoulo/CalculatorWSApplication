@@ -79,7 +79,7 @@ public class BabSensorLoginRecordService {
         loginRec.setJobnumber(jobnumber);
         this.update(loginRec);
 
-        BabSettingHistory setting = babSettingHistoryService.findProcessingByTagName(tagName);
+        BabSettingHistory setting = babSettingHistoryService.findFirstProcessingByTagName(tagName);
 
         if (setting != null) {
             setting.setJobnumber(jobnumber);

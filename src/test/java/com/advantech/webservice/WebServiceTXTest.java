@@ -32,7 +32,7 @@ public class WebServiceTXTest {
     @Autowired
     private WebServiceTX tx;
 
-    String testJobnumber = "A-7568";
+    String testJobnumber = "A-4960";
 
     //測試登入登出請距離超過30Min
     /**

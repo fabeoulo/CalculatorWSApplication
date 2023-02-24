@@ -97,7 +97,7 @@ public class BabSettingHistoryDAO extends AbstractDao<Integer, BabSettingHistory
                 .list();
     }
 
-    public BabSettingHistory findProcessingByTagName(SensorTransform tagName) {
+    public BabSettingHistory findFirstProcessingByTagName(SensorTransform tagName) {
         return (BabSettingHistory) super.createEntityCriteria()
                 .add(Restrictions.eq("tagName", tagName))
                 .add(Restrictions.isNull("lastUpdateTime"))

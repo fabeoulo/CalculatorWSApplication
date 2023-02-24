@@ -77,7 +77,7 @@ public class BabOtherStationController {
             @RequestParam(required = false) Integer pcs
     ) {
         Bab b = babService.findByPrimaryKey(bab_id);
-        BabSettingHistory setting = babSettingHistoryService.findProcessingByTagName(tagName);
+        BabSettingHistory setting = babSettingHistoryService.findFirstProcessingByTagName(tagName);
         checkArgument(setting != null, "找不到該站使用者");
         checkArgument(setting.getLastUpdateTime() == null, "感應器已經關閉");
         checkStation(b, setting.getStation());

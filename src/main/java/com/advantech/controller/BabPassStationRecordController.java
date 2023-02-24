@@ -41,7 +41,7 @@ public class BabPassStationRecordController {
             @CookieValue(required = true) String userInfo,
             @RequestParam String tagName
     ) {
-        BabSettingHistory setting = settingHistoryService.findProcessingByTagName(tagName);
+        BabSettingHistory setting = settingHistoryService.findFirstProcessingByTagName(tagName);
         checkArgument(setting != null, "Can't find processing bab");
         ModelAndView mav = new ModelAndView("barcode_input_click");
         mav.addObject("tagName", tagName);

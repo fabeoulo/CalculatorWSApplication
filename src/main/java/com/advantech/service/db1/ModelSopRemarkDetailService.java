@@ -43,7 +43,7 @@ public class ModelSopRemarkDetailService {
     }
 
     public List<ModelSopRemarkDetail> findByTagName(String tagName) {
-        BabSettingHistory setting = babSettingHistoryService.findProcessingByTagName(tagName);
+        BabSettingHistory setting = babSettingHistoryService.findFirstProcessingByTagName(tagName);
         if (setting == null) {
             return new ArrayList();
         }

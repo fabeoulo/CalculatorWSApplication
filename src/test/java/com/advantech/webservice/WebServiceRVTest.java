@@ -81,7 +81,7 @@ public class WebServiceRVTest {
 //    @Test
     public void testGetKanbanWorkId() throws Exception {
         System.out.println("getKanbanWorkId");
-        String jobnumber = "A-7275";
+        String jobnumber = "A-5131";
         String expResult = "";
         String result = rv.getKanbanWorkId(jobnumber, Factory.TWM3);
         assertNotEquals(expResult, result);
@@ -107,7 +107,7 @@ public class WebServiceRVTest {
 //    @Test
     public void testGetMESUser() {
         System.out.println("getMESUser");
-        String jobnumber = "A-7275";
+        String jobnumber = "A-5131";
         UserOnMes expResult = null;
         UserOnMes result = rv.getMESUser(jobnumber, Factory.TWM3);
         assertNotEquals(expResult, result);
@@ -121,7 +121,7 @@ public class WebServiceRVTest {
     public void testGetPassStationRecords() {
         System.out.println("getPassStationRecords");
         String po = "THL007939ZA";
-        List<PassStationRecord> result = rv.getPassStationRecords(po, 2, Factory.TWM3);
+        List<PassStationRecord> result = rv.getPassStationRecords(po, 16, Factory.TWM3);
         assertTrue(!result.isEmpty());
         HibernateObjectPrinter.print(result);
     }
@@ -168,11 +168,11 @@ public class WebServiceRVTest {
     @Autowired
     private TestRecordService testRecordService;
 
-    @Test
+//    @Test
     public void testGetTestPassStationDetails() {
         DateTime eD = new DateTime().withTime(8, 0, 0, 0);
         DateTime sD = eD.minusDays(2).withTime(8, 0, 0, 0);
-        List<String> users = newArrayList("'A-9043'");
+        List<String> users = newArrayList("'A-9043'","'A-9043'");
 
         List<TestRecord> records = testRecordService.findByDate(sD, eD, false);
         List<String> jobnumbers = records.stream().map(t -> "'" + t.getUserId() + "'").distinct().collect(Collectors.toList());
@@ -194,7 +194,7 @@ public class WebServiceRVTest {
         HibernateObjectPrinter.print(l.get(0));
     }
 
-//    @Test
+    @Test
     public void testRptStationQtys() {
         DateTime sD = new DateTime().withTime(0, 0, 0, 0);
         DateTime eD = new DateTime().plusDays(1).withTime(0, 0, 0, 0);

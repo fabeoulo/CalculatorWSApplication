@@ -60,10 +60,10 @@ public class BabSettingHistoryService {
         return babSettingHistoryDAO.findProcessing();
     }
 
-    public BabSettingHistory findProcessingByTagName(String tagName) {
+    public BabSettingHistory findFirstProcessingByTagName(String tagName) {
         SensorTransform sensor = sensorTransformService.findByPrimaryKey(tagName);
         checkArgument(sensor != null, "Can't find sensor named " + tagName);
-        return babSettingHistoryDAO.findProcessingByTagName(sensor);
+        return babSettingHistoryDAO.findFirstProcessingByTagName(sensor);
     }
 
     public List<BabSettingHistory> findProcessingByLine(String lineName) {

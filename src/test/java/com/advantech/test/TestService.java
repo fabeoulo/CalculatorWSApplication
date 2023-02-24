@@ -17,11 +17,14 @@ import com.advantech.model.db1.Fqc;
 import com.advantech.model.db1.FqcLine;
 import com.advantech.model.db1.Line;
 import com.advantech.model.db1.LineType;
+import com.advantech.model.db1.PreAssyModuleStandardTime;
+import com.advantech.model.db1.PreAssyModuleType;
 import com.advantech.model.db1.PrepareSchedule;
 import com.advantech.model.db1.PrepareScheduleEndtimeSetting;
 import com.advantech.model.db1.TagNameComparison;
 import com.advantech.model.db1.User;
 import com.advantech.model.db1.Worktime;
+import com.advantech.model.db3.WorktimeM3;
 import com.advantech.model.view.db1.BabProcessDetail;
 import com.advantech.quartzJob.HandleUncloseBab;
 import com.advantech.service.db1.BabCollectModeChangeEventService;
@@ -38,14 +41,22 @@ import com.advantech.service.db1.LineService;
 import com.advantech.service.db1.LineTypeService;
 import com.advantech.service.db1.LineUserReferenceService;
 import com.advantech.service.db1.ModelSopRemarkDetailService;
+import com.advantech.service.db1.PreAssyModuleStandardTimeService;
+import com.advantech.service.db1.PreAssyModuleTypeService;
 import com.advantech.service.db1.PrepareScheduleEndtimeSettingService;
 import com.advantech.service.db1.PrepareScheduleService;
 import com.advantech.service.db1.TagNameComparisonService;
 import com.advantech.service.db1.UserService;
 import com.advantech.service.db1.WorktimeService;
 import com.advantech.service.db3.SqlViewService;
+import com.advantech.service.db3.WorktimeM3Service;
 import com.advantech.webservice.WebServiceRV;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import static com.google.common.base.Preconditions.checkState;
+import com.google.common.base.Strings;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -131,15 +142,117 @@ public class TestService {
         new HandleUncloseBab().executeInternal(null);
     }
 
+    @Autowired
+    private PreAssyModuleTypeService preAssyModuleTypeService;
+
 //    @Test
+    @Transactional
+    @Rollback(true)
+    public void testPreAssyModuleTypeService() throws JobExecutionException {
+        int lineType_id = 1;
+        LineType lt = lineTypeService.findByPrimaryKey(lineType_id);
+        checkState(lt != null, "Can't find lineType in id " + lineType_id);
+        List<PreAssyModuleType> l = preAssyModuleTypeService.findByModelNameAndLineType("TPC1282T533A2102-T", lt);
+        new HandleUncloseBab().executeInternal(null);
+    }
+
+    @Autowired
+    private PreAssyModuleStandardTimeService preAssyModuleStandardTimeService;
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void testSetPreAssyModuleStandardTime() throws JobExecutionException {
+        List<PreAssyModuleStandardTime> ps1s = preAssyModuleStandardTimeService.findAll();
+        ps1s = ps1s.stream().filter(t -> t.getPreAssyModuleType().getId() == 44
+        ).collect(Collectors.toList());
+
+        List<String> collect2 = ps1s.stream().map(L -> L.getModelName()).collect(Collectors.toList());
+
+        List<WorktimeM3> listM3 = worktimeM3Service.findByModel(collect2);
+        Map<String, BigDecimal> mapM3 = listM3.stream()
+                .collect(Collectors.toMap(wt -> wt.getModelName(), wt -> wt.getCleanPanel()
+                ));
+
+        ps1s.forEach(e -> {
+            if (mapM3.containsKey(e.getModelName())) {
+                BigDecimal newST = mapM3.get(e.getModelName()).multiply(new BigDecimal(60));
+                e.setStandardTime(newST);
+                preAssyModuleStandardTimeService.update(e);
+            }
+        });
+    }
+
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void testPreAssyModuleStandardTimeService() throws JobExecutionException {
+        List<PreAssyModuleStandardTime> ps1s = preAssyModuleStandardTimeService.findAll();
+        Map<String, Long> collect2 = ps1s.stream()
+                .filter(p -> p.getPreAssyModuleType().getName().startsWith("(前置"))
+                .collect(Collectors.groupingBy(ps -> ps.getModelName(), Collectors.counting()
+                ));
+
+        List<WorktimeM3> listM3 = worktimeM3Service.findByModel(collect2.keySet().stream().collect(Collectors.toList()));
+
+        listM3.forEach(e -> {
+//                    System.out.println(e.getModelName()+ " - " + collect2.get(e.getModelName()));
+            e.setPreAssyModuleQty(collect2.get(e.getModelName()).intValue());
+            worktimeM3Service.update(e);
+
+//                    List<WorktimeM3> l = worktimeM3Service.findByModel(Arrays.asList(e.getKey()));
+//                    if (!l.isEmpty()) {
+//                        WorktimeM3 existRecord = l.get(0);
+//                    }
+        });
+    }
+
+    @Autowired
+    private WorktimeM3Service worktimeM3Service;
+
+    @Test
+    @Transactional
+//    @Rollback(false)
+    public void testpreAssyModuleStandardTimeService() throws JobExecutionException {
+        String s1 = "POCS1991703-T";
+        List<String> modelName = new ArrayList<>();
+        modelName.add(s1);
+        List<WorktimeM3> lt = worktimeM3Service.findByModel(modelName);
+        checkState(lt != null, "Can't find lineType in id ");
+        HibernateObjectPrinter.print(lt);
+
+        WorktimeM3 w3 = lt.get(0);
+        w3.setPreAssyModuleQty(-1);
+        worktimeM3Service.update(w3);
+        HibernateObjectPrinter.print(lt);
+    }
+
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void testWorktimeM3Service() throws JobExecutionException {
+        String s1 = "TPC1282T533A2102-T";
+        List<String> modelName = new ArrayList<>();
+        modelName.add(s1);
+        List<WorktimeM3> lt = worktimeM3Service.findByModel(modelName);
+        checkState(lt != null, "Can't find lineType in id ");
+        HibernateObjectPrinter.print(lt);
+
+        WorktimeM3 w3 = lt.get(0);
+        w3.setPreAssyModuleQty(-1);
+        worktimeM3Service.update(w3);
+        HibernateObjectPrinter.print(lt);
+    }
+
+    @Test
     @Transactional
     @Rollback(true)
     public void testBabSettingHistoryService() {
 
-        BabSettingHistory setting2 = babSettingHistoryService.findProcessingByTagName("L8-S-3");
+        BabSettingHistory setting2 = babSettingHistoryService.findFirstProcessingByTagName("PKG_L4-S-2");
         assertNotNull(setting2);
 
-        assertEquals(setting2.getTagName().getName(), "L8-S-3");
+        assertEquals(setting2.getTagName().getName(), "PKG_L4-S-2");
     }
 
 //    @Test
@@ -458,14 +571,14 @@ public class TestService {
 
     @Autowired
     private com.advantech.service.db1.TestService testLineTypeService;
-    
+
     @Test
     public void testTestLineTypeUserCheck() {
         testLineTypeService.checkUserIsAvailable("A-11018");
     }
-    
+
     @Test
-    public void testFindBabByPreAssyModuleType(){
+    public void testFindBabByPreAssyModuleType() {
         List l = babService.findByPreAssyModuleType(1, "");
         assertEquals(1, l.size());
     }

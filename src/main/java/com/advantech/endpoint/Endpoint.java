@@ -39,7 +39,7 @@ public class Endpoint extends BasicHandler implements WebSocketHandler {
 
     @PostConstruct
     private void init() {
-        log.info("Endpoint2 init polling job: " + JOB_NAME);
+        log.info("Endpoint init polling job: " + JOB_NAME);
         super.init(JOB_NAME);
         if (super.sessions != null && !super.sessions.isEmpty()) {
             synchronized (sessions) {

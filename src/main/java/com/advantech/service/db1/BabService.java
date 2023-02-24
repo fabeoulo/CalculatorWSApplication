@@ -258,7 +258,7 @@ public class BabService {
     }
 
     public int checkAndInsert(Bab b, TagNameComparison tag) {
-        BabSettingHistory bsh = babSettingHistoryService.findProcessingByTagName(tag.getId().getLampSysTagName().getName());
+        BabSettingHistory bsh = babSettingHistoryService.findFirstProcessingByTagName(tag.getId().getLampSysTagName().getName());
         if (bsh != null) {
             Bab processingBab = bsh.getBab();
             checkArgument(!Objects.equals(processingBab.getPo(), b.getPo()), "工單號碼已經存在");

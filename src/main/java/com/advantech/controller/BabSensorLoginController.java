@@ -82,7 +82,7 @@ public class BabSensorLoginController {
             @RequestParam String tagName,
             @RequestParam boolean isFirstStation
     ) {
-        BabSettingHistory setting = babSettingHistoryService.findProcessingByTagName(tagName);
+        BabSettingHistory setting = babSettingHistoryService.findFirstProcessingByTagName(tagName);
         if (setting == null) {
             return true;
         } else {
