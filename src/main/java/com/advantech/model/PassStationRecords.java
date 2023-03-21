@@ -17,10 +17,10 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Wei.Cheng
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "root")
+@XmlRootElement(name = "NewDataSet")
 public class PassStationRecords implements Serializable {
 
-    @XmlElement(name = "QryData", type = PassStation.class)
+    @XmlElement(name = "Table1", type = PassStation.class)
     private List<PassStation> QryData;
 
     public List<PassStation> getQryData() {

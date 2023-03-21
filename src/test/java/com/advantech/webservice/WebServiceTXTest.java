@@ -39,7 +39,6 @@ public class WebServiceTXTest {
     @AfterClass
     public static void tearDownClass() {
     }
-    String testJobnumber = "A-F0087";
 
     public WebServiceTXTest() {
     }
@@ -52,6 +51,8 @@ public class WebServiceTXTest {
     public void tearDown() {
     }
 
+    String testJobnumber = "A-F0087";
+    
     //測試登入登出請距離超過30Min
     /**
      * Test of getMESUser method, of class WebServiceRV.

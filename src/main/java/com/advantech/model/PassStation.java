@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * Cell passstation record
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "QryData")
+@XmlRootElement(name = "Table1")
 public class PassStation implements Serializable {
 
     @XmlElement(name = "BARCODE_NO")
