@@ -46,18 +46,20 @@ public class WebServiceTX extends SimpleWebServiceTX {
         UserOnMes user = rv.getMESUser(jobnumber, f);
         checkUserIsAvailable(user);
         String lineId = "21", stationId = "-1";// 目前暫時寫死，等待有固定查詢來源
-        String data = "<root><METHOD ID='WMPSO.TxWorkManPowerCard001'/><WORK_MANPOWER_CARD>"
+        String data = "<root><METHOD ID='Advantech.SFC.PBD.BLL.TxWorkManPowerCard001_EXT'/><WORK_MANPOWER_CARD>"
                 + "<WORK_ID>-1</WORK_ID>"
                 + "<LINE_ID>" + lineId + "</LINE_ID>"
                 + "<STATION_ID>" + stationId + "</STATION_ID>"
-                + "<FACTORY_NO>TW" + f.token() + "</FACTORY_NO>"
+                + "<FACTORY_NO>" + f.toString()+ "</FACTORY_NO>"
                 + "<UNIT_NO>T</UNIT_NO>"
                 + "<USER_NO>" + user.getUserNo() + "</USER_NO>"
                 + "<USER_NAME_CH>" + user.getUserName() + "</USER_NAME_CH>"
                 + "<WORK_DESC>\"\"</WORK_DESC>"
                 + "<CARD_FLAG>1</CARD_FLAG>"
                 + "<USER_ID>" + user.getUserId() + "</USER_ID>"
-                + "</WORK_MANPOWER_CARD></root>";
+                + "</WORK_MANPOWER_CARD>"
+                + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
+                + "</root>";
         this.sendData(data, UploadType.INSERT, f);
     }
 
@@ -66,18 +68,20 @@ public class WebServiceTX extends SimpleWebServiceTX {
         UserOnMes user = rv.getMESUser(jobnumber, f);
         checkUserIsAvailable(user);
         String lineId = "21", stationId = "-1";// 目前暫時寫死，等待有固定查詢來源
-        String data = "<root><METHOD ID='WMPSO.TxWorkManPowerCard001'/><WORK_MANPOWER_CARD>"
+        String data = "<root><METHOD ID='Advantech.SFC.PBD.BLL.TxWorkManPowerCard001_EXT'/><WORK_MANPOWER_CARD>"
                 + "<WORK_ID>" + workId + "</WORK_ID>"
                 + "<LINE_ID>" + lineId + "</LINE_ID>"
                 + "<STATION_ID>" + stationId + "</STATION_ID>"
-                + "<FACTORY_NO>TW" + f.token() + "</FACTORY_NO>"
+                + "<FACTORY_NO>" + f.toString()+ "</FACTORY_NO>"
                 + "<UNIT_NO>T</UNIT_NO>"
                 + "<USER_NO>" + user.getUserNo() + "</USER_NO>"
                 + "<USER_NAME_CH>" + user.getUserName() + "</USER_NAME_CH>"
                 + "<WORK_DESC>\"\"</WORK_DESC>"
                 + "<CARD_FLAG>-1</CARD_FLAG>"
                 + "<USER_ID>" + user.getUserId() + "</USER_ID>" //get userid from second xml
-                + "</WORK_MANPOWER_CARD></root>";
+                + "</WORK_MANPOWER_CARD>"
+                + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
+                + "</root>";
         this.sendData(data, UploadType.UPDATE, f);
     }
 

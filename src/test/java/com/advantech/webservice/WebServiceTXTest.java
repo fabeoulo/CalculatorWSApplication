@@ -38,18 +38,22 @@ public class WebServiceTXTest {
     /**
      * Test of getMESUser method, of class WebServiceRV.
      */
-    @Test
+    @Test//245
     public void testLogin() {
         out.println("testLogin");
         tx.kanbanUserLogin(testJobnumber, Factory.TWM3);
+        
+        tx.kanbanUserLogin(testJobnumber, Factory.TWM6);
     }
     /**
      * Test of getMESUser method, of class WebServiceRV.
      */
-    @Test
+    @Test//245
     public void testLogout() {
         out.println("testLogout");
         tx.kanbanUserLogout(testJobnumber, Factory.TWM3);
+        
+        tx.kanbanUserLogout(testJobnumber, Factory.TWM6);
     }
 
 }

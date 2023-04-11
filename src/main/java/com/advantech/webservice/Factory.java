@@ -18,11 +18,11 @@ public enum Factory implements Encodeable {
     /**
      * Default useing M3's webService
      */
-    TWM3("M3"),
+    TWM3("PD03"),
     /**
      * Temp1: M6
      */
-    TWM6("M6"),
+    TWM6("PD03"),
     /**
      * Temp2: M2
      */
@@ -43,11 +43,6 @@ public enum Factory implements Encodeable {
 
     @Override
     public Object token() {
-        return this.s;
-    }
-
-    @Override
-    public String toString() {
         return this.s;
     }
 

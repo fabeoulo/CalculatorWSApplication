@@ -59,10 +59,11 @@ public class WebServiceRV extends SimpleWebServiceRV {
     public List getKanbanUsers(Factory f) {
         super.setWsClient(mClient.getClient(f));
         String queryString = "<root>"
-                + "<METHOD ID='ETLSO.QryProductionKanban4Test'/>"
+                + "<METHOD ID='Advantech.ETL.ETL.BLL.QryProductionKanban4Test'/>"
                 + "<KANBANTEST>"
-                + "<STATION_ID>4,122,124,11,3,5,6,32,30,134,151,04,105</STATION_ID>"
+                + "<STATION_ID>4,122,124,11,3,5,6,32,30,134,151,104,105</STATION_ID>"
                 + "</KANBANTEST>"
+                + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
                 + "</root>";
         return super.getWebServiceData(queryString);
     }
@@ -70,10 +71,11 @@ public class WebServiceRV extends SimpleWebServiceRV {
     public List<String> getKanbanUsersForString(Factory f) throws IOException, TransformerConfigurationException, TransformerException {
         WsClient client = mClient.getClient(f);
         String queryString = "<root>"
-                + "<METHOD ID='ETLSO.QryProductionKanban4Test'/>"
+                + "<METHOD ID='Advantech.ETL.ETL.BLL.QryProductionKanban4Test'/>"
                 + "<KANBANTEST>"
-                + "<STATION_ID>4,122,124,11,3,5,6,32,30,134,151,04,105</STATION_ID>"
+                + "<STATION_ID>4,122,124,11,3,5,6,32,30,134,151,104,105</STATION_ID>"
                 + "</KANBANTEST>"
+                + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
                 + "</root>";
         return client.getFormatWebServiceData(queryString);
     }
@@ -81,30 +83,33 @@ public class WebServiceRV extends SimpleWebServiceRV {
     public String getKanbanWorkId(String jobnumber, Factory f) {
         super.setWsClient(mClient.getClient(f));
         String dt = fmt.print(new DateTime());
-        String queryString = "<root><METHOD ID='WMPSO.QryWorkManPowerCard001'/><WORK_MANPOWER_CARD><WORK_ID>-1</WORK_ID><LINE_ID>-1</LINE_ID><STATION_ID>-1</STATION_ID><FACTORY_NO></FACTORY_NO><UNIT_NO></UNIT_NO>"
+        String queryString = "<root><METHOD ID='Advantech.SFC.PBD.BLL.QryWorkManPowerCard001'/><WORK_MANPOWER_CARD><WORK_ID>-1</WORK_ID><LINE_ID>-1</LINE_ID><STATION_ID>-1</STATION_ID><FACTORY_NO></FACTORY_NO><UNIT_NO></UNIT_NO>"
                 + "<USER_NO>" + jobnumber + "</USER_NO>"
                 + "<CARD_FLAG>1</CARD_FLAG>"
                 + "<START_DATE>" + dt + "</START_DATE>"
                 + "<END_DATE>" + dt + "</END_DATE>"
-                + "</WORK_MANPOWER_CARD></root>";
+                + "</WORK_MANPOWER_CARD>"
+                + "<EXT_DEPT>" + f.token() + "</EXT_DEPT></root>";
         String childTagName = "WORK_ID";
         return super.getFieldValue(queryString, childTagName);
     }
 
     public String getModelNameByPo(String po, Factory f) {
         super.setWsClient(mClient.getClient(f));
-        String queryString = "<root><METHOD ID='WIPSO.QryWipAtt001'/><WIP_ATT><WIP_NO>"
+        String queryString = "<root><METHOD ID='Advantech.QAM.IPQ.BLL.QryWipAtt001'/><WIP_ATT><WIP_NO>"
                 + po
-                + "</WIP_NO><ITEM_NO></ITEM_NO></WIP_ATT></root>";
+                + "</WIP_NO><ITEM_NO></ITEM_NO></WIP_ATT>"
+                + "<EXT_DEPT>" + f.token() + "</EXT_DEPT></root>";
         String childTagName = "ITEM_NO";
         return super.getFieldValue(queryString, childTagName);
     }
 
     public String getPoByBarcode(String barcode, Factory f) {
         super.setWsClient(mClient.getClient(f));
-        String queryString = "<root><METHOD ID='WIPSO.QryWipBarcode003'/><WIP_BARCODE><BARCODE_NO>"
+        String queryString = "<root><METHOD ID='Advantech.SFC.RPT.BLL.QryWipBarcode003'/><WIP_BARCODE><BARCODE_NO>"
                 + barcode
-                + "</BARCODE_NO></WIP_BARCODE></root>";
+                + "</BARCODE_NO></WIP_BARCODE>"
+                + "<EXT_DEPT>" + f.token() + "</EXT_DEPT></root>";
         String childTagName = "WIP_NO";
         return super.getFieldValue(queryString, childTagName);
     }
@@ -112,9 +117,10 @@ public class WebServiceRV extends SimpleWebServiceRV {
     public UserOnMes getMESUser(String jobnumber, Factory f) {
         try {
             super.setWsClient(mClient.getClient(f));
-            String queryString = "<root><METHOD ID='PLBSO.QryLogion'/><USER_INFO><USER_NO>"
+            String queryString = "<root><METHOD ID='Advantech.IMG.SYS.BLL.QryLogion'/><USER_INFO><USER_NO>"
                     + jobnumber
-                    + "</USER_NO><PASSWORD></PASSWORD><STATUS>A</STATUS></USER_INFO></root>";
+                    + "</USER_NO><PASSWORD></PASSWORD><STATUS>A</STATUS></USER_INFO>"
+                    + "<EXT_DEPT>" + f.token() + "</EXT_DEPT></root>";
 
             return super.getMarshalResult(queryString, UserOnMes.class);
         } catch (Exception ex) {
@@ -127,8 +133,9 @@ public class WebServiceRV extends SimpleWebServiceRV {
         try {
             super.setWsClient(mClient.getClient(f));
             String queryString
-                    = "<root><METHOD ID='SYSSO.QryUserInfo001'/><USERS><USER_ID>-1</USER_ID><DEPT_ID>-1</DEPT_ID>"
-                    + "<STATUS>A</STATUS><UNIT_NO></UNIT_NO><LINE_ID>-1</LINE_ID></USERS></root>";
+                    = "<root><METHOD ID='Advantech.IMG.SYS.BLL.QryUserInfo001'/><USERS><USER_ID>-1</USER_ID><DEPT_ID>-1</DEPT_ID>"
+                    + "<STATUS>A</STATUS><UNIT_NO></UNIT_NO><LINE_ID>-1</LINE_ID></USERS>"
+                    + "<EXT_DEPT>" + f.token() + "</EXT_DEPT></root>";
             return super.getMarshalResults(queryString, UsersInfoOnMes.class);
         } catch (JAXBException ex) {
             log.error(ex.toString());
@@ -140,11 +147,12 @@ public class WebServiceRV extends SimpleWebServiceRV {
         try {
             super.setWsClient(mClient.getClient(f));
             String queryString
-                    = "<root><METHOD ID='ETLSO.QryT_SnPassTime001'/><WIP_INFO><WIP_NO>"
+                    = "<root><METHOD ID='Advantech.ETL.ETL.BLL.QryT_SnPassTime001'/><WIP_INFO><WIP_NO>"
                     + po
                     + "</WIP_NO><UNIT_NO></UNIT_NO><LINE_ID></LINE_ID><STATION_ID>"
                     + mesStationId
-                    + "</STATION_ID></WIP_INFO></root>";
+                    + "</STATION_ID></WIP_INFO>"
+                    + "<EXT_DEPT>" + f.token() + "</EXT_DEPT></root>";
 
             return super.getMarshalResults(queryString, PassStationRecords.class);
         } catch (JAXBException ex) {
@@ -157,10 +165,11 @@ public class WebServiceRV extends SimpleWebServiceRV {
         try {
             super.setWsClient(mClient.getClient(f));
             String queryString = "<root>"
-                    + "<METHOD ID='ETLSO.QryProductionKanban4Test'/>"
+                    + "<METHOD ID='Advantech.ETL.ETL.BLL.QryProductionKanban4Test'/>"
                     + "<KANBANTEST>"
-                    + "<STATION_ID>4,122,124,11,3,5,6,32,30,134,151,04,105</STATION_ID>"
+                    + "<STATION_ID>4,122,124,11,3,5,6,32,30,134,151,104,105</STATION_ID>"
                     + "</KANBANTEST>"
+                    + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
                     + "</root>";
 
             return super.getMarshalResults(queryString, TestRecords.class);
@@ -179,15 +188,16 @@ public class WebServiceRV extends SimpleWebServiceRV {
 
             String queryString
                     = "<root>"
-                    + "<METHOD ID='RPTSO.QryKPIUserPassStationDetail'/>"
+                    + "<METHOD ID='Advantech.EFM.PEF.BLL.QryKPIUserPassStationDetail'/>"
                     + "<RPT404>"
                     + "<UNIT_NO>" + section.getCode() + "</UNIT_NO>"
                     + "<STATION_ID>" + station + "</STATION_ID>"
                     + "<USER_NO>" + jobnumberStr + "</USER_NO>"
                     + "<START_DATE>" + fmt.print(sD) + "</START_DATE>"
                     + "<END_DATE>" + fmt.print(eD) + "</END_DATE>"
-                    + "<WERKS>TW" + f.token() + "</WERKS>"
+                    + "<WERKS>" + f.toString()+ "</WERKS>"
                     + "</RPT404>"
+                    + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
                     + "</root>";
 
             return super.getMarshalResults(queryString, TestPassStationDetails.class);
@@ -208,14 +218,15 @@ public class WebServiceRV extends SimpleWebServiceRV {
             String unit = "B";
             String queryString
                     = "<root>"
-                    + "<METHOD ID='KPISO.QryRPT404'/>"
+                    + "<METHOD ID='Advantech.EFM.PEF.BLL.QryRPT404'/>"
                     + "<RPT404>"
-                    + "<WERKS>TW" + f.token() + "</WERKS>"
+                    + "<WERKS>" + f.toString()+ "</WERKS>"
                     + "<UNIT_NO>" + unit + "</UNIT_NO>"
                     + "<START_DATE>" + fmt.print(sD) + "</START_DATE>"
                     + "<END_DATE>" + fmt.print(eD) + "</END_DATE>"
                     + "<LINE_ID></LINE_ID>"
                     + "</RPT404>"
+                    + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
                     + "</root>";
 
             return super.getMarshalResults(queryString, MesPassCountRecords.class);
@@ -230,7 +241,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
             super.setWsClient(mClient.getClient(f));
             String queryString
                     = "<root>"
-                    + "<METHOD ID='RPTSO.QryRptStationQty001'/>"
+                    + "<METHOD ID='Advantech.SFC.RPT.BLL.QryRptStationQty001'/>"
                     + "<STATION_QTY>"
                     + "<START_TIME></START_TIME>"
                     + "<END_TIME></END_TIME>"
@@ -239,6 +250,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
                     + "<WERKS/>"
                     + "<ITEM_NO>" + modelName + "</ITEM_NO>"
                     + "</STATION_QTY>"
+                    + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
                     + "</root>";
 
             return super.getMarshalResults(queryString, RptStationQtys.class);
