@@ -6,7 +6,10 @@
 package com.advantech.dao.db1;
 
 import com.advantech.dao.HibernateQueryMainActions;
+import static com.advantech.helper.HibernateBatchUtils.flushIfReachFetchSize;
 import java.io.Serializable;
+import java.util.List;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,4 +31,13 @@ public abstract class AbstractDao<PK extends Serializable, T> extends HibernateQ
         super.setSessionFactory(sessionFactory);
     }
 
+    public int update(List<T> l) {
+        Session session = super.getSession();
+        int currentRow = 1;
+        for (T a : l) {
+            session.update(a);
+            flushIfReachFetchSize(session, currentRow++);
+        }
+        return 1;
+    }
 }

@@ -45,6 +45,7 @@ import com.advantech.service.db1.PreAssyModuleStandardTimeService;
 import com.advantech.service.db1.PreAssyModuleTypeService;
 import com.advantech.service.db1.PrepareScheduleEndtimeSettingService;
 import com.advantech.service.db1.PrepareScheduleService;
+import com.advantech.service.db1.SystemReportService;
 import com.advantech.service.db1.TagNameComparisonService;
 import com.advantech.service.db1.UserService;
 import com.advantech.service.db1.WorktimeService;
@@ -57,6 +58,7 @@ import com.google.common.base.Strings;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -158,29 +160,62 @@ public class TestService {
 
     @Autowired
     private PreAssyModuleStandardTimeService preAssyModuleStandardTimeService;
+    @Autowired
+    private SystemReportService systemReportService;
 
     @Test
     @Transactional
     @Rollback(false)
     public void testSetPreAssyModuleStandardTime() throws JobExecutionException {
+        String sds = new DateTime().minusMonths(1).toString("yyyy-MM-dd");
+        String eds = new DateTime().toString("yyyy-MM-dd");
+        List<Map> data = systemReportService.getBabPreAssyDetailForExcel(-1, -1, sds, eds);
+
+        Map<String, BigDecimal> mapM3Wt = getPreAssyStandardTime(data, "CLEAN PANEL", Arrays.asList("5", "6"));
+        Map<String, BigDecimal> mapM6Wt = getPreAssyStandardTime(data, "CLEAN PANEL", Arrays.asList("7"));
+
+        List<String> keys = new ArrayList<>();
+        keys.addAll(mapM3Wt.keySet());
+        keys.addAll(mapM6Wt.keySet());
+//            .collect(Collectors.toMap(wt -> wt.get("modelName"), wt -> wt.getCleanPanel()
+//            ));
+        List<Integer> typeIds = Arrays.asList(44, 322);
         List<PreAssyModuleStandardTime> ps1s = preAssyModuleStandardTimeService.findAll();
-        ps1s = ps1s.stream().filter(t -> t.getPreAssyModuleType().getId() == 44
-        ).collect(Collectors.toList());
+        ps1s = ps1s.stream().filter(t -> keys.contains(t.getModelName()) && typeIds.contains(t.getPreAssyModuleType().getId()))
+                .collect(Collectors.toList());
 
-        List<String> collect2 = ps1s.stream().map(L -> L.getModelName()).collect(Collectors.toList());
-
-        List<WorktimeM3> listM3 = worktimeM3Service.findByModel(collect2);
-        Map<String, BigDecimal> mapM3 = listM3.stream()
-                .collect(Collectors.toMap(wt -> wt.getModelName(), wt -> wt.getCleanPanel()
-                ));
-
+//        List<String> collect2 = ps1s.stream().map(L -> L.getModelName()).collect(Collectors.toList());
+//        List<WorktimeM3> listM3 = worktimeM3Service.findByModel(collect2);
+//        Map<String, BigDecimal> mapM3 = listM3.stream()
+//                .collect(Collectors.toMap(wt -> wt.getModelName(), wt -> wt.getCleanPanel()
+//                ));
         ps1s.forEach(e -> {
-            if (mapM3.containsKey(e.getModelName())) {
-                BigDecimal newST = mapM3.get(e.getModelName()).multiply(new BigDecimal(60));
+            if (e.getPreAssyModuleType().getId() == 44 && mapM3Wt.containsKey(e.getModelName())) {
+                BigDecimal newST = mapM3Wt.get(e.getModelName());
                 e.setStandardTime(newST);
-                preAssyModuleStandardTimeService.update(e);
+            } else if (e.getPreAssyModuleType().getId() == 322 && mapM6Wt.containsKey(e.getModelName())) {
+                BigDecimal newST = mapM6Wt.get(e.getModelName());
+                e.setStandardTime(newST);
             }
         });
+        preAssyModuleStandardTimeService.update(ps1s);
+    }
+
+    private Map<String, BigDecimal> getPreAssyStandardTime(List<Map> data, String moduleName, List<String> floorIdstring) {
+        Map<String, BigDecimal> mapSt = new HashMap<>();
+        data.stream().filter(m
+                -> floorIdstring.contains(m.get("sitefloor").toString())
+                && m.get("preModuleName") != null
+                && m.get("preModuleName").toString().contains(moduleName)
+        )
+                .collect(Collectors.groupingBy(map -> map.get("modelName").toString()))
+                .forEach((key, value) -> {
+                    int pcs = value.stream().mapToInt(v -> (int) v.get("pcs")).sum();
+                    int spend = value.stream().mapToInt(v -> (int) v.get("時間花費")).sum();
+                    BigDecimal swt = new BigDecimal(spend / pcs);
+                    mapSt.put(key, swt);
+                });
+        return mapSt;
     }
 
     @Test

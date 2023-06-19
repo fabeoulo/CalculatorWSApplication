@@ -324,6 +324,20 @@
         <property name="cronExpression" value="0 30 08 ? * MON-FRI *" />
     </bean>
 
+    <!--
+        每週計算前置模組工時 UPDATE　table
+    -->    
+    <bean name="PreAssyModuleStandardTimeJob-Job" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="preAssyModuleStandardTimeJob" />
+        <property name="targetMethod" value="execute"/>  
+        <property name="concurrent" value="false"/>
+    </bean>
+    
+    <bean id="PreAssyModuleStandardTimeJob-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="PreAssyModuleStandardTimeJob-Job" />
+        <property name="cronExpression" value="0 35 08 ? * WED *" />
+    </bean>
+    
     <!--schedule jobs-->
     <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="applicationContextSchedulerContextKey" value="applicationContext" />
@@ -352,6 +366,7 @@
                 <!--<ref bean="CountermeasureAlarm-Trig"/>-->                
                 
                 <!--<ref bean="SensorDetect-Trig"/>-->
+                <ref bean="PreAssyModuleStandardTimeJob-Trig"/>
             </list>
         </property>
         <property name="schedulerName">

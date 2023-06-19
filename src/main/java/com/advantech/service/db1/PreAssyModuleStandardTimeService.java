@@ -71,6 +71,10 @@ public class PreAssyModuleStandardTimeService {
         return dao.update(pojo);
     }
 
+    public int update(List<PreAssyModuleStandardTime> l) {
+        return dao.update(l);
+    }
+
     public int delete(PreAssyModuleStandardTime pojo) {
         return dao.delete(pojo);
     }

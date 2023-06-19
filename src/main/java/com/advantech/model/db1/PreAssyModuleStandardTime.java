@@ -7,6 +7,7 @@ package com.advantech.model.db1;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,6 +17,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -31,6 +35,7 @@ public class PreAssyModuleStandardTime implements Serializable, Cloneable {
     private BigDecimal standardTime;
     private String sopName;
     private String sopPage;
+    private Date standardTimeModifyDate;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -87,6 +92,17 @@ public class PreAssyModuleStandardTime implements Serializable, Cloneable {
 
     public void setSopPage(String sopPage) {
         this.sopPage = sopPage;
+    }
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "modifyDate", length = 23, nullable = true)    
+    public Date getStandardTimeModifyDate() {
+        return standardTimeModifyDate;
+    }
+
+    public void setStandardTimeModifyDate(Date standardTimeModifyDate) {
+        this.standardTimeModifyDate = standardTimeModifyDate;
     }
 
     @Override
