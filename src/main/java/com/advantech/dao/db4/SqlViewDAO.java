@@ -22,7 +22,7 @@ import org.springframework.stereotype.Repository;
  *
  * @author Wei.Cheng
  */
-@Repository(value = "sqlViewDAO4")
+//@Repository(value = "sqlViewDAO4")
 public class SqlViewDAO extends AbstractDao<Integer, Object> {
 
     private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
