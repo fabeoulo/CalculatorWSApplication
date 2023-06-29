@@ -72,8 +72,8 @@ public class PrepareScheduleController {
 
     private List<StationInfo> stationMap;
 
-    @Autowired
-    @Qualifier("sqlViewService4")
+//    @Autowired
+//    @Qualifier("sqlViewService4")
     private com.advantech.service.db4.SqlViewService sqlViewService4;
     
     @Autowired

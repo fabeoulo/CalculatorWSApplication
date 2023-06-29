@@ -20,12 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author Wei.Cheng
  */
-@Service(value = "sqlViewService4")
-@Transactional("transactionManager4")
+//@Service(value = "sqlViewService4")
+//@Transactional("transactionManager4")
 public class SqlViewService {
 
-    @Autowired
-    @Qualifier("sqlViewDAO4")
+//    @Autowired
+//    @Qualifier("sqlViewDAO4")
     private SqlViewDAO sqlViewDAO;
 
     public List<MesPassStationInfo> findMesPassStationInfo(List<String> po, DateTime dt) {
