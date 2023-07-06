@@ -8,7 +8,6 @@ import com.advantech.model.db1.PreAssyModuleStandardTime;
 import com.advantech.service.db1.PreAssyModuleStandardTimeService;
 import com.advantech.service.db1.SystemReportService;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -36,40 +35,37 @@ public class PreAssyModuleStandardTimeJob {
         String eds = new DateTime().toString("yyyy-MM-dd");
         List<Map> data = systemReportService.getBabPreAssyDetailForExcel(-1, -1, sds, eds);
 
-        Map<String, BigDecimal> mapM3St = getPreAssyStandardTime(data, "CLEAN PANEL", Arrays.asList("5", "6"));
-        Map<String, BigDecimal> mapM6St = getPreAssyStandardTime(data, "CLEAN PANEL", Arrays.asList("7"));
+        List<PreAssyModuleStandardTime> ls = preAssyModuleStandardTimeService.findAllWithTypes();
 
-        List<String> modelNames = new ArrayList<>();
-        modelNames.addAll(mapM3St.keySet());
-        modelNames.addAll(mapM6St.keySet());
+        Map<String, BigDecimal> mapM3WtInExcel = getPreAssyStandardTime(data, Arrays.asList("5", "6"));
+        Map<String, BigDecimal> mapM6WtInExcel = getPreAssyStandardTime(data, Arrays.asList("7"));
+        List<String> m3Linetype = Arrays.asList("ASSY");
+        List<String> m6Linetype = Arrays.asList("Cell");
+        ls = ls.stream().filter(p -> p.getPreAssyModuleType().getName().startsWith("(前置"))
+                .filter(e -> {
+                    String key = e.getModelName() + "_" + e.getPreAssyModuleType().getName();
+                    String moduleLinetype = e.getPreAssyModuleType().getLineType().getName();
 
-        List<Integer> typeIds = Arrays.asList(44, 322);
-        List<PreAssyModuleStandardTime> ls = preAssyModuleStandardTimeService.findAll();
-        ls = ls.stream().filter(t
-                -> modelNames.contains(t.getModelName())
-                && typeIds.contains(t.getPreAssyModuleType().getId())
-        ).collect(Collectors.toList());
-
-        ls.forEach(e -> {
-            if (e.getPreAssyModuleType().getId() == 44 && mapM3St.containsKey(e.getModelName())) {
-                BigDecimal newST = mapM3St.get(e.getModelName());
-                e.setStandardTime(newST);
-            } else if (e.getPreAssyModuleType().getId() == 322 && mapM6St.containsKey(e.getModelName())) {
-                BigDecimal newST = mapM6St.get(e.getModelName());
-                e.setStandardTime(newST);
-            }
-        });
+                    if (m3Linetype.contains(moduleLinetype) && mapM3WtInExcel.containsKey(key)) {
+                        e.setStandardTime(mapM3WtInExcel.get(key));
+                        return true;
+                    } else if (m6Linetype.contains(moduleLinetype) && mapM6WtInExcel.containsKey(key)) {
+                        e.setStandardTime(mapM6WtInExcel.get(key));
+                        return true;
+                    }
+                    return false;
+                }).collect(Collectors.toList());
         preAssyModuleStandardTimeService.update(ls);
     }
-    
-    private Map<String, BigDecimal> getPreAssyStandardTime(List<Map> data, String moduleName, List<String> floorIdstring) {
+
+    private Map<String, BigDecimal> getPreAssyStandardTime(List<Map> data, List<String> floorName) {
         Map<String, BigDecimal> mapSt = new HashMap<>();
         data.stream().filter(m
-                -> floorIdstring.contains(m.get("sitefloor").toString())
+                -> floorName.contains(m.get("sitefloor").toString())
+                && m.get("modelName") != null
                 && m.get("preModuleName") != null
-                && m.get("preModuleName").toString().contains(moduleName)
         )
-                .collect(Collectors.groupingBy(map -> map.get("modelName").toString()))
+                .collect(Collectors.groupingBy(map -> map.get("modelName").toString() + "_" + map.get("preModuleName").toString()))
                 .forEach((key, value) -> {
                     int pcs = value.stream().mapToInt(v -> (int) v.get("pcs")).sum();
                     int spend = value.stream().mapToInt(v -> (int) v.get("時間花費")).sum();

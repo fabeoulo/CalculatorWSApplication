@@ -299,6 +299,17 @@
                                 'render': function (data, type, full, meta) {
                                     return typeOptions[data];
                                 }
+                            },
+                            {
+                                "type": "html",
+                                "targets": 6,
+                                "width": "10%",
+                                'render': function (data, type, row) {
+                                    if (data != null)
+                                        return moment(data).format('YYYY-MM-DD HH:mm');//YYYY-MM-DDTHH:mm:ss.SSS
+                                    else
+                                        return "";
+                                }
                             }
                         ],
                         "columns": [
@@ -308,6 +319,7 @@
                             {data: "standardTime", title: "標工"},
                             {data: "sopName", title: "文件編號"},
                             {data: "sopPage", title: "頁數"},
+                            {data: "standardTimeModifyDate", title: "最後更新"},
                             {
                                 "data": "id",
                                 "width": "20%",
@@ -318,7 +330,7 @@
                             }
                         ],
                         "pageLength": 20,
-                        "order": [[1, 'asc'], [2, 'asc']]
+                        "order": [[6, 'desc'], [1, 'asc'], [2, 'asc']]
                     });
 
                     typeTable = $('#preAssyModuleType-info').DataTable({

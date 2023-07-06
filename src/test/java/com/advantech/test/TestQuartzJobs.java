@@ -20,6 +20,7 @@ import com.advantech.quartzJob.TestLineTypeRecord;
 import com.advantech.quartzJob.TestLineTypeRecordUnrepliedAlarm;
 import com.advantech.quartzJob.ArrangePrepareScheduleImpl_Assy;
 import com.advantech.quartzJob.ArrangePrepareScheduleImpl_Packing;
+import com.advantech.quartzJob.PreAssyModuleStandardTimeJob;
 import com.advantech.quartzJob.SyncPrepareScheduleForPacking;
 import com.advantech.quartzJob.SyncWorktimeFromRemote;
 import static com.google.common.collect.Lists.newArrayList;
@@ -160,5 +161,12 @@ public class TestQuartzJobs {
     public void testSyncWorktimeFromRemote() throws Exception {
         swr.execute();
     }
+    
+    @Autowired
+    private PreAssyModuleStandardTimeJob preAssySt;
 
+    @Test
+    public void testPreAssyModuleStandardTimeJob() throws Exception {
+        preAssySt.execute();
+    }
 }

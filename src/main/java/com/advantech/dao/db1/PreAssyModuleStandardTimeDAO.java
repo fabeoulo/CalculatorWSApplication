@@ -11,6 +11,7 @@ import com.advantech.model.db1.PreAssyModuleStandardTime;
 import com.advantech.model.db1.PreAssyModuleType;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.FetchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -61,6 +62,13 @@ public class PreAssyModuleStandardTimeDAO extends AbstractDao<Integer, PreAssyMo
                 .list();
     }
 
+    public List<PreAssyModuleStandardTime> findAllWithTypes() {
+        return super.createEntityCriteria()
+                .setFetchMode("preAssyModuleType", FetchMode.JOIN)
+                .setFetchMode("preAssyModuleType.lineType", FetchMode.JOIN)
+                .list();
+    }
+    
     @Override
     public int insert(PreAssyModuleStandardTime pojo) {
         super.getSession().save(pojo);

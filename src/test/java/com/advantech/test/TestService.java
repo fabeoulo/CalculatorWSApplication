@@ -163,52 +163,60 @@ public class TestService {
     @Autowired
     private SystemReportService systemReportService;
 
-    @Test
-    @Transactional
-    @Rollback(false)
+//    @Test
+//    @Transactional
+//    @Rollback(false)
     public void testSetPreAssyModuleStandardTime() throws JobExecutionException {
         String sds = new DateTime().minusMonths(1).toString("yyyy-MM-dd");
         String eds = new DateTime().toString("yyyy-MM-dd");
         List<Map> data = systemReportService.getBabPreAssyDetailForExcel(-1, -1, sds, eds);
 
-        Map<String, BigDecimal> mapM3Wt = getPreAssyStandardTime(data, "CLEAN PANEL", Arrays.asList("5", "6"));
-        Map<String, BigDecimal> mapM6Wt = getPreAssyStandardTime(data, "CLEAN PANEL", Arrays.asList("7"));
+        Map<String, BigDecimal> mapM3Wt = getPreAssyStandardTime(data, Arrays.asList("5", "6"));
+        Map<String, BigDecimal> mapM6Wt = getPreAssyStandardTime(data, Arrays.asList("7"));
 
-        List<String> keys = new ArrayList<>();
-        keys.addAll(mapM3Wt.keySet());
-        keys.addAll(mapM6Wt.keySet());
-//            .collect(Collectors.toMap(wt -> wt.get("modelName"), wt -> wt.getCleanPanel()
-//            ));
-        List<Integer> typeIds = Arrays.asList(44, 322);
-        List<PreAssyModuleStandardTime> ps1s = preAssyModuleStandardTimeService.findAll();
-        ps1s = ps1s.stream().filter(t -> keys.contains(t.getModelName()) && typeIds.contains(t.getPreAssyModuleType().getId()))
-                .collect(Collectors.toList());
+//        List<String> keys = new ArrayList<>();
+//        keys.addAll(mapM3Wt.keySet());
+//        keys.addAll(mapM6Wt.keySet());
+//        List<Integer> typeIds = Arrays.asList(44, 322);
+        List<PreAssyModuleStandardTime> ls = preAssyModuleStandardTimeService.findAllWithTypes();
+        Map<String, Long> collect2 = ls.stream()
+                .filter(p -> p.getPreAssyModuleType().getName().startsWith("(前置"))
+                .collect(Collectors.groupingBy(ps -> ps.getModelName(), Collectors.counting()
+                ));
 
-//        List<String> collect2 = ps1s.stream().map(L -> L.getModelName()).collect(Collectors.toList());
-//        List<WorktimeM3> listM3 = worktimeM3Service.findByModel(collect2);
-//        Map<String, BigDecimal> mapM3 = listM3.stream()
-//                .collect(Collectors.toMap(wt -> wt.getModelName(), wt -> wt.getCleanPanel()
-//                ));
-        ps1s.forEach(e -> {
-            if (e.getPreAssyModuleType().getId() == 44 && mapM3Wt.containsKey(e.getModelName())) {
-                BigDecimal newST = mapM3Wt.get(e.getModelName());
-                e.setStandardTime(newST);
-            } else if (e.getPreAssyModuleType().getId() == 322 && mapM6Wt.containsKey(e.getModelName())) {
-                BigDecimal newST = mapM6Wt.get(e.getModelName());
-                e.setStandardTime(newST);
+//        ls = ls.stream().filter(t -> keys.contains(t.getModelName()) && typeIds.contains(t.getPreAssyModuleType().getId()))
+//                .collect(Collectors.toList());
+
+        List<String> m3Linetype = Arrays.asList("ASSY");
+        List<String> m6Linetype = Arrays.asList("Cell");
+        ls = ls.stream().filter(e -> {
+            String key = e.getModelName() + "_" + e.getPreAssyModuleType().getName();
+            String moduleLinetype = e.getPreAssyModuleType().getLineType().getName();
+            HibernateObjectPrinter.print(e.getModelName());
+            if (e.getModelName().equals("CRV430WP2102-T")) {
+                HibernateObjectPrinter.print(e.getPreAssyModuleType());
             }
-        });
-        preAssyModuleStandardTimeService.update(ps1s);
+
+            if (m3Linetype.contains(moduleLinetype) && mapM3Wt.containsKey(key)) {
+                e.setStandardTime(mapM3Wt.get(key));
+                return true;
+            } else if (m6Linetype.contains(moduleLinetype) && mapM6Wt.containsKey(key)) {
+                e.setStandardTime(mapM6Wt.get(key));
+                return true;
+            }
+            return false;
+        }).collect(Collectors.toList());
+        preAssyModuleStandardTimeService.update(ls);
     }
 
-    private Map<String, BigDecimal> getPreAssyStandardTime(List<Map> data, String moduleName, List<String> floorIdstring) {
+    private Map<String, BigDecimal> getPreAssyStandardTime(List<Map> data, List<String> floorName) {
         Map<String, BigDecimal> mapSt = new HashMap<>();
         data.stream().filter(m
-                -> floorIdstring.contains(m.get("sitefloor").toString())
+                -> floorName.contains(m.get("sitefloor").toString())
+                && m.get("modelName") != null
                 && m.get("preModuleName") != null
-                && m.get("preModuleName").toString().contains(moduleName)
         )
-                .collect(Collectors.groupingBy(map -> map.get("modelName").toString()))
+                .collect(Collectors.groupingBy(map -> map.get("modelName").toString() + "_" + map.get("preModuleName").toString()))
                 .forEach((key, value) -> {
                     int pcs = value.stream().mapToInt(v -> (int) v.get("pcs")).sum();
                     int spend = value.stream().mapToInt(v -> (int) v.get("時間花費")).sum();
@@ -218,9 +226,9 @@ public class TestService {
         return mapSt;
     }
 
-    @Test
-    @Transactional
-    @Rollback(false)
+//    @Test
+//    @Transactional
+//    //@Rollback(true)
     public void testPreAssyModuleStandardTimeService() throws JobExecutionException {
         List<PreAssyModuleStandardTime> ps1s = preAssyModuleStandardTimeService.findAll();
         Map<String, Long> collect2 = ps1s.stream()
@@ -245,8 +253,8 @@ public class TestService {
     @Autowired
     private WorktimeM3Service worktimeM3Service;
 
-    @Test
-    @Transactional
+//    @Test
+//    @Transactional
 //    @Rollback(false)
     public void testpreAssyModuleStandardTimeService() throws JobExecutionException {
         String s1 = "POCS1991703-T";
@@ -262,9 +270,9 @@ public class TestService {
         HibernateObjectPrinter.print(lt);
     }
 
-    @Test
-    @Transactional
-    @Rollback(true)
+//    @Test
+//    @Transactional
+//    @Rollback(true)
     public void testWorktimeM3Service() throws JobExecutionException {
         String s1 = "TPC1282T533A2102-T";
         List<String> modelName = new ArrayList<>();

@@ -29,6 +29,10 @@ public class PreAssyModuleStandardTimeService {
     public List<PreAssyModuleStandardTime> findAll() {
         return dao.findAll();
     }
+    
+    public List<PreAssyModuleStandardTime> findAllWithTypes() {
+        return dao.findAllWithTypes();
+    }
 
     public PreAssyModuleStandardTime findByPrimaryKey(Object obj_id) {
         return dao.findByPrimaryKey(obj_id);
