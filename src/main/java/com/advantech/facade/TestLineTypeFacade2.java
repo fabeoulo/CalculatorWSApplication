@@ -73,7 +73,7 @@ public class TestLineTypeFacade2 extends TestLineTypeFacade {
     @Override
     public void resetAlarmSign() {
         List<AlarmTestAction> alarmActions = almService.findAll();
-        List<AlarmDO> listDO = findDOByTables(alarmActions);
+        List<AlarmDO> listDO = this.findDOByTables(alarmActions);
 
         //filter
         Map allActiveTags = waGetTagValue.getMap();

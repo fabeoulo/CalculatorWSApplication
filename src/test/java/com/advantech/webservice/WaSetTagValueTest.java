@@ -89,6 +89,7 @@ public class WaSetTagValueTest {
 //        List<AlarmTestAction> alarmActions = Arrays.asList(
 //                new AlarmTestAction("T6", 0));
         waGetTagValue.initActiveTagNodes();
+//        Map<String, Integer> m = waGetTagValue.getMap();
         tF.setAlarmSign(alarmBabs);
         tF.resetAlarmSign();
 
@@ -196,7 +197,7 @@ public class WaSetTagValueTest {
 
     @Test
     public void testGetJsonString() {
-        String[] testValues = new String[] {"a", "b", "c", "d"};
+        String[] testValues = new String[]{"a", "b", "c", "d"};
         String result = this.waGetTagValue.getJsonString(Arrays.asList(testValues));
         System.out.println(result);
     }

@@ -171,42 +171,42 @@ public class TestService {
         String eds = new DateTime().toString("yyyy-MM-dd");
         List<Map> data = systemReportService.getBabPreAssyDetailForExcel(-1, -1, sds, eds);
 
-        Map<String, BigDecimal> mapM3Wt = getPreAssyStandardTime(data, Arrays.asList("5", "6"));
-        Map<String, BigDecimal> mapM6Wt = getPreAssyStandardTime(data, Arrays.asList("7"));
+        Map<String, BigDecimal> mapM3WtInExcel = getPreAssyStandardTime(data, Arrays.asList("5", "6"));
+        Map<String, BigDecimal> mapM6WtInExcel = getPreAssyStandardTime(data, Arrays.asList("7"));
 
 //        List<String> keys = new ArrayList<>();
-//        keys.addAll(mapM3Wt.keySet());
-//        keys.addAll(mapM6Wt.keySet());
+//        keys.addAll(mapM3WtInExcel.keySet());
+//        keys.addAll(mapM6WtInExcel.keySet());
 //        List<Integer> typeIds = Arrays.asList(44, 322);
         List<PreAssyModuleStandardTime> ls = preAssyModuleStandardTimeService.findAllWithTypes();
-        Map<String, Long> collect2 = ls.stream()
-                .filter(p -> p.getPreAssyModuleType().getName().startsWith("(前置"))
-                .collect(Collectors.groupingBy(ps -> ps.getModelName(), Collectors.counting()
-                ));
-
-//        ls = ls.stream().filter(t -> keys.contains(t.getModelName()) && typeIds.contains(t.getPreAssyModuleType().getId()))
-//                .collect(Collectors.toList());
-
+//        Map<String, Long> collect2 = ls.stream()
+//                .filter(p -> p.getPreAssyModuleType().getName().startsWith("(前置"))
+//                .collect(Collectors.groupingBy(ps -> ps.getModelName(), Collectors.counting()
+//                ));
+//
+////        ls = ls.stream().filter(t -> keys.contains(t.getModelName()) && typeIds.contains(t.getPreAssyModuleType().getId()))
+////                .collect(Collectors.toList());
         List<String> m3Linetype = Arrays.asList("ASSY");
         List<String> m6Linetype = Arrays.asList("Cell");
-        ls = ls.stream().filter(e -> {
-            String key = e.getModelName() + "_" + e.getPreAssyModuleType().getName();
-            String moduleLinetype = e.getPreAssyModuleType().getLineType().getName();
-            HibernateObjectPrinter.print(e.getModelName());
-            if (e.getModelName().equals("CRV430WP2102-T")) {
-                HibernateObjectPrinter.print(e.getPreAssyModuleType());
-            }
+        ls = ls.stream()
+                .filter(p -> {
+                    if (!p.getPreAssyModuleType().getName().startsWith("(前置")) {
+                        return false;
+                    }
+                    String key = p.getModelName() + "_" + p.getPreAssyModuleType().getName();
+                    String moduleLinetype = p.getPreAssyModuleType().getLineType().getName();
 
-            if (m3Linetype.contains(moduleLinetype) && mapM3Wt.containsKey(key)) {
-                e.setStandardTime(mapM3Wt.get(key));
-                return true;
-            } else if (m6Linetype.contains(moduleLinetype) && mapM6Wt.containsKey(key)) {
-                e.setStandardTime(mapM6Wt.get(key));
-                return true;
-            }
-            return false;
-        }).collect(Collectors.toList());
-        preAssyModuleStandardTimeService.update(ls);
+                    if (m3Linetype.contains(moduleLinetype) && mapM3WtInExcel.containsKey(key)) {
+                        p.setStandardTime(mapM3WtInExcel.get(key));
+                        return true;
+                    } else if (m6Linetype.contains(moduleLinetype) && mapM6WtInExcel.containsKey(key)) {
+                        p.setStandardTime(mapM6WtInExcel.get(key));
+                        return true;
+                    }
+                    return false;
+                }).collect(Collectors.toList());
+        HibernateObjectPrinter.print(ls);
+//        preAssyModuleStandardTimeService.update(ls);
     }
 
     private Map<String, BigDecimal> getPreAssyStandardTime(List<Map> data, List<String> floorName) {

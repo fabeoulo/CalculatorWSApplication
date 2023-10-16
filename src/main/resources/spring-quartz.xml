@@ -102,7 +102,7 @@
     
     <!--
         Job5 setting
-        禮拜日零點固定將Database的sensor unused的資料clean一次
+        禮拜日零點固定將Database的sensor unused的資料clean一次 // Clean FBN where logtime before 7 days ago.
     --> 
     <bean name="CleanSensorData" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
         <property name="jobClass" value="com.advantech.quartzJob.CleanSensorData" />
@@ -376,6 +376,8 @@
         <property name="configLocation">
             <value>classpath:quartz.properties</value>
         </property>
+        
+        <property name="waitForJobsToCompleteOnShutdown" value="true" />
     </bean>
     
 </beans>

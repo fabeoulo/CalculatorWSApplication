@@ -29,23 +29,7 @@ public class WaGetTagValue extends WaTagValue {
 
     private String urlGetTagValue;
 
-    public String getUrlGetTagValue() {
-        return urlGetTagValue;
-    }
-
-    public void setUrlGetTagValue(String urlGetTagValue) {
-        this.urlGetTagValue = urlGetTagValue;
-    }
-
     private Map<String, Integer> map = new HashMap<>();
-
-    public Map<String, Integer> getMap() {
-        return map;
-    }
-
-    public void setMap(Map<String, Integer> map) {
-        this.map = map;
-    }
 
     @Autowired
     private AlarmDOService alarmDOService;
@@ -54,7 +38,23 @@ public class WaGetTagValue extends WaTagValue {
     public void initActiveTagNodes() {
         List<String> allTagNames = alarmDOService.findAllDistinctCorrespondDO();
         String json = getJsonString(allTagNames);
-        setTagToMap(getResponseBodys(json));
+        this.setTagToMap(getResponseBodys(json));
+    }
+
+    public String getUrlGetTagValue() {
+        return urlGetTagValue;
+    }
+
+    public void setUrlGetTagValue(String urlGetTagValue) {
+        this.urlGetTagValue = urlGetTagValue;
+    }
+
+    public Map<String, Integer> getMap() {
+        return map;
+    }
+
+    public void setMap(Map<String, Integer> map) {
+        this.map = map;
     }
 
     private WaGetTagResponseModel getResponseBodys(String json) {

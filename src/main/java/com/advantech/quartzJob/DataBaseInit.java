@@ -58,6 +58,7 @@ public class DataBaseInit extends QuartzJobBean {
             babSettingHistoryService.init();
             babSensorLoginRecordService.init();
             testService.cleanTests();
+            
             waGetTagValue.initActiveTagNodes();
             bF.resetAlarm();
             tF.resetAlarm();

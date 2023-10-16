@@ -41,20 +41,24 @@ public class PreAssyModuleStandardTimeJob {
         Map<String, BigDecimal> mapM6WtInExcel = getPreAssyStandardTime(data, Arrays.asList("7"));
         List<String> m3Linetype = Arrays.asList("ASSY");
         List<String> m6Linetype = Arrays.asList("Cell");
-        ls = ls.stream().filter(p -> p.getPreAssyModuleType().getName().startsWith("(前置"))
-                .filter(e -> {
-                    String key = e.getModelName() + "_" + e.getPreAssyModuleType().getName();
-                    String moduleLinetype = e.getPreAssyModuleType().getLineType().getName();
+        ls = ls.stream()
+                .filter(p -> {
+                    if (!p.getPreAssyModuleType().getName().startsWith("(前置")) {
+                        return false;
+                    }
+                    String key = p.getModelName() + "_" + p.getPreAssyModuleType().getName();
+                    String moduleLinetype = p.getPreAssyModuleType().getLineType().getName();
 
                     if (m3Linetype.contains(moduleLinetype) && mapM3WtInExcel.containsKey(key)) {
-                        e.setStandardTime(mapM3WtInExcel.get(key));
+                        p.setStandardTime(mapM3WtInExcel.get(key));
                         return true;
                     } else if (m6Linetype.contains(moduleLinetype) && mapM6WtInExcel.containsKey(key)) {
-                        e.setStandardTime(mapM6WtInExcel.get(key));
+                        p.setStandardTime(mapM6WtInExcel.get(key));
                         return true;
                     }
                     return false;
                 }).collect(Collectors.toList());
+        
         preAssyModuleStandardTimeService.update(ls);
     }
 
