@@ -316,7 +316,8 @@
         com.advantech.helper,
         com.advantech.facade,
         com.advantech.webservice,
-        com.advantech.quartzJob
+        com.advantech.quartzJob,
+        com.advantech.api
     " />
     
     <!-- 要使用 @Transactional 時需要 -->
