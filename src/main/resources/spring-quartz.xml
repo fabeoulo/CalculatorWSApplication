@@ -297,7 +297,7 @@
     </bean>
     
     <!--
-        將User_Profile, 人員製成段更新為跟出缺勤相同
+        將User_Profile, MFG人員製成段更新為跟出缺勤相同
     -->    
     <bean name="SyncUserFromRemote-Job" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="syncUserFromRemote" />
@@ -325,7 +325,7 @@
     </bean>
 
     <!--
-        每週計算前置模組工時 UPDATE　table
+        每週計算前置模組工時 UPDATE PreAssyModuleStandardTime table
     -->    
     <bean name="PreAssyModuleStandardTimeJob-Job" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="preAssyModuleStandardTimeJob" />
@@ -377,6 +377,7 @@
             <value>classpath:quartz.properties</value>
         </property>
         
+        <!-- To resolve job thread issue on shutdown. -->
         <property name="waitForJobsToCompleteOnShutdown" value="true" />
     </bean>
     

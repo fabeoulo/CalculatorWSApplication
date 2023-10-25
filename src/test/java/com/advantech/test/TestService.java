@@ -22,11 +22,14 @@ import com.advantech.model.db1.PreAssyModuleType;
 import com.advantech.model.db1.PrepareSchedule;
 import com.advantech.model.db1.PrepareScheduleEndtimeSetting;
 import com.advantech.model.db1.TagNameComparison;
+import com.advantech.model.db1.Unit;
 import com.advantech.model.db1.User;
+import com.advantech.model.db1.UserInfoOnMes;
+import com.advantech.model.db1.UserProfile;
 import com.advantech.model.db1.Worktime;
-import com.advantech.model.db3.WorktimeM3;
 import com.advantech.model.view.db1.BabProcessDetail;
 import com.advantech.quartzJob.HandleUncloseBab;
+import com.advantech.security.State;
 import com.advantech.service.db1.BabCollectModeChangeEventService;
 import com.advantech.service.db1.BabPassStationRecordService;
 import com.advantech.service.db1.BabSensorLoginRecordService;
@@ -47,15 +50,17 @@ import com.advantech.service.db1.PrepareScheduleEndtimeSettingService;
 import com.advantech.service.db1.PrepareScheduleService;
 import com.advantech.service.db1.SystemReportService;
 import com.advantech.service.db1.TagNameComparisonService;
+import com.advantech.service.db1.UnitService;
+import com.advantech.service.db1.UserProfileService;
 import com.advantech.service.db1.UserService;
 import com.advantech.service.db1.WorktimeService;
 import com.advantech.service.db3.SqlViewService;
-import com.advantech.service.db3.WorktimeM3Service;
+import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import static com.google.common.base.Preconditions.checkState;
-import com.google.common.base.Strings;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -114,6 +119,12 @@ public class TestService {
     private UserService userService;
 
     @Autowired
+    private UnitService unitService;
+
+    @Autowired
+    private UserProfileService userProfileService;
+
+    @Autowired
     private BabLineTypeFacade bf;
 
     @Autowired
@@ -145,6 +156,98 @@ public class TestService {
     }
 
     @Autowired
+    private CustomPasswordEncoder pswEncoder;
+
+//    @Test
+//    @Transactional
+//    @Rollback(false)
+    public void testInsertMfgUser() {
+//        List<UserInfoOnMes> l = rv.getUsersInfoOnMes(Factory.TWM3);
+//        List<UserInfoOnMes> remoteDirectUser = l.stream()
+//                .filter(ur -> (ur.getUnitNo() != null && ur.getUnitNo().matches("(A|B|T|P)")))
+//                .collect(toList());
+//
+//        List<User> users = userService.findByRole("PREASSY_USER", "ASSY_USER", "TEST_USER", "PACKING_USER");
+//
+        Floor f = floorService.findByPrimaryKey(4);
+        Unit mfg = unitService.findByPrimaryKey(1);
+        List<UserProfile> userProfiles = userProfileService.findAll();
+//
+//        List<String> newU = Arrays.asList("A-F0389","A-F0297");
+//        remoteDirectUser.forEach(ru -> {
+//            if(newU.contains(ru.getUserNo())){
+//                HibernateObjectPrinter.print(ru.getUserNo() + ru.getUserNameCh());
+//            }
+//            
+//            User matchesUser = users.stream()
+//                    .filter(a -> a.getJobnumber().equals(ru.getUserNo()))
+//                    .findFirst()
+//                    .orElse(null);
+//
+//            if (matchesUser == null) {
+//                HibernateObjectPrinter.print(ru.getUserNo() + ru.getUserNameCh());
+//            }
+//        });
+
+        List<String> newU = Arrays.asList("A-F0297");//"A-F0389",
+        List<User> users = userService.findAll();
+        newU.forEach(ru -> {
+            User matchesUser = users.stream()
+                    .filter(a -> a.getJobnumber().equals(ru))
+                    .findFirst()
+                    .orElse(null);
+            if (matchesUser == null) {
+                User user = new User();
+                user.setJobnumber(ru);
+                user.setUsername(ru);
+                user.setUsernameCh(ru);
+                user.setPassword(pswEncoder.encode(ru));
+                user.setState(State.ACTIVE);
+
+                user.setFloor(f);
+                user.setUnit(mfg);
+                setUserProfle(user, "B", userProfiles);
+
+                userService.insert(user);
+                System.out.println("insert" + " " + ru);
+            }
+        });
+    }
+
+    private void setUserProfle(User user, String department, List<UserProfile> userProfiles) {
+        UserProfile preAssyRole = userProfiles.stream().filter(p -> p.getId() == 19).findFirst().orElse(null);
+        UserProfile assyRole = userProfiles.stream().filter(p -> p.getId() == 14).findFirst().orElse(null);
+        UserProfile pkgRole = userProfiles.stream().filter(p -> p.getId() == 15).findFirst().orElse(null);
+        UserProfile testRole = userProfiles.stream().filter(p -> p.getId() == 16).findFirst().orElse(null);
+
+        Set<UserProfile> roles = user.getUserProfiles();
+        roles.remove(preAssyRole);
+        roles.remove(assyRole);
+        roles.remove(testRole);
+        roles.remove(pkgRole);
+//"ASSY_USER", "PREASSY_USER", "PACKING_USER"
+
+        switch (department) {
+            case "A":
+                roles.add(preAssyRole);
+                break;
+            case "B":
+                roles.add(assyRole);
+                break;
+            case "T":
+                roles.add(testRole);
+                break;
+            case "P":
+                roles.add(pkgRole);
+                break;
+            default:
+                break;
+        }
+
+        user.setUserProfiles(roles);
+    }
+
+    @Autowired
     private PreAssyModuleTypeService preAssyModuleTypeService;
 
 //    @Test
@@ -163,44 +266,46 @@ public class TestService {
     @Autowired
     private SystemReportService systemReportService;
 
-//    @Test
-//    @Transactional
+    @Test
+    @Transactional
 //    @Rollback(false)
     public void testSetPreAssyModuleStandardTime() throws JobExecutionException {
         String sds = new DateTime().minusMonths(1).toString("yyyy-MM-dd");
         String eds = new DateTime().toString("yyyy-MM-dd");
         List<Map> data = systemReportService.getBabPreAssyDetailForExcel(-1, -1, sds, eds);
 
-        Map<String, BigDecimal> mapM3WtInExcel = getPreAssyStandardTime(data, Arrays.asList("5", "6"));
-        Map<String, BigDecimal> mapM6WtInExcel = getPreAssyStandardTime(data, Arrays.asList("7"));
+//        Map<String, BigDecimal> mapM3WtInExcel = getPreAssyStandardTime(data, Arrays.asList("5", "6"));
+//        Map<String, BigDecimal> mapM6WtInExcel = getPreAssyStandardTime(data, Arrays.asList("7"));
+        Map<String, BigDecimal> mapWtInExcel = getPreAssyStandardTime(data);
 
-//        List<String> keys = new ArrayList<>();
-//        keys.addAll(mapM3WtInExcel.keySet());
-//        keys.addAll(mapM6WtInExcel.keySet());
-//        List<Integer> typeIds = Arrays.asList(44, 322);
         List<PreAssyModuleStandardTime> ls = preAssyModuleStandardTimeService.findAllWithTypes();
-//        Map<String, Long> collect2 = ls.stream()
-//                .filter(p -> p.getPreAssyModuleType().getName().startsWith("(前置"))
-//                .collect(Collectors.groupingBy(ps -> ps.getModelName(), Collectors.counting()
-//                ));
-//
-////        ls = ls.stream().filter(t -> keys.contains(t.getModelName()) && typeIds.contains(t.getPreAssyModuleType().getId()))
-////                .collect(Collectors.toList());
-        List<String> m3Linetype = Arrays.asList("ASSY");
-        List<String> m6Linetype = Arrays.asList("Cell");
+
+//        List<String> m3Linetype = Arrays.asList("ASSY");
+//        List<String> m6Linetype = Arrays.asList("Cell");
         ls = ls.stream()
                 .filter(p -> {
                     if (!p.getPreAssyModuleType().getName().startsWith("(前置")) {
                         return false;
                     }
-                    String key = p.getModelName() + "_" + p.getPreAssyModuleType().getName();
-                    String moduleLinetype = p.getPreAssyModuleType().getLineType().getName();
 
-                    if (m3Linetype.contains(moduleLinetype) && mapM3WtInExcel.containsKey(key)) {
-                        p.setStandardTime(mapM3WtInExcel.get(key));
-                        return true;
-                    } else if (m6Linetype.contains(moduleLinetype) && mapM6WtInExcel.containsKey(key)) {
-                        p.setStandardTime(mapM6WtInExcel.get(key));
+//                    String key = p.getModelName() + "_" + p.getPreAssyModuleType().getName();
+//                    String moduleLinetype = p.getPreAssyModuleType().getLineType().getName();
+//
+//                    if (m3Linetype.contains(moduleLinetype) && mapM3WtInExcel.containsKey(key)) {
+//                        p.setStandardTime(mapM3WtInExcel.get(key));
+//                        return true;
+//                    } else if (m6Linetype.contains(moduleLinetype) && mapM6WtInExcel.containsKey(key)) {
+//                        p.setStandardTime(mapM6WtInExcel.get(key));
+//                        return true;
+//                    }
+                    String key = p.getModelName() + "_"
+                            + p.getPreAssyModuleType().getName() + "_"
+                            + p.getPreAssyModuleType().getLineType().getName();
+                    if (mapWtInExcel.containsKey(key)) {
+                        BigDecimal newST = mapWtInExcel.get(key);
+                        BigDecimal oldSt = p.getStandardTime();
+                        BigDecimal avg = newST.add(oldSt).divide(new BigDecimal(2), 1, RoundingMode.HALF_UP);
+                        p.setStandardTime(avg);
                         return true;
                     }
                     return false;
@@ -209,82 +314,27 @@ public class TestService {
 //        preAssyModuleStandardTimeService.update(ls);
     }
 
-    private Map<String, BigDecimal> getPreAssyStandardTime(List<Map> data, List<String> floorName) {
+//    private Map<String, BigDecimal> getPreAssyStandardTime(List<Map> data, List<String> floorName) {
+    private Map<String, BigDecimal> getPreAssyStandardTime(List<Map> data) {
         Map<String, BigDecimal> mapSt = new HashMap<>();
         data.stream().filter(m
-                -> floorName.contains(m.get("sitefloor").toString())
-                && m.get("modelName") != null
+                -> //floorName.contains(m.get("sitefloor").toString())&&
+                m.get("modelName") != null
                 && m.get("preModuleName") != null
         )
-                .collect(Collectors.groupingBy(map -> map.get("modelName").toString() + "_" + map.get("preModuleName").toString()))
+                .collect(Collectors.groupingBy( //map -> map.get("modelName").toString() + "_" + map.get("preModuleName").toString()))
+                        map
+                        -> map.get("modelName").toString() + "_"
+                        + map.get("preModuleName").toString() + "_"
+                        + map.get("lineType").toString()
+                ))
                 .forEach((key, value) -> {
                     int pcs = value.stream().mapToInt(v -> (int) v.get("pcs")).sum();
                     int spend = value.stream().mapToInt(v -> (int) v.get("時間花費")).sum();
-                    BigDecimal swt = new BigDecimal(spend / pcs);
+                    BigDecimal swt = new BigDecimal(spend).divide(new BigDecimal(pcs),1,RoundingMode.HALF_UP );
                     mapSt.put(key, swt);
                 });
         return mapSt;
-    }
-
-//    @Test
-//    @Transactional
-//    //@Rollback(true)
-    public void testPreAssyModuleStandardTimeService() throws JobExecutionException {
-        List<PreAssyModuleStandardTime> ps1s = preAssyModuleStandardTimeService.findAll();
-        Map<String, Long> collect2 = ps1s.stream()
-                .filter(p -> p.getPreAssyModuleType().getName().startsWith("(前置"))
-                .collect(Collectors.groupingBy(ps -> ps.getModelName(), Collectors.counting()
-                ));
-
-        List<WorktimeM3> listM3 = worktimeM3Service.findByModel(collect2.keySet().stream().collect(Collectors.toList()));
-
-        listM3.forEach(e -> {
-//                    System.out.println(e.getModelName()+ " - " + collect2.get(e.getModelName()));
-            e.setPreAssyModuleQty(collect2.get(e.getModelName()).intValue());
-            worktimeM3Service.update(e);
-
-//                    List<WorktimeM3> l = worktimeM3Service.findByModel(Arrays.asList(e.getKey()));
-//                    if (!l.isEmpty()) {
-//                        WorktimeM3 existRecord = l.get(0);
-//                    }
-        });
-    }
-
-    @Autowired
-    private WorktimeM3Service worktimeM3Service;
-
-//    @Test
-//    @Transactional
-//    @Rollback(false)
-    public void testpreAssyModuleStandardTimeService() throws JobExecutionException {
-        String s1 = "POCS1991703-T";
-        List<String> modelName = new ArrayList<>();
-        modelName.add(s1);
-        List<WorktimeM3> lt = worktimeM3Service.findByModel(modelName);
-        checkState(lt != null, "Can't find lineType in id ");
-        HibernateObjectPrinter.print(lt);
-
-        WorktimeM3 w3 = lt.get(0);
-        w3.setPreAssyModuleQty(-1);
-        worktimeM3Service.update(w3);
-        HibernateObjectPrinter.print(lt);
-    }
-
-//    @Test
-//    @Transactional
-//    @Rollback(true)
-    public void testWorktimeM3Service() throws JobExecutionException {
-        String s1 = "TPC1282T533A2102-T";
-        List<String> modelName = new ArrayList<>();
-        modelName.add(s1);
-        List<WorktimeM3> lt = worktimeM3Service.findByModel(modelName);
-        checkState(lt != null, "Can't find lineType in id ");
-        HibernateObjectPrinter.print(lt);
-
-        WorktimeM3 w3 = lt.get(0);
-        w3.setPreAssyModuleQty(-1);
-        worktimeM3Service.update(w3);
-        HibernateObjectPrinter.print(lt);
     }
 
     @Test

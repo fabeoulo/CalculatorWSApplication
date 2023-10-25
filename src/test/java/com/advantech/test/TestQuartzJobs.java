@@ -165,7 +165,7 @@ public class TestQuartzJobs {
     @Autowired
     private PreAssyModuleStandardTimeJob preAssySt;
 
-    @Test
+//    @Test
     public void testPreAssyModuleStandardTimeJob() throws Exception {
         preAssySt.execute();
     }

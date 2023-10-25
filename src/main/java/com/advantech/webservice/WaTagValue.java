@@ -26,6 +26,8 @@ public class WaTagValue {
 
     private String password;
 
+    protected HttpHeaders headers;
+    
     public String getUsername() {
         return username;
     }
@@ -41,8 +43,6 @@ public class WaTagValue {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    protected HttpHeaders headers;
 
     //Authorization config
     @PostConstruct

@@ -52,7 +52,7 @@ public class PreAssyModuleStandardTimeService {
     }
 
     public int insertBySeries(String baseModelName, String targetModelName, Floor f) throws CloneNotSupportedException {
-        List<PreAssyModuleStandardTime> l = dao.findByModelNameAndFloor(baseModelName, f);
+        List<PreAssyModuleStandardTime> l = dao.findByModelName(baseModelName);
         checkArgument(l.size() > 0, "Can't find data with modelName: " + baseModelName);
         for (PreAssyModuleStandardTime p : l) {
             PreAssyModuleStandardTime clone = p.clone();

@@ -5,7 +5,6 @@
 package com.advantech.service.db3;
 
 import com.advantech.dao.db3.WorktimeM3DAO;
-import com.advantech.model.db1.PreAssyModuleStandardTime;
 import com.advantech.model.db3.WorktimeM3;
 import static com.google.common.base.Preconditions.checkArgument;
 import java.util.Arrays;
@@ -29,9 +28,9 @@ public class WorktimeM3Service {
         return worktimeM3DAO.findByModel(modelNames);
     }
 
-    public int update(WorktimeM3 pojo) {
-        return worktimeM3DAO.update(pojo);
-    }
+//    public int update(WorktimeM3 pojo) {
+//        return worktimeM3DAO.update(pojo);
+//    }
 
     public void checkIsModelNameInWorktime(WorktimeM3 pojo) {
         List<WorktimeM3> l = worktimeM3DAO.findByModel(Arrays.asList(pojo.getModelName()));

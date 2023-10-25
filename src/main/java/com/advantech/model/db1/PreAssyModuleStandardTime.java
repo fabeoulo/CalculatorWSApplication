@@ -35,6 +35,7 @@ public class PreAssyModuleStandardTime implements Serializable, Cloneable {
     private BigDecimal standardTime;
     private String sopName;
     private String sopPage;
+    private Floor floor;
     private Date standardTimeModifyDate;
 
     @Id
@@ -94,9 +95,19 @@ public class PreAssyModuleStandardTime implements Serializable, Cloneable {
         this.sopPage = sopPage;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "floor_id", nullable = true)
+    public Floor getFloor() {
+        return floor;
+    }
+
+    public void setFloor(Floor floor) {
+        this.floor = floor;
+    }
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modifyDate", length = 23, nullable = true)    
+    @Column(name = "modifyDate", length = 23, nullable = true)
     public Date getStandardTimeModifyDate() {
         return standardTimeModifyDate;
     }

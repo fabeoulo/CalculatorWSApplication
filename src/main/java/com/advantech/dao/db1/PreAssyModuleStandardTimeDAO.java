@@ -32,6 +32,12 @@ public class PreAssyModuleStandardTimeDAO extends AbstractDao<Integer, PreAssyMo
         return super.getByKey((int) obj_id);
     }
 
+    public List<PreAssyModuleStandardTime> findByModelName(String modelName) {
+        return super.createEntityCriteria()
+                .add(Restrictions.eq("modelName", modelName))
+                .list();
+    }
+    
     public List<PreAssyModuleStandardTime> findByModelNameAndFloor(String modelName, Floor f) {
         return super.createEntityCriteria()
                 .add(Restrictions.eq("modelName", modelName))
@@ -68,7 +74,7 @@ public class PreAssyModuleStandardTimeDAO extends AbstractDao<Integer, PreAssyMo
                 .setFetchMode("preAssyModuleType.lineType", FetchMode.JOIN)
                 .list();
     }
-    
+
     @Override
     public int insert(PreAssyModuleStandardTime pojo) {
         super.getSession().save(pojo);
