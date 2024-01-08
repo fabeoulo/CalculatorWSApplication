@@ -54,7 +54,7 @@ public class CronTrigMod {
     private Scheduler getScheduler() throws SchedulerException {
         Scheduler scheduler = schedulerFactory.getScheduler();
         if (scheduler == null || !scheduler.isStarted()) {
-            throw new SchedulerException("Scheduler is not started");
+            throw new SchedulerException("Scheduler is never started");
         }
         return scheduler;
     }
@@ -254,7 +254,7 @@ public class CronTrigMod {
             if (!this.isJobInScheduleExist(jobDetail.getKey())) {
                 this.getScheduler().scheduleJob(jobDetail, trigger);
                 log.info("The job with name " + triggerName + " is sched.");
-            }else{
+            } else {
                 log.info("The job with name " + triggerName + "  is already exist.");
             }
 
@@ -275,9 +275,13 @@ public class CronTrigMod {
 
     public void removeJob(String jobName) throws SchedulerException {
         Scheduler scheduler = this.getScheduler();
-        JobKey jobKey = this.createJobKey(jobName); 
-        scheduler.deleteJob(jobKey);
-        log.info("The job with name " + jobName + (scheduler.checkExists(jobKey) ? " remove fail." : " remove success."));
+        JobKey jobKey = this.createJobKey(jobName);
+        if (!scheduler.isShutdown()) {
+            scheduler.deleteJob(jobKey);
+            log.info("The job with name " + jobName + (scheduler.checkExists(jobKey) ? " remove fail." : " remove success."));
+        } else {
+            log.info("Job scheduler is Shutdown.");
+        }
     }
 
     public void removeJob(JobKey jobKey) throws SchedulerException {

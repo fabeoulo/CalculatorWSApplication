@@ -217,6 +217,12 @@
         <property name="configLocation">
             <value>classpath:quartz.properties</value>
         </property>
+        
+        <!--        
+            fix ERROR com.advantech.endpoint.Endpoint2 - java.nio.channels.ClosedChannelException
+            java.nio.channels.ClosedChannelException: null
+        -->
+        <property name="waitForJobsToCompleteOnShutdown" value="true" />
     </bean>
     
 </beans>

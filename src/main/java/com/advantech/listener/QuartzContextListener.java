@@ -45,7 +45,7 @@ public class QuartzContextListener implements ServletContextListener {
             Thread.sleep(3000);
             ThreadLocalCleanUtil.clearThreadLocals();
         } catch (Exception e) {
-            log.error(e.toString());
+            sce.getServletContext().log(e.toString());
         }
 
         //web service當tomcat在做reload會有資源為釋放之情形(多次reload可能會memory leak)
