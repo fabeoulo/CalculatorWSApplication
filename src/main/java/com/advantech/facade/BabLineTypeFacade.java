@@ -218,8 +218,9 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
         /*
                 Because BabLastGroupStatus.class is a sql view object
                 Get all data in one transaction to prevent sql deadlock.
+                on vw_FbnToday in DB using NOLOCK
          */
-        List<BabLastGroupStatus> status = procService.findBabLastGroupStatus(processingBabs);
+        List<BabLastGroupStatus> status = procService.findBabLastGroupStatusBatch(processingBabs);
 
         processingBabs.forEach((bab) -> {
             List<BabSettingHistory> babSettings = allBabSettings.stream()

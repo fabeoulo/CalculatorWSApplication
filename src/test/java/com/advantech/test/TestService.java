@@ -331,7 +331,7 @@ public class TestService {
                 .forEach((key, value) -> {
                     int pcs = value.stream().mapToInt(v -> (int) v.get("pcs")).sum();
                     int spend = value.stream().mapToInt(v -> (int) v.get("時間花費")).sum();
-                    BigDecimal swt = new BigDecimal(spend).divide(new BigDecimal(pcs),1,RoundingMode.HALF_UP );
+                    BigDecimal swt = new BigDecimal(spend).divide(new BigDecimal(pcs), 1, RoundingMode.HALF_UP);
                     mapSt.put(key, swt);
                 });
         return mapSt;
@@ -546,6 +546,17 @@ public class TestService {
         List<BabProcessDetail> l = babService.findBabTimeGapPerLine(sD, eD);
         List<BabProcessDetail> checkD = l.stream().filter(b -> b.getLineId() == 28).collect(toList());
         HibernateObjectPrinter.print(checkD);
+    }
+
+//    @Test
+    @Transactional
+    @Rollback(true)
+    public void testListIntToString() {
+        List<Bab> processingBabs = babService.findProcessing();
+
+        List<String> stringList = processingBabs.stream().map(i -> i.getId())
+                .map(Object::toString).collect(Collectors.toList());
+        String input = String.join(",", stringList);
     }
 
 //    @Test

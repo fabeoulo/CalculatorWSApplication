@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,11 +42,22 @@ public class SqlProcedureService {
         return sqlProcedureDAO.findBabLastGroupStatus(bab_id);
     }
 
-    public List<BabLastGroupStatus> findBabLastGroupStatus(List<Bab> babs) {
+    public List<BabLastGroupStatus> findBabLastGroupStatus(List<Bab> babs) {        
         List<BabLastGroupStatus> l = new ArrayList();
         babs.forEach((b) -> {
             l.addAll(sqlProcedureDAO.findBabLastGroupStatus(b.getId()));
         });
+        
+        return l;
+    }
+    
+    public List<BabLastGroupStatus> findBabLastGroupStatusBatch(List<Bab> babs) {  
+        
+        List<String> ids = babs.stream().map(b -> b.getId()).distinct()
+                .map(Object::toString).collect(Collectors.toList());
+        String input = String.join(",", ids);
+        
+        List<BabLastGroupStatus> l = sqlProcedureDAO.findBabLastGroupStatusBatch(input);
         return l;
     }
 

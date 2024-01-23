@@ -41,6 +41,14 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .list();
     }
 
+    public List<BabLastGroupStatus> findBabLastGroupStatusBatch(String bab_ids) {
+        return super.getSession()
+                .createSQLQuery("{CALL M3_BW.usp_GetLastGroupStatus_batch(:bab_id)}")
+                .setParameter("bab_id", bab_ids)
+                .setResultTransformer(Transformers.aliasToBean(BabLastGroupStatus.class))
+                .list();
+    }
+
     //For job "CheckSensor.java" check sensor
     public List<SensorCurrentGroupStatus> findSensorCurrentGroupStatus(int bab_id) {
         return super.getSession()
@@ -287,7 +295,7 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .list();
     }
-    
+
     public List<Map> findBabModuleUsageRateForPacking(DateTime sD, DateTime eD, Floor f) {
         return super.getSession()
                 .createSQLQuery("{CALL M3_BW.usp_GetBabModuleUsageRate_ForPacking(:sD, :eD, :floor_id)}")
@@ -297,7 +305,7 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .list();
     }
-    
+
     public List<Map> findPreAssyPercentage(int lineTypeId, DateTime sD) {
         return super.getSession()
                 .createSQLQuery("{CALL M3_BW.usp_Excel_PreAssyPercentage(:lineTypeId, :sD)}")

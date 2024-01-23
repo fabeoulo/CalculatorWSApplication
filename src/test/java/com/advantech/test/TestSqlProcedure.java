@@ -10,7 +10,12 @@ import com.advantech.dao.db1.BabPcsDetailHistoryDAO;
 import com.advantech.dao.db1.SqlProcedureDAO;
 import com.advantech.helper.HibernateObjectPrinter;
 import com.advantech.model.db1.Bab;
+import com.advantech.model.view.db1.BabLastGroupStatus;
+import com.advantech.service.db1.BabService;
+import com.advantech.service.db1.SqlProcedureService;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -37,10 +42,16 @@ public class TestSqlProcedure {
     private SqlProcedureDAO procDAO;
 
     @Autowired
+    private SqlProcedureService procService;
+
+    @Autowired
     private BabPcsDetailHistoryDAO babPcsDetailHistoryDAO;
-    
+
     @Autowired
     private BabDAO babDAO;
+
+    @Autowired
+    private BabService babService;
 
 //    @Test
     @Transactional
@@ -64,25 +75,41 @@ public class TestSqlProcedure {
     @Test
     @Transactional
     @Rollback(true)
+    public void testLastGroupStatus() {
+
+        List<Bab> processingBabs = babService.findProcessing();
+        List<BabLastGroupStatus> l = procService.findBabLastGroupStatus(processingBabs);
+
+        List<Integer> intList = Arrays.asList(186963, 186963);
+        List<String> ids = intList.stream().distinct()
+                .map(Object::toString).collect(Collectors.toList());
+        String input = String.join(",", ids);
+
+        List<BabLastGroupStatus> ll = procDAO.findBabLastGroupStatusBatch(input);
+    }
+
+    @Test
+    @Transactional
+    @Rollback(true)
     public void testProc() {
         DateTime sD = new DateTime("2020-02-03");
         DateTime eD = new DateTime("2020-02-07");
         String st = "";
         int i = 1;
-        
+
         assertTrue(!procDAO.findBabBestLineBalanceRecord(1, sD, eD).isEmpty());
 
         assertTrue(!procDAO.findBabDetail(1, 1, sD, eD, true).isEmpty());
-        
+
         procDAO.findBabDetailWithBarcode(1, 1, sD, eD, true);
-        
+
         procDAO.findBabLastBarcodeStatus(123);
         procDAO.findBabLastGroupStatus(123);
-        
+
         assertTrue(!procDAO.findBabLineProductivity(null, null, 1, 1, null, 1, sD, eD).isEmpty());
         procDAO.findBabLineProductivityWithBarcode(null, null, 1, null, 1, sD, eD);
-        
-        procDAO.findBabPassStationExceptionReport(null, null, sD, eD, 0); 
+
+        procDAO.findBabPassStationExceptionReport(null, null, sD, eD, 0);
 
         procDAO.findBabPassStationRecord(null, null, sD, eD, "ASSY");
 
@@ -90,24 +117,22 @@ public class TestSqlProcedure {
         procDAO.findBabPcsDetailWithBarcode(st, st, sD, eD);
 
         assertTrue(!procDAO.findBabPreAssyProductivity(1, 1, sD, eD).isEmpty());
-        
+
         procDAO.findLineBalanceCompare(st, "ASSY");
         procDAO.findLineBalanceCompareByBab(i);
         procDAO.findLineBalanceCompareByBabWithBarcode(i);
         assertTrue(!procDAO.findPreAssyModuleUnexecuted(sD, eD).isEmpty());
         procDAO.findSensorCurrentGroupStatus(i);
         assertTrue(!procDAO.findTestPassStationProductivity(sD, eD).isEmpty());
-        
+
 //        procDAO.getTotalAbnormalData(i); //proc M3_BW.sensorTotalAbnormalCheck not found
 //        procDAO.getAbnormalData(i); proc not found
-        
         Bab b = babDAO.findByPrimaryKey(185);
 //        procDAO.closeBabDirectly(b);
 //        procDAO.closeBabWithSaving(b);
 //        procDAO.closeBabWithSavingWithBarcode(b);
-        
+
 //        procDAO.sensorDataClean(sD.withTime(0, 0, 0, 0).toDate());
-        
 //        procDAO.findWorktime();
 //        procDAO.findWorktime(st);
 //        procDAO.findUserInfoRemote();

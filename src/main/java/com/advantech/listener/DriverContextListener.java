@@ -4,6 +4,7 @@
  */
 package com.advantech.listener;
 
+import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -48,6 +49,15 @@ public class DriverContextListener implements ServletContextListener {
                 // driver was not registered by the webapp's ClassLoader and may be in use elsewhere
                 event.getServletContext().log("Not deregistering JDBC driver " + driver + " as it does not belong to this webapp's ClassLoader");
             }
+        }
+        
+        // MySQL driver leaves a thread in bean pool. This static method cleans it up.
+        try {
+            AbandonedConnectionCleanupThread.checkedShutdown();
+            event.getServletContext().log("Abandoned Mysql Connection Cleanup.");
+        } catch (Exception e) {
+            // again failure, not much you can do
+            event.getServletContext().log("Abandoned Mysql Connection Cleanup failure.", e);
         }
     }
 
