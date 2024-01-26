@@ -2,21 +2,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.advantech.webservice;
+package com.advantech.webapi.model;
 
 /**
  *
  * @author Justin.Yeh
  */
-public class WaSetTagRequestModel {
+public class WaTagNode {
 
     private String Name;
     private int Value;
+    private int Quality;
 
-    public WaSetTagRequestModel() {
+    public WaTagNode() {
     }
 
-    public WaSetTagRequestModel(String Name, int Value) {
+    public WaTagNode(String Name, int Value) {
         this.Name = Name;
         this.Value = Value;
     }
@@ -35,5 +36,13 @@ public class WaSetTagRequestModel {
 
     public void setValue(int Value) {
         this.Value = Value;
+    }
+
+    public int getQuality() {
+        return Quality;
+    }
+
+    public void setQuality(int Quality) {
+        this.Quality = Quality;
     }
 }

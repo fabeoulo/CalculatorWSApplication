@@ -1,13 +1,27 @@
 {
     "sitefloors": [
         {
-            "floor": 5
-        }, 
-        {
-            "floor": 6
-        }, 
+            "floor": 3
+        },
         {
             "floor": 7
+        }
+    ],
+    "sitefloors_mgr": [
+        {
+            "floor": 3,
+            "section": "包裝",
+            "lineType": "Packing"
+        },
+        {
+            "floor": 3,
+            "section": "組/測",
+            "lineType": "ASSY"
+        },
+        {
+            "floor": 7,
+            "section": "IDS",
+            "lineType": "ids"
         }
     ]
 }

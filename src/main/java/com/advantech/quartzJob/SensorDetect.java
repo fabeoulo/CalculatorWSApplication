@@ -50,7 +50,8 @@ public class SensorDetect extends ProcessingBabDetector {
         super(
                 "_SensorCheck",
                 "SensorCheck",
-                "0 " + getMinutePeriodTime() + "/" + SENSOR_DETECT_PERIOD + " 8-11,13-20 ? * MON-SAT *",
+//                "0 " + getMinutePeriodTime() + "/" + SENSOR_DETECT_PERIOD + " 8-11,13-20 ? * MON-SAT *",
+                "0 0/" + SENSOR_DETECT_PERIOD + " 9-12,13-20 ? * MON-SAT *",
                 CheckSensor.class
         );
         babService = (BabService) ApplicationContextHelper.getBean("babService");

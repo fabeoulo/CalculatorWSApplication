@@ -5,16 +5,21 @@
  */
 package com.advantech.test;
 
+import com.advantech.helper.HibernateObjectPrinter;
 import com.advantech.helper.PropertiesReader;
 import com.advantech.model.db1.BabDataCollectMode;
 import com.advantech.model.view.db1.BabAvg;
 import com.advantech.service.db2.LineBalancingService;
 import com.advantech.service.db1.SqlViewService;
+import com.advantech.webapi.WaSetTagValue;
 import com.google.gson.Gson;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -78,6 +83,12 @@ public class TestSpring {
 
 //    @Test
     public void testContextParam() {
+        try {
+            InetAddress localhost = InetAddress.getLocalHost();
+            System.out.println("Local Host: " + localhost.getHostAddress());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
 //        assertTrue(testByPassHours == null);
         System.out.println(Arrays.toString(this.testByPassHours));
     }
@@ -117,23 +128,35 @@ public class TestSpring {
     }
 
 //    @Autowired
-//    private WebAccessRESTful port;
-//
+//    private WaSetTagValue waSetTagValue;
+    
 //    @Test
-//    public void testWebAccessRESTful() {
-//
-//        int value = 0;
-//        
-//        JSONObject requestJson = new JSONObject();
-//        JSONArray jsonArr = new JSONArray();
-//        jsonArr.put(new JSONObject().put("Name", "Sensor_153:DO_00").put("Value", value));
-//        jsonArr.put(new JSONObject().put("Name", "Sensor_153:DO_01").put("Value", value));
-//        jsonArr.put(new JSONObject().put("Name", "Sensor_153:DO_02").put("Value", value));
-//        requestJson.put("Tags", jsonArr);
-//
-//        HashMap<String, Object> yourHashMap = new Gson().fromJson(requestJson.toString(), HashMap.class);
-//        
-//        System.out.println(port.setTagValue(yourHashMap));
-//    }
+    public void testWebAccessRESTful() {
+
+        int value = 0;
+
+        JSONObject requestJson = new JSONObject();
+        JSONArray jsonArr = new JSONArray();
+        jsonArr.put(new JSONObject().put("Name", "Sensor_153:DO_00").put("Value", value));
+        jsonArr.put(new JSONObject().put("Name", "Sensor_153:DO_01").put("Value", value));
+        jsonArr.put(new JSONObject().put("Name", "Sensor_153:DO_02").put("Value", value));
+        requestJson.put("Tags", jsonArr);
+
+        HibernateObjectPrinter.print(requestJson.toString());
+        HashMap<String, Object> yourHashMap = new Gson().fromJson(requestJson.toString(), HashMap.class);
+
+        HibernateObjectPrinter.print(yourHashMap);
+        ((List) yourHashMap.get("Tags")).forEach(map -> {
+            HibernateObjectPrinter.print(map);
+            for (Map.Entry<String, Object> entry : ((Map<String, Object>) map).entrySet()) {
+                String key = entry.getKey();
+                if (entry.getValue() instanceof Double) {
+                    int valueO = ((Double) entry.getValue()).intValue();
+                    entry.setValue(valueO);
+                }
+            }
+        });
+        HibernateObjectPrinter.print(yourHashMap);
+    }
 
 }

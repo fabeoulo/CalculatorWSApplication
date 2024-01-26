@@ -34,7 +34,7 @@
                 var maxHoldHours = 8;
                 initRefreshTimer();
 
-                var sitefloor = ${param.sitefloor};
+                var userlineType = "${param.lineType}";
 
                 var cookieTNum = $.cookie("user_sel");//cookie save the user selected 站別 in babpage.jsp，search when it is exist
                 //Init the table when no data send from the server. (Datatype json, default "[]")
@@ -67,7 +67,7 @@
                         var flag = false;
                         for (var i = 0; i < arr.length; i++) {
                             var arrobj = arr[i];
-                            if (sitefloor != arrobj.sitefloor) {
+                            if (userlineType != arrobj.lineType) {
                                 /*
                                  * Get user's station number in cookies, and show the Sensor data that matches.
                                  */
@@ -151,7 +151,7 @@
                 $("#redirectBtn").click(function () {
                     console.log("click");
                 });
-                
+
                 //Redirect page when user stay on page too long.
                 function initRefreshTimer() {
                     setInterval(function () {

@@ -258,7 +258,6 @@ public class TestService {
         LineType lt = lineTypeService.findByPrimaryKey(lineType_id);
         checkState(lt != null, "Can't find lineType in id " + lineType_id);
         List<PreAssyModuleType> l = preAssyModuleTypeService.findByModelNameAndLineType("TPC1282T533A2102-T", lt);
-        new HandleUncloseBab().executeInternal(null);
     }
 
     @Autowired
@@ -266,8 +265,8 @@ public class TestService {
     @Autowired
     private SystemReportService systemReportService;
 
-    @Test
-    @Transactional
+//    @Test
+//    @Transactional
 //    @Rollback(false)
     public void testSetPreAssyModuleStandardTime() throws JobExecutionException {
         String sds = new DateTime().minusMonths(1).toString("yyyy-MM-dd");

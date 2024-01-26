@@ -8,9 +8,9 @@ import com.advantech.model.db1.AlarmBabAction;
 import com.advantech.model.db1.AlarmDO;
 import com.advantech.service.db1.AlarmBabActionService;
 import com.advantech.service.db1.AlarmDOService;
-import com.advantech.webservice.WaGetTagValue;
-import com.advantech.webservice.WaSetTagRequestModel;
-import com.advantech.webservice.WaSetTagValue;
+import com.advantech.webapi.WaGetTagValue;
+import com.advantech.webapi.WaSetTagValue;
+import com.advantech.webapi.model.WaTagNode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +35,7 @@ public class BabLineTypeFacade2 extends BabLineTypeFacade {
 
     @Autowired
     private WaGetTagValue waGetTagValue;
-    
+
     @Autowired
     private WaSetTagValue waSetTagValue;
 
@@ -54,11 +54,11 @@ public class BabLineTypeFacade2 extends BabLineTypeFacade {
                 .collect(Collectors.toMap(AlarmDO::getProcessName, AlarmDO::getCorrespondDO));
 
         //set requestBody
-        List<WaSetTagRequestModel> requestModels = new ArrayList<>();
+        List<WaTagNode> requestModels = new ArrayList<>();
         alarmBabs.forEach(e -> {
             if (mapTablesDOs.containsKey(e.getTableId())) {
                 requestModels.add(
-                        new WaSetTagRequestModel(mapTablesDOs.get(e.getTableId()), e.getAlarm())
+                        new WaTagNode(mapTablesDOs.get(e.getTableId()), e.getAlarm())
                 );
             }
         });
@@ -73,11 +73,11 @@ public class BabLineTypeFacade2 extends BabLineTypeFacade {
 
         //filter
         Map allActiveTags = waGetTagValue.getMap();
-        List<WaSetTagRequestModel> requestModels = new ArrayList<>();
+        List<WaTagNode> requestModels = new ArrayList<>();
         listDO.forEach(e -> {
             if (allActiveTags.containsKey(e.getCorrespondDO())) {
                 requestModels.add(
-                        new WaSetTagRequestModel(e.getCorrespondDO(), 0)
+                        new WaTagNode(e.getCorrespondDO(), 0)
                 );
             }
         });

@@ -15,7 +15,7 @@
     </c:if>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>組包裝 ${userSitefloor} 樓 - ${initParam.pageTitle}</title>
+        <title>組包裝 - ${initParam.pageTitle}</title>
         <link rel="shortcut icon" href="<c:url value="/images/favicon.ico" />"/>
         <link href="<c:url value="/webjars/jquery-ui-themes/1.12.1/redmond/jquery-ui.min.css" />" rel="stylesheet">
         <link rel="stylesheet" href="<c:url value="/css/select2.min.css" />">
@@ -967,10 +967,10 @@
     <body>
         <input id="userSitefloorSelect" type="hidden" value="${userSitefloor}">
         <div id="titleAlert">
-            <fmt:message key="assy.label.step1.content" /><c:out value="${userSitefloor}" />
+            <fmt:message key="assy.label.step1.content" />
             <a href="${pageContext.request.contextPath}">
                 <button id="redirectBtn" class="btn btn-default btn-xs" >
-                    <fmt:message key="assy.label.floor.hint2" />
+                    <c:out value="${userSitefloor}" /><fmt:message key="assy.label.floor.hint2" />
                 </button>
             </a>
         </div>

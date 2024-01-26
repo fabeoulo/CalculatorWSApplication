@@ -72,7 +72,7 @@ public class SyncUserFromRemote {
                 .filter(ur -> (ur.getUnitNo() != null && ur.getUnitNo().matches("(A|B|T|P)")))
                 .collect(toList());
 
-        List<User> users = userDAO.findByRole("PREASSY_USER", "ASSY_USER", "TEST_USER", "PACKING_USER");
+        List<User> mfgUsers = userDAO.findByRole("PREASSY_USER", "ASSY_USER", "TEST_USER", "PACKING_USER");
 
         Floor f = floorService.findByPrimaryKey(4);
 
@@ -82,17 +82,17 @@ public class SyncUserFromRemote {
 
         //Compare which jobnumber is new and which number is old
         //沒在User_Profile_REF的User會被insert進去
-        if (!remoteDirectUser.isEmpty() && !users.isEmpty()) {
+        if (!remoteDirectUser.isEmpty() && !mfgUsers.isEmpty()) {
 
             remoteDirectUser.forEach(ru -> {
-                User matchesUser = users.stream()
+                User matchesUser = mfgUsers.stream()
                         .filter(a -> a.getJobnumber().equals(ru.getUserNo()))
                         .findFirst()
                         .orElse(null);
 
                 if (matchesUser == null) {
                     //insert new one
-                    User userWithoutRole = userDAO.findByJobnumber(ru.getUserNo());
+//                    User userWithoutRole = userDAO.findByJobnumber(ru.getUserNo());
 
                     User user = new User();
                     user.setJobnumber(ru.getUserNo());
@@ -128,7 +128,7 @@ public class SyncUserFromRemote {
             //Remove user when user is not in remote list
             List adminProfileIds = newArrayList(1, 4, 7, 9, 11, 13);
 
-            users.forEach(u -> {
+            mfgUsers.forEach(u -> {
                 UserInfoOnMes fitUser = remoteDirectUser.stream()
                         .filter(ur -> (ur.getUserNo().equals(u.getJobnumber())))
                         .findFirst().orElse(null);
@@ -137,7 +137,7 @@ public class SyncUserFromRemote {
                         .filter(p -> adminProfileIds.contains(p.getId()))
                         .findFirst()
                         .orElse(null);
-                
+
                 //If user is not in admin group, update user to delete status
                 if (fitUser == null && usersAdminProfile == null) {
                     System.out.println("remove" + " " + u.getJobnumber());

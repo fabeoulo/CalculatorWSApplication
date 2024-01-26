@@ -2,19 +2,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.advantech.webservice;
+package com.advantech.webapi;
 
+import com.advantech.webapi.model.WaTagNode;
+import com.advantech.webapi.model.WaGetTagResponseModel;
 import com.advantech.service.db1.AlarmDOService;
-import com.advantech.webservice.WaGetTagResponseModel.TagNode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +24,9 @@ import org.springframework.stereotype.Component;
  * @author Justin.Yeh
  */
 @Component
-public class WaGetTagValue extends WaTagValue {
+public class WaGetTagValue extends WaBaseTagValue {
 
-    private static final Logger log = Logger.getLogger(WaGetTagValue.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(WaGetTagValue.class);
 
     private String urlGetTagValue;
 
@@ -38,10 +39,10 @@ public class WaGetTagValue extends WaTagValue {
     public void initActiveTagNodes() {
         List<String> allTagNames = alarmDOService.findAllDistinctCorrespondDO();
         String json = getJsonString(allTagNames);
-        this.setTagToMap(getResponseBodys(json));
+        setTagToMap(getResponseBodys(json));
     }
 
-    public String getUrlGetTagValue() {
+    protected String getUrl() {
         return urlGetTagValue;
     }
 
@@ -58,16 +59,17 @@ public class WaGetTagValue extends WaTagValue {
     }
 
     private WaGetTagResponseModel getResponseBodys(String json) {
-        String jsonResponse = postJson(urlGetTagValue, json);
-        return jsonToObj(jsonResponse, WaGetTagResponseModel.class);
+        String jsonResponse = super.postJson(urlGetTagValue, json);
+        return super.jsonToObj(jsonResponse, WaGetTagResponseModel.class);
     }
 
     private Map<String, Integer> setTagToMap(WaGetTagResponseModel responseBodys) {
-        map = responseBodys.getValues().stream()
-                .filter(f -> (f.getValue() == 0 || f.getValue() == 1))
-                .collect(Collectors.toMap(TagNode::getName, TagNode::getValue));
-
-        log.log(Level.INFO, "initActiveTagNodes.map.size() : {0}", map.size());
+        if (responseBodys != null) {
+            map = responseBodys.getValues().stream()
+                    .filter(f -> (f.getValue() == 0 || f.getValue() == 1))
+                    .collect(Collectors.toMap(WaTagNode::getName, WaTagNode::getValue));
+        }
+        log.info("initActiveTagNodes.map.size() : " + map.size());
         return map;
     }
 

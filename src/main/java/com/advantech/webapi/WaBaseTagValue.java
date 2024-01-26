@@ -2,32 +2,38 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.advantech.webservice;
+package com.advantech.webapi;
 
 import com.google.gson.Gson;
 import javax.annotation.PostConstruct;
 import org.apache.commons.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 /**
  *
  * @author Justin.Yeh
  */
-@Component
-public class WaTagValue {
+public abstract class WaBaseTagValue {
+
+    private static final Logger log = LoggerFactory.getLogger(WaBaseTagValue.class);
 
     private String username;
 
     private String password;
 
-    protected HttpHeaders headers;
-    
+    private HttpHeaders headers;
+
+    private final int connectionTimeout = 3000;
+    private final int readTimeout = 5000;
+
     public String getUsername() {
         return username;
     }
@@ -61,14 +67,29 @@ public class WaTagValue {
     }
 
     public <C> C jsonToObj(String st, Class<C> clazz) {
+        // null if st.isEmpty() 
         return new Gson().fromJson(st, clazz);
     }
 
     // POST method
     protected String postJson(String url, String json) {
         HttpEntity<String> request = new HttpEntity<>(json, this.headers);
-        ResponseEntity<String> responseEntity
-                = new RestTemplate().postForEntity(url, request, String.class);
-        return responseEntity.getBody();
+        try {
+            ResponseEntity<String> responseEntity = createRestTemplateWithTimeouts()
+                    .postForEntity(this.getUrl(), request, String.class);
+            return responseEntity.getBody();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return "";
+        }
     }
+
+    private RestTemplate createRestTemplateWithTimeouts() {
+        ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        ((HttpComponentsClientHttpRequestFactory) requestFactory).setConnectTimeout(connectionTimeout);
+//        ((HttpComponentsClientHttpRequestFactory) requestFactory).setReadTimeout(readTimeout);
+        return new RestTemplate(requestFactory);
+    }
+
+    protected abstract String getUrl();
 }

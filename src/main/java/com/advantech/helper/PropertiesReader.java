@@ -63,7 +63,7 @@ public class PropertiesReader {
     @Value("${bab.salt.productivity: 0}")
     private Double babSaltProductivity;
 
-    @Value("${bab.data.collect.mode: 1}")
+    @Value("${bab.data.collect.mode: AUTO}")
     private BabDataCollectMode babDataCollectMode;
 
     //Settings inject from database

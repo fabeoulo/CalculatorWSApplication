@@ -15,7 +15,7 @@
     </c:if>
     <head> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>測試 ${userSitefloor} 樓 - ${initParam.pageTitle}</title>
+        <title>測試 - ${initParam.pageTitle}</title>
         <link rel="shortcut icon" href="<c:url value="/images/favicon.ico" />"/>
         <style>
             #titleAlert{
@@ -350,10 +350,10 @@
     <body>
         <input id="userSitefloorSelect" type="hidden" value="${userSitefloor}">
         <div id="titleAlert">
-            <fmt:message key="assy.label.step1.content" /><c:out value="${userSitefloor}" />
+            <fmt:message key="assy.label.step1.content" />
             <a href="${pageContext.request.contextPath}">
                 <button id="redirectBtn">
-                    <fmt:message key="assy.label.floor.hint2" />
+                    <c:out value="${userSitefloor}" /><fmt:message key="assy.label.floor.hint2" />
                 </button>
             </a>
         </div>

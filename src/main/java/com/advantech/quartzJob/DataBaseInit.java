@@ -14,7 +14,7 @@ import com.advantech.service.db1.BabSettingHistoryService;
 import com.advantech.facade.TestLineTypeFacade;
 import com.advantech.facade.TestLineTypeFacade2;
 import com.advantech.service.db1.TestService;
-import com.advantech.webservice.WaGetTagValue;
+import com.advantech.webapi.WaGetTagValue;
 import java.io.IOException;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -59,7 +59,7 @@ public class DataBaseInit extends QuartzJobBean {
             babSensorLoginRecordService.init();
             testService.cleanTests();
             
-            waGetTagValue.initActiveTagNodes();
+            waGetTagValue.initActiveTagNodes(); // before resetAlarm
             bF.resetAlarm();
             tF.resetAlarm();
             log.info("Data has been initialized.");

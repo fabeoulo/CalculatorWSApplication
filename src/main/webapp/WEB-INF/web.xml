@@ -6,9 +6,11 @@
         <welcome-file>index.htm</welcome-file>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
-<!--    <listener>
+
+    <listener>
         <listener-class>com.advantech.listener.QuartzContextListener</listener-class>
-    </listener>-->
+    </listener>
+    
     <!--http://stackoverflow.com/questions/20326451/hide-jsp-extension-or-change-display-name-on-url-->
     
     <!--Global param-->

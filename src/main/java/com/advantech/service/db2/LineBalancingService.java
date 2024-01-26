@@ -18,6 +18,8 @@ import com.advantech.model.db1.User;
 import com.advantech.model.view.db1.BabAvg;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -164,9 +166,18 @@ public class LineBalancingService {
     public void sendMail(Bab bab, int maxbln, int currentbln, int diff) throws MessagingException {
 
         Line line = lineDAO.findByPrimaryKey(bab.getLine().getId());
-        
+
         List<User> mailTo = userDAO.findLineOwner(line.getId());
         List<User> mailCc = userDAO.findByUserNotification("under_balance_alarm");
+
+        InetAddress localhost;
+        String hostIp = "";
+        try {
+            localhost = InetAddress.getLocalHost();
+            hostIp = localhost.getHostAddress();
+        } catch (UnknownHostException e) {
+            log.error(e.getMessage());
+        }
 
         String subject = "[藍燈系統]異常訊息(" + line.getName().trim() + ")";
         mailManager.sendMail(mailTo, mailCc, subject,
@@ -189,7 +200,8 @@ public class LineBalancingService {
                         .append("</p><p>生產人數: ")
                         .append(bab.getPeople())
                         .append("</p><p>詳細歷史資料請上 <a href='")
-                        .append("http://172.20.131.208/Line_Balancing/Login.aspx")
+                        .append(hostIp)
+                        .append("/Line_Balancing/Login.aspx")
                         .append("'>線平衡電子化系統</a> 中的歷史紀錄做查詢</p>")
                         .toString());
     }

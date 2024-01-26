@@ -11,22 +11,22 @@
 <html>
     <head>
         <c:set var="userSitefloor" value="${param.sitefloor}" />
-        <%--<c:set var="userLineType" value="${param.lineType2}" />--%>
+        <c:set var="userLineType" value="${param.lineType}" />
         <c:if test="${(userSitefloor == null) || (userSitefloor == '' || userSitefloor < 1 || userSitefloor > 7)}">
             <c:redirect url="/SysInfo" />
         </c:if>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>${userSitefloor}F狀態平面圖 - ${initParam.pageTitle}</title>
+        <title>${userSitefloor}F_${userLineType}狀態平面圖 - ${initParam.pageTitle}</title>
         <link rel="stylesheet" href="<c:url value="/webjars/jquery-ui-themes/1.12.1/redmond/jquery-ui.min.css" />" >
         <link rel="stylesheet" href="<c:url value="/css/tooltipster.bundle.min.css"/>" >
         <style>
             body{
                 font-family: 微軟正黑體;
             }
-            .draggable { 
-                width: 25px; 
-                height: 20px; 
-                padding: 0.3em; 
+            .draggable {
+                width: 25px;
+                height: 20px;
+                padding: 0.3em;
                 float: left;
                 /*background-color: red;*/
                 margin: 0px;
@@ -55,7 +55,7 @@
                 color: blue;
             }
             .mapTitle{
-                padding: 3px; 
+                padding: 3px;
                 background-color: white;
                 font-size: 30px;
                 float: left;
@@ -64,7 +64,7 @@
                 overflow: auto;
             }
             .lineTitle{
-                padding: 3px; 
+                padding: 3px;
                 background-color: white;
                 font-size: 32px;
                 float: left;
@@ -78,7 +78,7 @@
             #mapGroup{
                 width: 1200px;
                 height: 500px;
-                background-image: url(../../images/totalMap_${userSitefloor + (userLineType == null ? '' : userLineType)}f.png);
+                background-image: url(../../images/totalMap_${userSitefloor}f_${userLineType}.png);
                 background-repeat: no-repeat;
                 -o-background-size: 100% 100%, auto;
                 -moz-background-size: 100% 100%, auto;
@@ -87,7 +87,7 @@
                 background-position:center center;
                 border:5px red solid;
                 /*讓最外層div不要隨視窗變動而改變(不然裏頭的子div會跑掉)*/
-                position: absolute; 
+                position: absolute;
             }
             /*            body {
                             padding-top: 70px;
@@ -150,8 +150,8 @@
                 padding: 0.5em 0.5em 0.5em 0.5em;
                 position: absolute;
                 /*                position: fixed;*/
-                left: 0px;
-                bottom: 0px;
+                right: 0px;
+                top: 70px;
                 overflow: auto;
                 height: 20%;
                 width: 35%;
@@ -171,17 +171,17 @@
                 border-color: red;
                 cursor: pointer;
             }
-/*            .rotate {
-                -webkit-transform: rotateX(180deg);
-                transform: rotateX(180deg);
-            }*/
+            /*            .rotate {
+                            -webkit-transform: rotateX(180deg);
+                            transform: rotateX(180deg);
+                        }*/
         </style>
         <script src="<c:url value="/webjars/jquery/1.12.4/jquery.min.js" />"></script>
         <script src="<c:url value="/js/jquery-ui-1.10.0.custom.min.js"/>"></script>
         <script src="<c:url value="/js/reconnecting-websocket.min.js"/>"></script>
         <script src="<c:url value="/js/jquery.fullscreen-min.js"/>"></script>
         <script src="<c:url value="/js/tooltipster.bundle.min.js"/>"></script>
-        <script src="<c:url value="/js/totalMap-setting/${userSitefloor}f.js"/>"></script>
+        <script src="<c:url value="/js/totalMap-setting/${userSitefloor}f_${userLineType}.js"/>"></script>
         <script>
             var maxProductivity = 200;
 
@@ -335,7 +335,7 @@
                             var startCount = loopCount + childAmount - 1;
 
                             $(this).children().each(function () {
-                                $(this).attr({"id": "draggable" + "T" + startCount + "_" + sitefloor + "f"})
+                                $(this).attr({"id": "draggableT" + startCount + "_" + sitefloor + "f"})
                                         .addClass("draggable blub-empty divCustomBg")
                                         .html(startCount)
                                         .tooltipster({updateAnimation: null});
@@ -344,7 +344,7 @@
                             loopCount += childAmount;
                         } else {
                             $(this).children().each(function () {
-                                $(this).attr({"id": "draggable" + "T" + loopCount + "_" + sitefloor + "f"})
+                                $(this).attr({"id": "draggableT" + loopCount + "_" + sitefloor + "f"})
                                         .addClass("draggable blub-empty divCustomBg")
                                         .html(loopCount)
                                         .tooltipster({updateAnimation: null});

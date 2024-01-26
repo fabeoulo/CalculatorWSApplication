@@ -321,7 +321,7 @@
     
     <bean id="SyncWorktimeFromRemote-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="SyncWorktimeFromRemote-Job" />
-        <property name="cronExpression" value="0 30 08 ? * MON-FRI *" />
+        <property name="cronExpression" value="0 0 08 ? * MON-FRI *" />
     </bean>
 
     <!--
@@ -377,7 +377,11 @@
             <value>classpath:quartz.properties</value>
         </property>
         
-        <!-- To resolve job thread issue on shutdown. -->
+        <!-- 
+            1. To resolve job thread issue on shutdown.   
+            2. fix ERROR com.advantech.endpoint.Endpoint2 - java.nio.channels.ClosedChannelException
+            java.nio.channels.ClosedChannelException: null
+        -->
         <property name="waitForJobsToCompleteOnShutdown" value="true" />
     </bean>
     

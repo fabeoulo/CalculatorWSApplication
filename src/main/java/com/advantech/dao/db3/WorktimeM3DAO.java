@@ -20,7 +20,7 @@ public class WorktimeM3DAO extends AbstractDao<Integer, WorktimeM3DAO> {
 
     public List<WorktimeM3> findByModel(List<String> modelNames) {
         String sql = "select id,model_name \"modelName\", clean_panel \"cleanPanel\", total_module \"totalModule\", keypart_a \"keypartA\" from Worktime where model_name in (?)";
-        Query query = this.queryIn(sql, modelNames);
+        Query query = super.queryIn(sql, modelNames);
 
         return query.setResultTransformer(Transformers.aliasToBean(WorktimeM3.class))
                 .list();

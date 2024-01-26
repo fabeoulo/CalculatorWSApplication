@@ -4,16 +4,16 @@
  */
 package com.advantech.webservice;
 
-import com.advantech.facade.BabLineTypeFacade;
 import com.advantech.facade.BabLineTypeFacade2;
 import com.advantech.facade.TestLineTypeFacade2;
 import com.advantech.model.db1.AlarmBabAction;
 import com.advantech.model.db1.AlarmDO;
 import com.advantech.model.db1.AlarmTestAction;
-import com.advantech.model.db1.TagNameComparison;
-import com.advantech.service.db1.AlarmBabActionService;
 import com.advantech.service.db1.AlarmDOService;
 import com.advantech.service.db1.AlarmTestActionService;
+import com.advantech.webapi.WaSetTagValue;
+import com.advantech.webapi.WaGetTagValue;
+import com.advantech.webapi.model.WaTagNode;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,9 +63,9 @@ public class WaSetTagValueTest {
     @Qualifier("testLineTypeFacade2")
     private TestLineTypeFacade2 tF;
 
-//    @Test
-//    @Transactional
-//    @Rollback(true)
+    @Test
+    @Transactional
+    @Rollback(true)
     public void testBabLineTypeFacade() {
 //        String st = "";
 //        try {
@@ -101,7 +101,7 @@ public class WaSetTagValueTest {
     }
 
     @Autowired
-    @Qualifier("alarmTestActionService")
+//    @Qualifier("alarmTestActionService")
     private AlarmTestActionService almService;
 
 //    @Test
@@ -118,21 +118,21 @@ public class WaSetTagValueTest {
 //        System.out.println("findDOByTables.size=======" + lDO.size());
 
         Map tagNodes = waGetTagValue.getMap();// map with active Tags while DataBaseInit.java
-        List<WaSetTagRequestModel> requestModels = lDO.stream()
+        List<WaTagNode> requestModels = lDO.stream()
                 .filter(e -> tagNodes.containsKey(e.getCorrespondDO()))
-                .map(alarmDo -> new WaSetTagRequestModel(alarmDo.getCorrespondDO(), 0))
+                .map(alarmDo -> new WaTagNode(alarmDo.getCorrespondDO(), 0))
                 .collect(Collectors.toList());
 
         waSetTagValue.exchange(requestModels);
 
 //        //from table LS_TagNameComparison in DB
-//        List<WaSetTagRequestModel> requestModels = new ArrayList<>();
+//        List<WaTagNode> requestModels = new ArrayList<>();
 //        List<TagNameComparison> tagNames = tagNameService.findAll();
 //        for (TagNameComparison item : tagNames) {
 //            String TagName = item.getId().getOrginTagName().getName();
 //            if (TagName.contains(":DI")) {
 //                TagName = TagName.replace(":DI", ":DO").trim();
-//                requestModels.add(new WaSetTagRequestModel(TagName, 0));
+//                requestModels.add(new WaTagNode(TagName, 0));
 //            }
 //        }
     }
@@ -150,7 +150,7 @@ public class WaSetTagValueTest {
         Objects.requireNonNull(param);
 
 //        int arrLen = 10;
-//        List<List<WaSetTagRequestModel>> subL = Lists.partition(l, arrLen);
+//        List<List<WaTagNode>> subL = Lists.partition(l, arrLen);
 //        subL.forEach(c -> {
 //            waSetTagValue.exchange(c);
 //        });
@@ -172,12 +172,12 @@ public class WaSetTagValueTest {
 //                    .collect(Collectors.toMap(AlarmDO::getProcessName, AlarmDO::getCorrespondDO));
 //            System.out.println("mapTablesDOs.size=====" + mapTablesDOs.size());
 //
-//            List<WaSetTagRequestModel> requestModels = new ArrayList<>();
+//            List<WaTagNode> requestModels = new ArrayList<>();
 //            alarmBabs.forEach(e -> {
 ////            alarmBabs.stream().filter(e -> {
 //                if (mapTablesDOs.containsKey(e.getTableId())) {
 //                    requestModels.add(
-//                            new WaSetTagRequestModel(mapTablesDOs.get(e.getTableId()), e.getAlarm())
+//                            new WaTagNode(mapTablesDOs.get(e.getTableId()), e.getAlarm())
 //                    );
 //                } 
 //            });

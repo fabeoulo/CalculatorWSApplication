@@ -49,7 +49,7 @@ public class CronTrigMod {
     private Scheduler getScheduler() throws SchedulerException {
         Scheduler scheduler = schedulerFactory.getScheduler();
         if (scheduler == null || !scheduler.isStarted()) {
-            throw new SchedulerException("Scheduler is not started");
+            throw new SchedulerException("Scheduler is never started");
         }
         return scheduler;
     }

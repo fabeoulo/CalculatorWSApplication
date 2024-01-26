@@ -9,7 +9,9 @@
 <!DOCTYPE html>
 <html>
     <c:set var="userSitefloor" value="${param.sitefloor}" />
-    <c:if test="${(userSitefloor == null) || (userSitefloor == '' || userSitefloor < 1 || userSitefloor > 7)}">
+    <c:set var="numberRE" value="\\d+" />
+    <c:set var="userLineType" value="${param.lineType}" />
+    <c:if test="${(userSitefloor == null) || !(userSitefloor.matches(numberRE)) || (userSitefloor < 1 || userSitefloor > 7)}">
         <c:redirect url="SysInfo" />
     </c:if>
     <head>
@@ -32,6 +34,23 @@
         <script src="<c:url value="/webjars/jquery/1.12.4/jquery.min.js" />"></script>
         <script>
             $(function () {
+                $.getJSON("../../json/sitefloor.json", function (data) {
+                    var sf = ${userSitefloor};
+                    var lt = "${userLineType}";
+
+                    var matchFlag = false;
+                    var sitefloors = data.sitefloors_mgr;
+                    for (var i = 0, j = sitefloors.length; i < j; i++) {
+                        if (sf === sitefloors[i].floor && lt === sitefloors[i].lineType) {
+                            matchFlag = true;
+                            break;
+                        }
+                    }
+                    if (!matchFlag) {
+                        window.location.href = "<c:url value="/SysInfo" />";
+                    }
+                });
+
                 $("#iframe1").load(function () {
                     console.log("This table is update.");
                 });
@@ -41,7 +60,9 @@
     <body>
         <c:import url="/temp/admin-header.jsp" />
         <div id="wigetCtrl">
-            <iframe id="iframe1" style='width:100%; height:650px' frameborder="0" scrolling="no" src="map_totalStatus.jsp?sitefloor=${userSitefloor}" webkitAllowFullScreen mozAllowFullScreen allowFullScreen></iframe>
+            <iframe id="iframe1" style='width:100%; height:650px' frameborder="0" scrolling="no" 
+                    src="map_totalStatus.jsp?sitefloor=${userSitefloor}&lineType=${userLineType}" 
+                    webkitAllowFullScreen mozAllowFullScreen allowFullScreen></iframe>
         </div>
         <c:import url="/temp/admin-footer.jsp" />
     </body>

@@ -46,14 +46,16 @@
         var mode = "<fmt:message key="bab.data.collect.mode" />".toLowerCase();
 
         $.getJSON("../../json/sitefloor.json", function (data) {
-            var sitefloors = data.sitefloors;
+            var sitefloors = data.sitefloors_mgr;
             var navbar = $("#bs-example-navbar-collapse-1");
             for (var i = 0, j = sitefloors.length; i < j; i++) {
                 var sitefloor = sitefloors[i].floor;
-                navbar.find(".totalMapSelect").append("<li><a href='TotalMap?sitefloor=" + sitefloor + "'>狀態平面圖" + sitefloor + "F</a></li>");
+                var siteSection = sitefloors[i].section;
+                var siteLineType = sitefloors[i].lineType;
+                navbar.find(".totalMapSelect").append("<li><a href='TotalMap?sitefloor=" + sitefloor + "&lineType=" + siteLineType + "'>狀態平面圖 " + siteSection + "</a></li>");
 //                navbar.find(".totalMapSelect").append("<li><a href='changeover.jsp?sitefloor=" + sitefloor + "'>換線" + sitefloor + "F</a></li>");
-                navbar.find(".sensorAdjustSelect").append("<li><a href='" + (mode == "auto" ? "Sensor" : "Barcode") +
-                        "Adjust?sitefloor=" + sitefloor + "'>" + sitefloor + "樓感應器狀態(校正用)</a></li>");
+                navbar.find(".sensorAdjustSelect").append("<li><a href='" + (mode === "auto" ? "Sensor" : "Barcode") +
+                        "Adjust?sitefloor=" + sitefloor + "&lineType=" + siteLineType + "'>" + siteSection + "-感應器狀態(校正用)</a></li>");
             }
         });
 

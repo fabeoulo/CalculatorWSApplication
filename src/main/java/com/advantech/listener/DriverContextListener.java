@@ -40,8 +40,8 @@ public class DriverContextListener implements ServletContextListener {
             if (driver.getClass().getClassLoader() == cl) {
                 // This driver was registered by the webapp's ClassLoader, so deregister it:
                 try {
-                    event.getServletContext().log("Deregistering JDBC driver " + driver);
                     DriverManager.deregisterDriver(driver);
+                    event.getServletContext().log("Deregistering JDBC driver " + driver);
                 } catch (SQLException ex) {
                     event.getServletContext().log("Driver deregistration failure.", ex);
                 }

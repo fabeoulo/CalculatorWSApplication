@@ -99,7 +99,11 @@ public class TestService {
         if (t.getTestTable().getFloor().getId() == 3) {
             f = Factory.TWM6;
         }
-        tx.kanbanUserLogout(jobnumber, f);
+        try {
+            tx.kanbanUserLogout(jobnumber, f);
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+        }
         return 1;
     }
 

@@ -79,7 +79,10 @@
     <logger name="org.hibernate.SQL" level="DEBUG" />
     <logger name="org.hibernate.engine.QueryParameters" level="DEBUG" />
     <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG" />
-    
+     
+    <!--can see gc action.-->
+    <!--<logger name="com.zaxxer.hikari" level="DEBUG" />-->
+        
     <logger name="org.springframework" level="INFO" additivity="false" />
     
     <logger name="com.piedra.logback" level="INFO" additivity="false">
