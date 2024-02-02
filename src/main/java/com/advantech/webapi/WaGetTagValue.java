@@ -35,8 +35,9 @@ public class WaGetTagValue extends WaBaseTagValue {
     @Autowired
     private AlarmDOService alarmDOService;
 
+    // quartz everyday in BabLineTypeFacade(BasicLineTypeFacade) in DataBaseInit
     @PostConstruct
-    public void initActiveTagNodes() {
+    public void updateActiveDOs() {
         List<String> allTagNames = alarmDOService.findAllDistinctCorrespondDO();
         String json = getJsonString(allTagNames);
         setTagToMap(getResponseBodys(json));
@@ -69,7 +70,7 @@ public class WaGetTagValue extends WaBaseTagValue {
                     .filter(f -> (f.getValue() == 0 || f.getValue() == 1))
                     .collect(Collectors.toMap(WaTagNode::getName, WaTagNode::getValue));
         }
-        log.info("initActiveTagNodes.map.size() : " + map.size());
+//        log.info("map.size() : " + map.size());
         return map;
     }
 

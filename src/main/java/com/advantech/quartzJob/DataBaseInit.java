@@ -8,11 +8,9 @@ package com.advantech.quartzJob;
 
 import com.advantech.helper.ApplicationContextHelper;
 import com.advantech.facade.BabLineTypeFacade;
-import com.advantech.facade.BabLineTypeFacade2;
 import com.advantech.service.db1.BabSensorLoginRecordService;
 import com.advantech.service.db1.BabSettingHistoryService;
 import com.advantech.facade.TestLineTypeFacade;
-import com.advantech.facade.TestLineTypeFacade2;
 import com.advantech.service.db1.TestService;
 import com.advantech.webapi.WaGetTagValue;
 import java.io.IOException;
@@ -34,17 +32,17 @@ public class DataBaseInit extends QuartzJobBean {
     private final BabSensorLoginRecordService babSensorLoginRecordService;
     private final TestService testService;
 
-    private final BabLineTypeFacade2 bF;
-    private final TestLineTypeFacade2 tF;
+    private final BabLineTypeFacade bF;
+    private final TestLineTypeFacade tF;
 
     private final WaGetTagValue waGetTagValue;
-
+    
     public DataBaseInit() {
         babSettingHistoryService = (BabSettingHistoryService) ApplicationContextHelper.getBean("babSettingHistoryService");
         babSensorLoginRecordService = (BabSensorLoginRecordService) ApplicationContextHelper.getBean("babSensorLoginRecordService");
         testService = (TestService) ApplicationContextHelper.getBean("testService");
-        tF = (TestLineTypeFacade2) ApplicationContextHelper.getBean("testLineTypeFacade2");
-        bF = (BabLineTypeFacade2) ApplicationContextHelper.getBean("babLineTypeFacade2");
+        tF = (TestLineTypeFacade) ApplicationContextHelper.getBean("testLineTypeFacade");
+        bF = (BabLineTypeFacade) ApplicationContextHelper.getBean("babLineTypeFacade");
         waGetTagValue = (WaGetTagValue) ApplicationContextHelper.getBean("waGetTagValue");
     }
 
@@ -58,8 +56,8 @@ public class DataBaseInit extends QuartzJobBean {
             babSettingHistoryService.init();
             babSensorLoginRecordService.init();
             testService.cleanTests();
-            
-            waGetTagValue.initActiveTagNodes(); // before resetAlarm
+
+            waGetTagValue.updateActiveDOs(); // before resetAlarm
             bF.resetAlarm();
             tF.resetAlarm();
             log.info("Data has been initialized.");

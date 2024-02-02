@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,6 +37,7 @@ import org.springframework.stereotype.Component;
  * @author Wei.Cheng
  */
 @Component
+@Primary
 public class TestLineTypeFacade extends BasicLineTypeFacade {
 
     private static final Logger log = LoggerFactory.getLogger(TestLineTypeFacade.class);
@@ -190,12 +192,14 @@ public class TestLineTypeFacade extends BasicLineTypeFacade {
 
     @Override
     public void setAlarmSign(List l) {
-        almService.update(l);
+//        almService.update(l);
+        super.setAlarmSignWa(l);
     }
 
     @Override
     public void resetAlarmSign() {
-        almService.reset();
+//        almService.reset();
+        super.resetAlarmSignWa(almService.findAll());
     }
 
     @Override

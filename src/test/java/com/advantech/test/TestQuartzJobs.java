@@ -56,7 +56,7 @@ public class TestQuartzJobs {
         tr.executeInternal(null);
     }
 
-//    @Test
+//    @Test //Be careful. it will reset bab and test login immediately.
     public void testDbInit() throws JobExecutionException {
         DataBaseInit d = new DataBaseInit();
         d.executeInternal(null);
@@ -161,7 +161,7 @@ public class TestQuartzJobs {
     public void testSyncWorktimeFromRemote() throws Exception {
         swr.execute();
     }
-    
+
     @Autowired
     private PreAssyModuleStandardTimeJob preAssySt;
 

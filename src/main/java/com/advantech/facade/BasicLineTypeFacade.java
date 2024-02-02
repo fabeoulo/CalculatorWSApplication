@@ -6,11 +6,18 @@
 package com.advantech.facade;
 
 import com.advantech.helper.PropertiesReader;
+import com.advantech.model.db1.AlarmDO;
+import com.advantech.service.db1.AlarmDOService;
+import com.advantech.webapi.WaGetTagValue;
+import com.advantech.webapi.WaSetTagValue;
+import com.advantech.webapi.model.WaTagNode;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -42,6 +49,15 @@ public abstract class BasicLineTypeFacade implements com.advantech.service.db1.A
 
     @Autowired
     private PropertiesReader p;
+
+    @Autowired
+    private AlarmDOService alarmDOService;
+
+    @Autowired
+    private WaGetTagValue waGetTagValue;
+
+    @Autowired
+    protected WaSetTagValue waSetTagValue;
 
     @PostConstruct
     protected void initValues() {
@@ -130,4 +146,50 @@ public abstract class BasicLineTypeFacade implements com.advantech.service.db1.A
         this.controlJobFlag = controlJobFlag;
     }
 
+    protected <T extends com.advantech.model.db1.AlarmAction> void setAlarmSignWa(List<T> alarmActions) {
+        if (alarmActions != null) {
+            //find DO by TableIds & active DOs        
+            Map<String, String> mapTableIdToDO = this.findFilterMapByTables(alarmActions);
+
+            //set requestBody
+            List<WaTagNode> requestModels = new ArrayList<>();
+            alarmActions.forEach(e -> {
+                if (mapTableIdToDO.containsKey(e.getTableId())) {
+                    requestModels.add(
+                            new WaTagNode(mapTableIdToDO.get(e.getTableId()), e.getAlarm())
+                    );
+                }
+            });
+
+            waSetTagValue.exchange(requestModels);
+        }
+    }
+
+    protected void resetAlarmSignWa(List alarmActions) {
+        //find DO by TableIds & active DOs        
+        Map<String, String> mapTableIdToDO = this.findFilterMapByTables(alarmActions);
+
+        //set requestBody
+        List<WaTagNode> requestModels = new ArrayList<>();
+        mapTableIdToDO.entrySet().forEach((entry)
+                -> requestModels.add(new WaTagNode(entry.getValue(), 0)));
+
+        //reset
+        waSetTagValue.exchange(requestModels);
+    }
+
+    private <T extends com.advantech.model.db1.AlarmAction> Map<String, String> findFilterMapByTables(List<T> alarmActions) {
+        //find table ID
+        List<String> tableIds = alarmActions.stream()
+                .map(e -> e.getTableId())
+                .collect(Collectors.toList());
+
+        //find active DO
+        Map allActiveTags = waGetTagValue.getMap();
+        List<String> liveDOs = new ArrayList<>(allActiveTags.keySet());
+
+        List<AlarmDO> f_alarmDOs = alarmDOService.findAllByTablesAndDOs(tableIds, liveDOs);
+        return f_alarmDOs.stream()
+                .collect(Collectors.toMap(AlarmDO::getProcessName, AlarmDO::getCorrespondDO));
+    }
 }

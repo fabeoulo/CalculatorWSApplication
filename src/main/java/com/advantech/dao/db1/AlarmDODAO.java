@@ -21,22 +21,17 @@ public class AlarmDODAO extends AbstractDao<String, AlarmDO> implements BasicDAO
     public List<AlarmDO> findAll() {
         return super.createEntityCriteria().list();
     }
-    
-    public List<String> findAllDistinctProcessName() {
-        return super.createEntityCriteria()
-                .setProjection(Projections.distinct(Projections.property("processName")))
-                .list();
-    }
-    
-    public List<String> findAllDistinctCorrespondDO() {
-        return super.createEntityCriteria()
-                .setProjection(Projections.distinct(Projections.property("correspondDO")))
-                .list();
-    }
 
-    public List<AlarmDO> findDOByTables(List<String> tableIds) {
+    public List<String> findAllDistinctColumn(String columnName) {
+        return super.createEntityCriteria()
+                .setProjection(Projections.distinct(Projections.property(columnName)))
+                .list();        
+    }    
+
+    public List<AlarmDO> findAllByTablesAndDOs(List<String> tableIds, List<String> DOs) {
         return super.createEntityCriteria()
                 .add(Restrictions.in("processName", tableIds))
+                .add(Restrictions.in("correspondDO", DOs))
                 .list();
     }
 

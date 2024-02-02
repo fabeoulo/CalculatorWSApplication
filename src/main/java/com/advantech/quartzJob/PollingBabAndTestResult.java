@@ -7,8 +7,8 @@
 package com.advantech.quartzJob;
 
 import com.advantech.endpoint.Endpoint2;
-import com.advantech.facade.BabLineTypeFacade2;
-import com.advantech.facade.TestLineTypeFacade2;
+import com.advantech.facade.BabLineTypeFacade;
+import com.advantech.facade.TestLineTypeFacade;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,15 +20,15 @@ import org.springframework.stereotype.Component;
  * @author Wei.Cheng
  */
 @Component
-public class PollingBabAndTestResult implements EndpointPollingJob{
+public class PollingBabAndTestResult implements EndpointPollingJob {
 
     private static final Logger log = LoggerFactory.getLogger(PollingBabAndTestResult.class);
 
     @Autowired
-    private TestLineTypeFacade2 tF;
+    private TestLineTypeFacade tF;
 
     @Autowired
-    private BabLineTypeFacade2 bF;
+    private BabLineTypeFacade bF;
 
     @Autowired
     private Endpoint2 socket;

@@ -4,11 +4,12 @@
  */
 package com.advantech.webservice;
 
-import com.advantech.facade.BabLineTypeFacade2;
-import com.advantech.facade.TestLineTypeFacade2;
+import com.advantech.facade.BabLineTypeFacade;
+import com.advantech.facade.TestLineTypeFacade;
 import com.advantech.model.db1.AlarmBabAction;
 import com.advantech.model.db1.AlarmDO;
 import com.advantech.model.db1.AlarmTestAction;
+import com.advantech.service.db1.AlarmBabActionService;
 import com.advantech.service.db1.AlarmDOService;
 import com.advantech.service.db1.AlarmTestActionService;
 import com.advantech.webapi.WaSetTagValue;
@@ -56,16 +57,20 @@ public class WaSetTagValueTest {
     private WaGetTagValue waGetTagValue;
 
     @Autowired
-    @Qualifier("babLineTypeFacade2")
-    private BabLineTypeFacade2 bF;
+    private BabLineTypeFacade bF;
 
     @Autowired
-    @Qualifier("testLineTypeFacade2")
-    private TestLineTypeFacade2 tF;
+    private TestLineTypeFacade tF;
 
-    @Test
-    @Transactional
-    @Rollback(true)
+    @Autowired
+    private AlarmTestActionService alarmTestService;
+
+    @Autowired
+    private AlarmBabActionService alarmBabService;
+
+//    @Test
+//    @Transactional
+//    @Rollback(true)
     public void testBabLineTypeFacade() {
 //        String st = "";
 //        try {
@@ -78,69 +83,46 @@ public class WaSetTagValueTest {
 //        }
         System.out.println("testBabLineTypeFacade= ");
 
-//        List<AlarmBabAction> alarmActions = Arrays.asList(
-//                new AlarmBabAction("T17", 0),
-//                new AlarmBabAction("PKG_L2-L-1", 0));
-//        alarmActions = babService.findAll();
-//        waGetTagValue.initActiveTagNodes();
-//        bF.setAlarmSign(alarmActions);
-//        bF.resetAlarmSign();
-        List<AlarmTestAction> alarmBabs = almService.findAll();
-//        List<AlarmTestAction> alarmActions = Arrays.asList(
-//                new AlarmTestAction("T6", 0));
-        waGetTagValue.initActiveTagNodes();
-//        Map<String, Integer> m = waGetTagValue.getMap();
-        tF.setAlarmSign(alarmBabs);
-        tF.resetAlarmSign();
+        List<AlarmBabAction> alarmBabs = Arrays.asList(
+                new AlarmBabAction("T24", 1),
+                new AlarmBabAction("L3-L-6", 1));
+//        alarmBabs = babService.findAll();
+        bF.setAlarmSign(alarmBabs);
+        bF.resetAlarmSign();
 
+//        List<AlarmTestAction> alarmActions = alarmTestService.findAll();
+//        List<AlarmTestAction> alarmActions = Arrays.asList(
+//                new AlarmTestAction("T24", 1));
+//        tF.setAlarmSign(alarmActions);
+//        tF.resetAlarmSign();
 //        bF.initMap();
 //        bF.initAlarmSign();
 //        List l = bF.mapToAlarmSign(bF.getMap());
 //        bF.setAlarmSign(l);
-//        waGetTagValue.initActiveTagNodes();
     }
 
-    @Autowired
-//    @Qualifier("alarmTestActionService")
-    private AlarmTestActionService almService;
-
-//    @Test
-//    @Transactional
-//    @Rollback(true)
-    public void resetAlarmSign() {
-//        //from table Alm_BABAction in DB
-        List<String> tableIds = new ArrayList<>();
-//        alarmBabs.forEach(item -> {
-//            tableIds.add(item.getTableId());
-//        });
-        tableIds.add("L2-L-1");
-        List<AlarmDO> lDO = alarmDOService.findDOByTables(tableIds);
-//        System.out.println("findDOByTables.size=======" + lDO.size());
-
-        Map tagNodes = waGetTagValue.getMap();// map with active Tags while DataBaseInit.java
-        List<WaTagNode> requestModels = lDO.stream()
-                .filter(e -> tagNodes.containsKey(e.getCorrespondDO()))
-                .map(alarmDo -> new WaTagNode(alarmDo.getCorrespondDO(), 0))
+    @Test
+    @Transactional
+    @Rollback(false)
+    public void testAlarmDOService() {
+        List<AlarmBabAction> alarmBabs = alarmBabService.findAll();
+        //find table ID
+        List<String> tableIds = alarmBabs.stream()
+                .map(bab -> bab.getTableId())
                 .collect(Collectors.toList());
 
-        waSetTagValue.exchange(requestModels);
+        //find active DO
+        Map allActiveTags = waGetTagValue.getMap();
+        List<String> liveDOs = new ArrayList<>(allActiveTags.keySet());
 
-//        //from table LS_TagNameComparison in DB
-//        List<WaTagNode> requestModels = new ArrayList<>();
-//        List<TagNameComparison> tagNames = tagNameService.findAll();
-//        for (TagNameComparison item : tagNames) {
-//            String TagName = item.getId().getOrginTagName().getName();
-//            if (TagName.contains(":DI")) {
-//                TagName = TagName.replace(":DI", ":DO").trim();
-//                requestModels.add(new WaTagNode(TagName, 0));
-//            }
-//        }
+        List<AlarmDO> f_alarmDOs = alarmDOService.findAllByTablesAndDOs(tableIds, liveDOs);
+//        List<AlarmDO> f_alarmDOs2 = alarmDOService.findDOByTables(tableIds);
     }
 
 //    @Test
     public void getTagValue() {
 
-        waGetTagValue.initActiveTagNodes();
+        waGetTagValue.updateActiveDOs();
         System.out.println("map.size:= " + waGetTagValue.getMap().size());
     }
 
@@ -163,7 +145,7 @@ public class WaSetTagValueTest {
         alarmBabs.add(new AlarmBabAction("L4-L-1", 0));
         alarmBabs.add(new AlarmBabAction("L3-L-2", 0));
 
-        waGetTagValue.initActiveTagNodes();
+//        waGetTagValue.updateActiveDOs();
         bF.setAlarmSign(alarmBabs);
 
         if (alarmBabs != null) {

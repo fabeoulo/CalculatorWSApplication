@@ -27,20 +27,18 @@ public class AlarmDOService {
         return dao.findAll();
     }
 
-    public List<String> findAllDistinctProcessName() {
-        return dao.findAllDistinctProcessName();
-    }
-
     public List<String> findAllDistinctCorrespondDO() {
-        return dao.findAllDistinctCorrespondDO();
+        return dao.findAllDistinctColumn("correspondDO");
     }
 
-    public List<AlarmDO> findDOByTables(List<String> tableIds) {
+    public List<AlarmDO> findAllByTablesAndDOs(List<String> tableIds, List<String> DOs) {
         List<AlarmDO> list = new ArrayList<>();
-        try {
-            list = dao.findDOByTables(tableIds);        
-        } catch (Exception ex) {
-            throw ex;
+        if (!tableIds.isEmpty() && !DOs.isEmpty()) {
+            try {
+                list = dao.findAllByTablesAndDOs(tableIds, DOs);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         return list;
     }

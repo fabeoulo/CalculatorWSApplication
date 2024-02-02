@@ -155,9 +155,6 @@ public class TestService {
         new HandleUncloseBab().executeInternal(null);
     }
 
-    @Autowired
-    private CustomPasswordEncoder pswEncoder;
-
 //    @Test
 //    @Transactional
 //    @Rollback(false)
@@ -201,7 +198,7 @@ public class TestService {
                 user.setJobnumber(ru);
                 user.setUsername(ru);
                 user.setUsernameCh(ru);
-                user.setPassword(pswEncoder.encode(ru));
+                user.setPassword(encoder.encode(ru));
                 user.setState(State.ACTIVE);
 
                 user.setFloor(f);

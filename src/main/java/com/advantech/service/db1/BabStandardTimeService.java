@@ -48,11 +48,10 @@ public class BabStandardTimeService {
         Worktime w = worktimeService.findByModelName(b.getModelName());
         return this.findMaxAndMinAllowanceByBabFromWorktime(b, w);
     }
-    
+
     public BigDecimal[] findMaxAndMinAllowanceByBabFromWorktime(Bab b, Worktime w) {
-        
-        
-        BigDecimal[] result = new BigDecimal[2];
+
+        BigDecimal[] result = new BigDecimal[]{BigDecimal.ZERO, BigDecimal.ZERO};
         if (b == null) {
             return result;
         }
@@ -68,12 +67,12 @@ public class BabStandardTimeService {
         }
 
         return findMaxAndMinAllowance(standardTime, b);
-    } 
+    }
 
     public BigDecimal[] findMaxAndMinAllowanceByBabFromHistory(int babId) {
         Bab b = babService.findWithLineInfo(babId);
         BabStandardTimeHistory standardTimeHistory = babStandardTimeHistoryService.findByBab(babId);
-        BigDecimal[] result = new BigDecimal[2];
+        BigDecimal[] result = new BigDecimal[]{BigDecimal.ZERO, BigDecimal.ZERO};
         if (b == null) {
             return result;
         }
