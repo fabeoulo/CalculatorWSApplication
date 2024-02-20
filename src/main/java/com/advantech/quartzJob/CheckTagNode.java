@@ -10,6 +10,7 @@ import com.advantech.model.db1.User;
 import com.advantech.service.db1.SqlViewService;
 import com.advantech.service.db1.UserService;
 import com.advantech.webapi.WaGetTagValue;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -47,25 +48,28 @@ public class CheckTagNode extends QuartzJobBean {
         mailManager = (MailManager) ApplicationContextHelper.getBean("mailManager");
         userService = (UserService) ApplicationContextHelper.getBean("userService");
         if (liveTagNames == null) {
-            List<String> l = sqlViewService.findSensorDIDONames();
-            liveTagNames = waGetTagValue.getMapByTagNames(l).keySet();
+            liveTagNames = getDIDONamesMap().keySet();
         }
+    }
+
+    private Map<String, Integer> getDIDONamesMap() {
+        List<String> l = sqlViewService.findSensorDIDONames();
+        return waGetTagValue.getMapByTagNames(l);
     }
 
     @Override
     public void executeInternal(JobExecutionContext jec) throws JobExecutionException {
 
-        List<String> l = sqlViewService.findSensorDIDONames();
-        Map<String, Integer> map = waGetTagValue.getMapByTagNames(l);
-        Set<String> currentTagNames = new HashSet<>(map.keySet());// keySet is read-only
+        Map<String, Integer> map = getDIDONamesMap();
+        Set<String> currentTagNames = new HashSet<>(map.keySet());// keySet is read-only, new HashSet() if need to write
 
         Set<String> leakTagNames = getDiffNames(liveTagNames, currentTagNames);
         Set<String> moreTagNames = getDiffNames(currentTagNames, liveTagNames);
         if (!leakTagNames.isEmpty() || !moreTagNames.isEmpty()) {
             try {
-                sendMail(leakTagNames, moreTagNames);
                 liveTagNames = currentTagNames;
-                
+                sendMail(leakTagNames, moreTagNames);
+
                 Map<String, Integer> mapDO = map.entrySet().parallelStream()
                         .filter(e -> e.getKey().contains("DO"))
                         .collect(Collectors.toConcurrentMap(e -> e.getKey(), e -> e.getValue()));
@@ -96,12 +100,19 @@ public class CheckTagNode extends QuartzJobBean {
                 .append("<p>時間 <strong>")
                 .append(new Date())
                 .append(" Sensor異常訊息如下</strong></p>")
-                .append("<p style='color:red'>新增:")
-                .append(moreTagNames.toString())
-                .append(" ;減少:")
-                .append(leakTagNames.toString())
-                .append("</p>")
-                .append("<p>請協助確認感應器是否正常，謝謝。</p>")
+                .append("<p style='color:red'>新增 : ")
+                .append(sortSetByDefault(moreTagNames).toString())
+                .append("</p><p style='color:red'>減少 : ")
+                .append(sortSetByDefault(leakTagNames).toString())
+                .append("</p><p>現存 : ")
+                .append(sortSetByDefault(liveTagNames).toString())
+                .append("</p><p>請協助確認感應器是否正常，謝謝。</p>")
                 .toString();
+    }
+
+    private List<String> sortSetByDefault(Set<String> set) {
+        List<String> sortedList = new ArrayList<>(set);
+        sortedList.sort(null);
+        return sortedList;
     }
 }

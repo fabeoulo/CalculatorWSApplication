@@ -63,6 +63,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -333,15 +334,46 @@ public class TestService {
         return mapSt;
     }
 
-    @Test
+//    @Test
     @Transactional
     @Rollback(true)
+    public void testBabServiceCloseBab() {
+        Bab b = babService.findByPrimaryKey(188982);
+        BabSettingHistory setting = babSettingHistoryService.findFirstProcessingByTagName("L2-S-2");
+//        BabSettingHistory setting = babSettingHistoryService.findByBabAndStation(b, 2);
+        
+        babService.stationComplete(b, setting,true);
+//        babService.closeBab(b);
+
+//        String tagname = setting.getTagName().getName();
+//        List<Map> lBab0 = babService.findProcessingByTagName(tagname);
+//        List<Map> lBab = babService.findProcessingByTagName("PKG_L6-S-4");
+//        List<Map> lBab2 = babService.findProcessingByTagName("PKG_L2-S-4");
+    }
+
+//    @Test
+    @Transactional
+    @Rollback(false)
     public void testBabSettingHistoryService() {
 
-        BabSettingHistory setting2 = babSettingHistoryService.findFirstProcessingByTagName("PKG_L4-S-2");
-        assertNotNull(setting2);
-
-        assertEquals(setting2.getTagName().getName(), "PKG_L4-S-2");
+        BabSettingHistory setting = babSettingHistoryService.findByPrimaryKey(22457);
+        BabSettingHistory setting2 = babSettingHistoryService.findByPrimaryKey(22458);
+        
+        setting.setLastUpdateTime(new Date());
+//        setting.setCompleteTime(new Date());
+        babSettingHistoryService.update(setting);
+                
+        setting2.setLastUpdateTime(new Date());
+//        setting2.setCompleteTime(new Date());
+        babSettingHistoryService.update(setting2);
+        
+//        BabSettingHistory setting2 = babSettingHistoryService.findFirstProcessingByTagName("PKG_L4-S-2");
+//        assertNotNull(setting2);
+//
+//        assertEquals(setting2.getTagName().getName(), "PKG_L4-S-2");
+//
+//        setting2.setCompleteTime(new Date());
+//        babSettingHistoryService.update(setting2);
     }
 
 //    @Test

@@ -24,7 +24,7 @@ public class CleanSensorData extends QuartzJobBean {
 
     private static final Logger log = LoggerFactory.getLogger(CleanSensorData.class);
     private final DatetimeGenerator dg = new DatetimeGenerator("yyyy-MM-dd");
-    private static final int SPECIFY_DAY = 7;
+    private static final int SPECIFY_DAY = 21;
     
     private final SqlProcedureService procService;
 

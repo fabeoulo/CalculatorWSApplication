@@ -153,7 +153,7 @@
                         {
                             extend: 'excelHtml5',
                             title: 'Pcs detail'
-                        }, 
+                        },
                         'print'
                     ],
                     "ajax": {
@@ -215,7 +215,7 @@
                         {
                             extend: 'excelHtml5',
                             title: 'Line balance detail'
-                        }, 
+                        },
                         'print'
                     ],
                     "ajax": {
@@ -333,6 +333,9 @@
                             }
                         }
                         generateChart(d, chartId);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("請求失敗:", status, error);
                     }
                 });
             }
@@ -477,8 +480,9 @@
                                     case 1:
                                         return "已經關閉";
                                     case - 1:
+                                        return "無組別紀錄";
                                     case - 2:
-                                        return "沒有儲存紀錄";
+                                        return "未正常關閉";
                                     default:
                                         return "尚未關閉";
                                 }
@@ -888,7 +892,7 @@
                     var isused = selectData.isused;
                     var lineType = $("#lineType2").val();
 
-                    if (isused == -1) {
+                    if (isused === -1) {
                         alert("此筆記錄無統計數據。");
                         return;
                     }
@@ -900,12 +904,8 @@
 
                     getBabCompare(bab_id, ModelName, lineType);
 
-                    if ($(this).hasClass('selected')) {
-                        $(this).removeClass('selected');
-                    } else {
-                        historyTable.$('tr.selected').removeClass('selected');
-                        $(this).addClass('selected');
-                    }
+                    historyTable.$('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
 
                 });
 
@@ -923,19 +923,20 @@
                     getBabCompare(null, modelName, lineType);
                 });
 
-                $("body").on('click', '.babSetting-detail', function () {
+                $("body").on('click', '.babSetting-detail, .cm-detail', function () {
                     var selectData = historyTable.row($(this).parents('tr')).data();
-                    editId = selectData.id;
                     var modal = $($(this).attr("data-target"));
+                    var editId = selectData.id;
                     modal.find(".modal-title").html(
                             "號碼: " + editId +
                             " / 工單: " + selectData.po +
                             " / 機種: " + selectData.modelName +
-                            " / 線別: " + selectData.lineName +
+                            " / 線別: " + selectData.line_name +
                             " / 時間: " + formatDate(selectData.btime)
                             );
-                    getBabSettingHistory(selectData.id);
-
+                    if ($(this).hasClass('babSetting-detail')) {
+                        getBabSettingHistory(selectData.id);
+                    }
                 });
 
                 var excelExport = function () {

@@ -348,7 +348,7 @@
     
     <bean id="CheckTagNode-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="CheckTagNode" />
-        <property name="cronExpression" value="0 35,55 8-20 ? * MON-FRI *" />
+        <property name="cronExpression" value="0 35,55 8-21 ? * MON-FRI *" />
     </bean>
     
     <!--schedule jobs-->

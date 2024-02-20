@@ -19,6 +19,7 @@ import com.advantech.webapi.model.WaTagNode;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -145,6 +146,8 @@ public class TestWebAccess {
 
         Set<String> currentNodes = new HashSet<>(map.keySet());
         List<String> copyDO = new ArrayList<>(allDIDO);
+        List<String> currentNodesTest = new ArrayList<>(currentNodes);
+        currentNodesTest.sort(null);
         boolean b = copyDO.retainAll(currentNodes);
     }
 

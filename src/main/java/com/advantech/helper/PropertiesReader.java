@@ -66,7 +66,7 @@ public class PropertiesReader {
     @Value("${bab.data.collect.mode: AUTO}")
     private BabDataCollectMode babDataCollectMode;
 
-    //Settings inject from database
+    //*******Settings inject from database*******
     private BigDecimal assyLineBalanceStandard = new BigDecimal(0.8);
     private BigDecimal packingLineBalanceStandard = new BigDecimal(0.8);
     private BigDecimal babAlarmPercentStandard = new BigDecimal(0.3);

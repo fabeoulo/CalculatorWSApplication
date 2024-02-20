@@ -64,16 +64,16 @@
             $(function () {
                 var lineType = getQueryVariable("lineType");
                 var iframeUrl = "babMainSearch_1.jsp?t=1";
-                if(lineType != null){
+                if (lineType !== null) {
                     iframeUrl += "&lineType=" + lineType;
                 }
                 $("#frame1").attr("src", iframeUrl);
-                var lastHeight = 0, curHeight = 0, $frame = $('iframe:eq(0)');
+                var lastHeight = 400, $frame = $('iframe:eq(0)');
                 setInterval(function () {
-                    curHeight = $frame.contents().find('body').height();
-                    if (curHeight != lastHeight) {
-                        $frame.css('height', (lastHeight = curHeight + 50) + 'px');
-                    }
+                    var curHeight = $frame.contents().find('body').height();
+                    var newHeight = curHeight + 50;
+                    lastHeight = lastHeight < newHeight ? newHeight : lastHeight;
+                    $frame.css('height', lastHeight + 'px');
                 }, 500);
             });
 

@@ -72,9 +72,8 @@ public class BabStandardTimeService {
     public BigDecimal[] findMaxAndMinAllowanceByBabFromHistory(int babId) {
         Bab b = babService.findWithLineInfo(babId);
         BabStandardTimeHistory standardTimeHistory = babStandardTimeHistoryService.findByBab(babId);
-        BigDecimal[] result = new BigDecimal[]{BigDecimal.ZERO, BigDecimal.ZERO};
-        if (b == null) {
-            return result;
+        if (b == null || standardTimeHistory == null) {
+            return new BigDecimal[]{BigDecimal.ZERO, BigDecimal.ZERO};
         }
         return findMaxAndMinAllowance(standardTimeHistory.getStandardTime(), b);
     }
@@ -85,8 +84,8 @@ public class BabStandardTimeService {
         BigDecimal allowance = BigDecimal.ZERO;
 
         /*
-            min = (worktime - allowanceMin) * 60(to second) / people
-            max = (worktime - allowanceMax) * 60(to second) / people
+            min = (worktime - allowance) * 60(to second) / people
+            max = (worktime + allowance) * 60(to second) / people
          */
         if ("ASSY".equals(lineTypeName)) {
             allowance = worktime.multiply(this.ASSY_WORKTIME_ALLOWANCE_STANDARD);

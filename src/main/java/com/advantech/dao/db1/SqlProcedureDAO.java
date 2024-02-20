@@ -61,7 +61,7 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
     //Join detail with alarmPercent in /pages/admin/BabTotal page
     public List<Map> findBabDetail(int lineType_id, int floor_id, DateTime sD, DateTime eD, boolean isAboveStandard) {
         return super.getSession()
-                .createSQLQuery("{CALL M3_BW.usp_GetBabDetail_1(:lineType_id, :floor_id, :sD, :eD, :minPcs)}")
+                .createSQLQuery("{CALL M3_BW.usp_GetBabDetail_WithPersons(:lineType_id, :floor_id, :sD, :eD, :minPcs)}")
                 .setParameter("lineType_id", lineType_id)
                 .setParameter("floor_id", floor_id)
                 .setParameter("sD", sD.withHourOfDay(0).toDate())

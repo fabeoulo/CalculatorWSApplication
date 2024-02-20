@@ -277,18 +277,19 @@ public class BabService {
     }
 
     public int stationComplete(Bab bab, BabSettingHistory setting, boolean isNeedCheckPrev) {
+        Date now = new Date();
         if (isNeedCheckPrev) {
             BabSettingHistory prev = babSettingHistoryService.findByBabAndStation(bab, setting.getStation() - 1);
 
             if (setting.getStation() == 2 && prev.getLastUpdateTime() == null) {
-                prev.setLastUpdateTime(new Date());
+                prev.setLastUpdateTime(now);
                 babSettingHistoryService.update(prev);
             } else {
                 checkArgument(prev.getLastUpdateTime() != null, "關閉失敗，請檢查上一站是否關閉");
             }
         }
 
-        setting.setLastUpdateTime(new Date());
+        setting.setLastUpdateTime(now);
         babSettingHistoryService.update(setting);
 
         return 1;
@@ -327,7 +328,7 @@ public class BabService {
         } else {
             this.closeBabDirectly(bab);
         }
-
+        
         BabSettingHistory setting = babSettings.stream()
                 .filter(b -> b.getStation() == bab.getPeople())
                 .reduce((first, second) -> second).orElse(null);

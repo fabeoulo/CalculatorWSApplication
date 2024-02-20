@@ -504,7 +504,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">                
-                            <h4 class="modal-title" id="myModalLabel">Add/Edit Remark</h4>
+                            <h4 class="modal-title" id="myModalLabel">Add/Edit Module Worktime</h4>
                         </div>
                         <div class="modal-body">
                             <fieldset>
@@ -559,7 +559,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">                
-                            <h4 class="modal-title" id="myModalLabel2">Add/Edit Remark</h4>
+                            <h4 class="modal-title" id="myModalLabel2">Add Modules</h4>
                         </div>
                         <div class="modal-body">
                             <fieldset>
@@ -595,7 +595,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">                
-                            <h4 class="modal-title" id="myModalLabel3">Add/Edit Remark</h4>
+                            <h4 class="modal-title" id="myModalLabel3">Add/Edit Module</h4>
                         </div>
                         <div class="modal-body">
                             <fieldset>
