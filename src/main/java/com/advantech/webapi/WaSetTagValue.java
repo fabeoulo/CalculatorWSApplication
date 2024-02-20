@@ -21,6 +21,7 @@ public class WaSetTagValue extends WaBaseTagValue {
 
     private String urlSetTagValue;
 
+    @Override
     protected String getUrl() {
         return urlSetTagValue;
     }

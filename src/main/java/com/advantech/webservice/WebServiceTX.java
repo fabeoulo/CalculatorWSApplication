@@ -58,7 +58,7 @@ public class WebServiceTX extends SimpleWebServiceTX {
                 + "<CARD_FLAG>1</CARD_FLAG>"
                 + "<USER_ID>" + user.getUserId() + "</USER_ID>"
                 + "</WORK_MANPOWER_CARD>"
-                + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
+                + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT>"
                 + "</root>";
         this.sendData(data, UploadType.INSERT, f);
     }
@@ -80,7 +80,7 @@ public class WebServiceTX extends SimpleWebServiceTX {
                 + "<CARD_FLAG>-1</CARD_FLAG>"
                 + "<USER_ID>" + user.getUserId() + "</USER_ID>" //get userid from second xml
                 + "</WORK_MANPOWER_CARD>"
-                + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
+                + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT>"
                 + "</root>";
         this.sendData(data, UploadType.UPDATE, f);
     }

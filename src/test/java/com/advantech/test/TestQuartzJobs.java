@@ -20,9 +20,11 @@ import com.advantech.quartzJob.TestLineTypeRecord;
 import com.advantech.quartzJob.TestLineTypeRecordUnrepliedAlarm;
 import com.advantech.quartzJob.ArrangePrepareScheduleImpl_Assy;
 import com.advantech.quartzJob.ArrangePrepareScheduleImpl_Packing;
+import com.advantech.quartzJob.CheckTagNode;
 import com.advantech.quartzJob.PreAssyModuleStandardTimeJob;
 import com.advantech.quartzJob.SyncPrepareScheduleForPacking;
 import com.advantech.quartzJob.SyncWorktimeFromRemote;
+import com.advantech.webapi.WaGetTagValue;
 import static com.google.common.collect.Lists.newArrayList;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -55,13 +57,28 @@ public class TestQuartzJobs {
         TestLineTypeRecord tr = new TestLineTypeRecord();
         tr.executeInternal(null);
     }
-
+    
 //    @Test //Be careful. it will reset bab and test login immediately.
     public void testDbInit() throws JobExecutionException {
         DataBaseInit d = new DataBaseInit();
         d.executeInternal(null);
+        
+        CheckTagNode b = new CheckTagNode();
+        b.executeInternal(null);
+        
+        d.executeInternal(null);
     }
 
+//    @Test
+    public void testCheckTagNode() throws JobExecutionException {
+        CheckTagNode b = new CheckTagNode();
+        b.executeInternal(null);
+        CheckTagNode b2 = new CheckTagNode();
+        b2.executeInternal(null);
+        CheckTagNode b3 = new CheckTagNode();
+        b3.executeInternal(null);
+    }
+    
 //    @Test
     public void testBabDataSaver() throws JobExecutionException {
         HandleUncloseBab b = new HandleUncloseBab();

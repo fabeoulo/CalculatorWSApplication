@@ -11,7 +11,6 @@ import com.advantech.model.db1.BabDataCollectMode;
 import com.advantech.model.view.db1.BabAvg;
 import com.advantech.service.db2.LineBalancingService;
 import com.advantech.service.db1.SqlViewService;
-import com.advantech.webapi.WaSetTagValue;
 import com.google.gson.Gson;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
@@ -64,6 +63,13 @@ public class TestSpring {
     @Autowired
     private PropertiesReader reader;
 
+//    @Test
+//    @Transactional
+//    @Rollback(true)
+    public void testSqlViewService() {
+        List<String> l = sqlViewService.findSensorDIDONames();
+    }
+    
 //    @Test
     public void testLineBalanceCount() {
         List<BabAvg> l = sqlViewService.findBabAvgInHistory(13220);
@@ -127,9 +133,6 @@ public class TestSpring {
         System.out.println(answer);
     }
 
-//    @Autowired
-//    private WaSetTagValue waSetTagValue;
-    
 //    @Test
     public void testWebAccessRESTful() {
 

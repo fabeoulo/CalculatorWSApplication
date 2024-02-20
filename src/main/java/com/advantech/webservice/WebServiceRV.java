@@ -63,7 +63,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
                 + "<KANBANTEST>"
                 + "<STATION_ID>4,122,124,11,3,5,6,32,30,134,151,104,105</STATION_ID>"
                 + "</KANBANTEST>"
-                + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
+                + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT>"
                 + "</root>";
         return super.getWebServiceData(queryString);
     }
@@ -75,7 +75,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
                 + "<KANBANTEST>"
                 + "<STATION_ID>4,122,124,11,3,5,6,32,30,134,151,104,105</STATION_ID>"
                 + "</KANBANTEST>"
-                + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
+                + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT>"
                 + "</root>";
         return client.getFormatWebServiceData(queryString);
     }
@@ -89,7 +89,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
                 + "<START_DATE>" + dt + "</START_DATE>"
                 + "<END_DATE>" + dt + "</END_DATE>"
                 + "</WORK_MANPOWER_CARD>"
-                + "<EXT_DEPT>" + f.token() + "</EXT_DEPT></root>";
+                + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT></root>";
         String childTagName = "WORK_ID";
         return super.getFieldValue(queryString, childTagName);
     }
@@ -99,7 +99,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
         String queryString = "<root><METHOD ID='Advantech.QAM.IPQ.BLL.QryWipAtt001'/><WIP_ATT><WIP_NO>"
                 + po
                 + "</WIP_NO><ITEM_NO></ITEM_NO></WIP_ATT>"
-                + "<EXT_DEPT>" + f.token() + "</EXT_DEPT></root>";
+                + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT></root>";
         String childTagName = "ITEM_NO";
         return super.getFieldValue(queryString, childTagName);
     }
@@ -109,7 +109,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
         String queryString = "<root><METHOD ID='Advantech.SFC.RPT.BLL.QryWipBarcode003'/><WIP_BARCODE><BARCODE_NO>"
                 + barcode
                 + "</BARCODE_NO></WIP_BARCODE>"
-                + "<EXT_DEPT>" + f.token() + "</EXT_DEPT></root>";
+                + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT></root>";
         String childTagName = "WIP_NO";
         return super.getFieldValue(queryString, childTagName);
     }
@@ -120,7 +120,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
             String queryString = "<root><METHOD ID='Advantech.IMG.SYS.BLL.QryLogion'/><USER_INFO><USER_NO>"
                     + jobnumber
                     + "</USER_NO><PASSWORD></PASSWORD><STATUS>A</STATUS></USER_INFO>"
-                    + "<EXT_DEPT>" + f.token() + "</EXT_DEPT></root>";
+                    + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT></root>";
 
             return super.getMarshalResult(queryString, UserOnMes.class);
         } catch (Exception ex) {
@@ -135,7 +135,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
             String queryString
                     = "<root><METHOD ID='Advantech.IMG.SYS.BLL.QryUserInfo001'/><USERS><USER_ID>-1</USER_ID><DEPT_ID>-1</DEPT_ID>"
                     + "<STATUS>A</STATUS><UNIT_NO></UNIT_NO><LINE_ID>-1</LINE_ID></USERS>"
-                    + "<EXT_DEPT>" + f.token() + "</EXT_DEPT></root>";
+                    + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT></root>";
             return super.getMarshalResults(queryString, UsersInfoOnMes.class);
         } catch (JAXBException ex) {
             log.error(ex.toString());
@@ -152,7 +152,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
                     + "</WIP_NO><UNIT_NO></UNIT_NO><LINE_ID></LINE_ID><STATION_ID>"
                     + mesStationId
                     + "</STATION_ID></WIP_INFO>"
-                    + "<EXT_DEPT>" + f.token() + "</EXT_DEPT></root>";
+                    + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT></root>";
 
             return super.getMarshalResults(queryString, PassStationRecords.class);
         } catch (JAXBException ex) {
@@ -169,7 +169,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
                     + "<KANBANTEST>"
                     + "<STATION_ID>4,122,124,11,3,5,6,32,30,134,151,104,105</STATION_ID>"
                     + "</KANBANTEST>"
-                    + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
+                    + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT>"
                     + "</root>";
 
             return super.getMarshalResults(queryString, TestRecords.class);
@@ -197,7 +197,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
                     + "<END_DATE>" + fmt.print(eD) + "</END_DATE>"
                     + "<WERKS>" + f.toString()+ "</WERKS>"
                     + "</RPT404>"
-                    + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
+                    + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT>"
                     + "</root>";
 
             return super.getMarshalResults(queryString, TestPassStationDetails.class);
@@ -226,7 +226,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
                     + "<END_DATE>" + fmt.print(eD) + "</END_DATE>"
                     + "<LINE_ID></LINE_ID>"
                     + "</RPT404>"
-                    + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
+                    + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT>"
                     + "</root>";
 
             return super.getMarshalResults(queryString, MesPassCountRecords.class);
@@ -250,7 +250,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
                     + "<WERKS/>"
                     + "<ITEM_NO>" + modelName + "</ITEM_NO>"
                     + "</STATION_QTY>"
-                    + "<EXT_DEPT>" + f.token() + "</EXT_DEPT>"
+                    + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT>"
                     + "</root>";
 
             return super.getMarshalResults(queryString, RptStationQtys.class);

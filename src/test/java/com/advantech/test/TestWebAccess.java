@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.advantech.webservice;
+package com.advantech.test;
 
 import com.advantech.facade.BabLineTypeFacade;
 import com.advantech.facade.TestLineTypeFacade;
@@ -12,15 +12,18 @@ import com.advantech.model.db1.AlarmTestAction;
 import com.advantech.service.db1.AlarmBabActionService;
 import com.advantech.service.db1.AlarmDOService;
 import com.advantech.service.db1.AlarmTestActionService;
+import com.advantech.service.db1.SqlViewService;
 import com.advantech.webapi.WaSetTagValue;
 import com.advantech.webapi.WaGetTagValue;
 import com.advantech.webapi.model.WaTagNode;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -45,7 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
     "classpath:servlet-context.xml"
 })
 @RunWith(SpringJUnit4ClassRunner.class)
-public class WaSetTagValueTest {
+public class TestWebAccess {
 
     @Autowired
     private AlarmDOService alarmDOService;
@@ -122,8 +125,27 @@ public class WaSetTagValueTest {
 //    @Test
     public void getTagValue() {
 
+        System.out.println("map.size:= " + waGetTagValue.getMap().size());
         waGetTagValue.updateActiveDOs();
         System.out.println("map.size:= " + waGetTagValue.getMap().size());
+    }
+
+    @Autowired
+    private SqlViewService sqlViewService;
+
+//    @Test
+    public void testCheckTagNode() {
+        List<String> allDIDO = sqlViewService.findSensorDIDONames();
+        Map<String, Integer> map = waGetTagValue.getMapByTagNames(allDIDO);
+
+        Map<String, Integer> mapDO = map.entrySet().parallelStream()
+                .filter(e -> e.getKey().contains("DO"))
+                .collect(Collectors.toConcurrentMap(e -> e.getKey(), e -> e.getValue()));
+        waGetTagValue.setMap(mapDO);
+
+        Set<String> currentNodes = new HashSet<>(map.keySet());
+        List<String> copyDO = new ArrayList<>(allDIDO);
+        boolean b = copyDO.retainAll(currentNodes);
     }
 
     /* POST */
@@ -139,7 +161,7 @@ public class WaSetTagValueTest {
 //        System.out.println("getJsonString" + waSetTagValue.getJsonString());
     }
 
-    @Test
+//    @Test
     public void setTagValue() {
         List<AlarmBabAction> alarmBabs = new ArrayList<>();
         alarmBabs.add(new AlarmBabAction("L4-L-1", 0));
@@ -166,7 +188,6 @@ public class WaSetTagValueTest {
 //            System.out.println("requestModels.size=====" + requestModels.size());
 //
 //            //filter
-//            waGetTagValue.initActiveTagNodes();
 //            Map tagNodes = WaGetTagValue.getMap();
 //            requestModels.stream().peek(e -> {
 //                tagNodes.containsKey(e.getName());
@@ -179,8 +200,8 @@ public class WaSetTagValueTest {
 
     @Test
     public void testGetJsonString() {
-        String[] testValues = new String[]{"a", "b", "c", "d"};
-        String result = this.waGetTagValue.getJsonString(Arrays.asList(testValues));
+        String[] testValues = {"a", "b", "c", "d"};
+        String result = waGetTagValue.getJsonString(Arrays.asList(testValues));
         System.out.println(result);
     }
 }

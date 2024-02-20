@@ -8,6 +8,7 @@ package com.advantech.test;
 import com.advantech.dao.db1.BabPcsDetailHistoryDAO;
 import com.advantech.dao.db1.SqlViewDAO;
 import com.advantech.helper.HibernateObjectPrinter;
+import com.advantech.model.view.db1.BabAvg;
 import com.advantech.model.view.db3.WorktimeCobots;
 import static com.google.common.collect.Lists.newArrayList;
 import java.util.List;
@@ -61,13 +62,20 @@ public class TestSqlView {
 //    @Test
     @Transactional
     @Rollback(true)
+    public void testSqlViewService() {
+        List<String> l = sqlViewDAO.findSensorDIDONames();
+    }
+
+//    @Test
+    @Transactional
+    @Rollback(true)
     public void testProc() {
         DateTime d = new DateTime();
         String st = "";
         int i = 1;
 
         sqlViewDAO.findBabAvg(123);
-        sqlViewDAO.findBabAvgInHistory(123);
+        List<BabAvg> l = sqlViewDAO.findBabAvgInHistory(187987);
         sqlViewDAO.findBabAvgWithBarcode(123);
         sqlViewDAO.findBabLastInputPerLine();
         sqlViewDAO.findBalanceDetail(i);

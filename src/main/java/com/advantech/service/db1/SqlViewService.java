@@ -12,6 +12,7 @@ import com.advantech.model.view.db1.BabAvg;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,4 +70,13 @@ public class SqlViewService {
         return sqlViewDAO.findBabLastInputPerLine();
     }
 
+    public List<String> findSensorDIDONames() {
+        return sqlViewDAO.findSensorDIDONames();
+    }
+
+    public List<String> findSensorDIDONames2() {
+        List<Object[]> map = sqlViewDAO.findSensorDIDONames2();
+        return map.stream().map(arr -> arr[1].toString())
+                .collect(Collectors.toList());
+    }
 }

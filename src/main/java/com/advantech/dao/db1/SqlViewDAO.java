@@ -99,4 +99,15 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
                 .list();
     }
 
+    public List<String> findSensorDIDONames() {
+        return super.getSession()
+                .createSQLQuery("select * from {h-schema}vw_SensorDIDONames")
+                .getResultList();
+    }
+
+    public List<Object[]> findSensorDIDONames2() {
+        return super.getSession()
+                .createSQLQuery("select dido_names, dido_names name2 from {h-schema}vw_SensorDIDONames")
+                .getResultList();
+    }
 }

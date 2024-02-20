@@ -102,7 +102,7 @@
     
     <!--
         Job5 setting
-        禮拜日零點固定將Database的sensor unused的資料clean一次 // Clean unused FBN where logtime before 7 days ago.
+        禮拜日零點固定將Database的sensor unused的資料clean一次 // Clean FBN where logtime before 7 days ago.
     --> 
     <bean name="CleanSensorData" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
         <property name="jobClass" value="com.advantech.quartzJob.CleanSensorData" />
@@ -338,6 +338,19 @@
         <property name="cronExpression" value="0 35 08 ? * WED *" />
     </bean>
     
+    <!--
+        check sensor and light via webaccess
+    -->    
+    <bean name="CheckTagNode" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.advantech.quartzJob.CheckTagNode" />
+        <property name="durability" value="true" />
+    </bean>
+    
+    <bean id="CheckTagNode-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="CheckTagNode" />
+        <property name="cronExpression" value="0 35,55 8-20 ? * MON-FRI *" />
+    </bean>
+    
     <!--schedule jobs-->
     <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="applicationContextSchedulerContextKey" value="applicationContext" />
@@ -367,6 +380,7 @@
                 
                 <!--<ref bean="SensorDetect-Trig"/>-->
                 <ref bean="PreAssyModuleStandardTimeJob-Trig"/>
+                <ref bean="CheckTagNode-Trig"/>
             </list>
         </property>
         <property name="schedulerName">

@@ -12,17 +12,18 @@ import java.util.Map;
 /**
  *
  * @author Wei.Cheng 假如要用其他廠區的話，Factory必須吻合DB設定
+ * Use for webservice and FactoryConverter
  */
 public enum Factory implements Encodeable {
 
     /**
      * Default useing M3's webService
      */
-    TWM3("PD03"),
+    TWM3("M3"),
     /**
      * Temp1: M6
      */
-    TWM6("PD03"),
+    TWM6("M6"),
     /**
      * Temp2: M2
      */
@@ -54,4 +55,7 @@ public enum Factory implements Encodeable {
         throw new IllegalArgumentException("Can't find enum with value " + t);
     }
 
+    public String getWsDept(){
+        return "PD03";
+    }
 }

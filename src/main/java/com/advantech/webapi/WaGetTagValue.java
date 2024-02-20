@@ -39,10 +39,10 @@ public class WaGetTagValue extends WaBaseTagValue {
     @PostConstruct
     public void updateActiveDOs() {
         List<String> allTagNames = alarmDOService.findAllDistinctCorrespondDO();
-        String json = getJsonString(allTagNames);
-        setTagToMap(getResponseBodys(json));
+        map = getMapByTagNames(allTagNames);
     }
 
+    @Override
     protected String getUrl() {
         return urlGetTagValue;
     }
@@ -59,22 +59,28 @@ public class WaGetTagValue extends WaBaseTagValue {
         this.map = map;
     }
 
+    public Map<String, Integer> getMapByTagNames(List<String> tagNames) {
+        String json = getJsonString(tagNames);
+        return getMapByTag(getResponseBodys(json));
+    }
+
     private WaGetTagResponseModel getResponseBodys(String json) {
         String jsonResponse = super.postJson(urlGetTagValue, json);
         return super.jsonToObj(jsonResponse, WaGetTagResponseModel.class);
     }
 
-    private Map<String, Integer> setTagToMap(WaGetTagResponseModel responseBodys) {
+    private Map<String, Integer> getMapByTag(WaGetTagResponseModel responseBodys) {
+        Map<String, Integer> tempMap = new HashMap<>();
         if (responseBodys != null) {
-            map = responseBodys.getValues().stream()
+            tempMap = responseBodys.getValues().stream()
                     .filter(f -> (f.getValue() == 0 || f.getValue() == 1))
                     .collect(Collectors.toMap(WaTagNode::getName, WaTagNode::getValue));
         }
-//        log.info("map.size() : " + map.size());
-        return map;
+//        log.info("map.size() : " + tempMap.size());
+        return tempMap;
     }
 
-    public String getJsonString(List<String> l) {
+    private String getJsonString(List<String> l) {
         JSONObject result = new JSONObject();
         JSONArray tags = new JSONArray();
 

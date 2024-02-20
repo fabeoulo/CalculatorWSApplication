@@ -13,7 +13,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
@@ -85,8 +84,8 @@ public abstract class WaBaseTagValue {
     }
 
     private RestTemplate createRestTemplateWithTimeouts() {
-        ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        ((HttpComponentsClientHttpRequestFactory) requestFactory).setConnectTimeout(connectionTimeout);
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+         requestFactory.setConnectTimeout(connectionTimeout);
 //        ((HttpComponentsClientHttpRequestFactory) requestFactory).setReadTimeout(readTimeout);
         return new RestTemplate(requestFactory);
     }
