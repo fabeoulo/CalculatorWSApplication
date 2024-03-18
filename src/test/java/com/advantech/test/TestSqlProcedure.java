@@ -72,7 +72,7 @@ public class TestSqlProcedure {
         HibernateObjectPrinter.print(l);
     }
 
-    @Test
+//    @Test
     @Transactional
     @Rollback(true)
     public void testLastGroupStatus() {

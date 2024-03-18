@@ -85,6 +85,14 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
                 .list();
     }
 
+    public List<Map> checkSettingHasMaxGroup(int bab_id) {
+        return super.getSession()
+                .createSQLQuery("select * from {h-schema}tbfn_GetBabHasMaxGroup(:bab_id)")
+                .setParameter("bab_id", bab_id)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+    }
+
     public List<Map> findSensorStatusPerStationToday() {
         return super.getSession()
                 .createSQLQuery("select * from {h-schema}vw_SensorStatusPerStationToday")
@@ -105,9 +113,16 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
                 .getResultList();
     }
 
-    public List<Object[]> findSensorDIDONames2() {
+    public List<Object[]> findSensorDIDONamesNativeQuery() {
         return super.getSession()
                 .createSQLQuery("select dido_names, dido_names name2 from {h-schema}vw_SensorDIDONames")
+                .getResultList();
+    }
+
+    // error
+    public List<Map> findSensorDIDONamesHQL() {
+        return super.getSession()
+                .createQuery("select new Map(dido_names as dido_names, dido_names as name2) from vw_SensorDIDONames")//vw_SensorDIDONames must be entity
                 .getResultList();
     }
 }

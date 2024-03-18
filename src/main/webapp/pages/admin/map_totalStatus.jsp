@@ -210,7 +210,7 @@
                 dragableWiget.addClass("adjustPosition");
                 dragableWiget.not(".clearWiget").addClass("ui-helper").draggable({
                     drag: function (e) {
-//                        return false;
+                        return false;
                     }
                 });
 
@@ -436,7 +436,12 @@
                                 if (childElement.length) {
                                     childElement.removeClass("blub-empty blub-prepared");
 
-                                    if ("ismax" in people) {
+                                    if ("isUnclosed" in people) {
+                                        var closeFlag = people.isUnclosed === 1;
+                                        childElement.addClass(closeFlag ? "blub-abnormal" : "blub-prepared")
+                                                .html(people.station)
+                                                .tooltipster('content', closeFlag ? "請確認是否未關站" : "");
+                                    } else if ("ismax" in people) {
                                         childElement.addClass((people.ismax ? "blub-alarm" : "blub-normal"))
                                                 .html(people.station)
                                                 .tooltipster('content', "Time:" + people.diff + "秒");

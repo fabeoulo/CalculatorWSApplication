@@ -85,8 +85,9 @@ public class SqlViewController {
         Map m = l.get(0);
 
         m.put("exp_avgs",
-                b.getBabStatus() == BabStatus.CLOSED ? getAvg(sqlViewService.findBabAvgInHistory(bab_id))
-                : b.getBabStatus() == null ? getAvg(sqlViewService.findBabAvg(bab_id)) : 0);
+                b.getBabStatus() == null ? getAvg(sqlViewService.findBabAvg(bab_id))
+                : b.getBabStatus() != BabStatus.NO_RECORD ? getAvg(sqlViewService.findBabAvgInHistory(bab_id))
+                : 0);
 
         Integer ctrl_bab = (Integer) m.get("ctrl_id");
         m.put("ctrl_avgs", ctrl_bab == null ? 0 : getAvg(sqlViewService.findBabAvgInHistory(ctrl_bab)));

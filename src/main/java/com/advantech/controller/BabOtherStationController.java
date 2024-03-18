@@ -27,7 +27,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import static com.google.common.base.Preconditions.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -94,18 +96,8 @@ public class BabOtherStationController {
                 babPreAssyPcsRecordService.insert(pcsRecords);
             }
 
-            babService.closeBab(b);
+            this.closeBab(b, bab_id);
 
-            BabAlarmHistory bah = babAlarmHistoryService.findByBab(bab_id);
-            if (bah != null && bah.getTotalPcs() < 10) {
-                //Get object again and set reply flag
-                //Get bab again because object bab close by procedure not by update object itself
-                //bab object is old, babStatus is null
-                b = babService.findByPrimaryKey(bab_id);
-                b.setReplyStatus(ReplyStatus.NO_NEED_TO_REPLY);
-                babService.update(b);
-            }
-            
             //If not preAssy, refresh endpoint data when user finished the job
             if (b.getIspre() == 0) {
                 ep6.syncAndEcho();
@@ -115,6 +107,40 @@ public class BabOtherStationController {
         }
 
         return "success";
+    }
+
+    private void closeBab(Bab b, int bab_id) {
+        babService.closeBab(b);
+
+        BabAlarmHistory bah = babAlarmHistoryService.findByBab(bab_id);
+        if (bah != null && bah.getTotalPcs() < 10) {
+            //Get object again and set reply flag
+            //Get bab again because object bab close by procedure not by update object itself
+            //bab object is old, babStatus is null
+            b = babService.findByPrimaryKey(bab_id);
+            b.setReplyStatus(ReplyStatus.NO_NEED_TO_REPLY);
+            babService.update(b);
+        }
+    }
+
+    // call by quartzJob
+    public void autoCloseNotPre(Bab b) {
+        if (b.getIspre() == 1) {
+            return;
+        }
+
+        int bab_id = b.getId();
+        List<BabSettingHistory> settings = babSettingHistoryService.findByBab(b);
+
+        for (BabSettingHistory setting : settings) {
+            if (setting.getLastUpdateTime() == null) {
+                if (setting.getStation() == b.getPeople()) {
+                    this.closeBab(b, bab_id);
+                } else if (setting.getStation() > 1) {
+                    babService.stationComplete(b, setting);
+                }
+            }
+        }
     }
 
     private void checkStation(Bab b, int station) {

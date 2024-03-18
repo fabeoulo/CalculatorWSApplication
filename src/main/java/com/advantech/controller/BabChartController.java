@@ -91,7 +91,7 @@ public class BabChartController {
                     break;
             }
         } else {
-            l = (b.getBabStatus() == BabStatus.CLOSED ? babBalanceHistoryService.findByBab(b.getId()) : new ArrayList());
+            l = (b.getBabStatus() != BabStatus.NO_RECORD ? babBalanceHistoryService.findByBab(b.getId()) : new ArrayList());
         }
         return new DataTableResponse(l);
     }
@@ -106,7 +106,7 @@ public class BabChartController {
         if (null == bab.getBabStatus()) { //Still proccessing
             l = sqlViewService.findSensorStatus(bab.getId());
         } else {
-            l = (bab.getBabStatus() == BabStatus.CLOSED ? babPcsDetailHistoryService.findByBabForMap(bab.getId()) : new ArrayList());
+            l = (bab.getBabStatus() != BabStatus.NO_RECORD ? babPcsDetailHistoryService.findByBabForMap(bab.getId()) : new ArrayList());
         }
         return new DataTableResponse(l);
     }
@@ -136,7 +136,7 @@ public class BabChartController {
             //The bab is closed
 
             //closed and with sensor data
-            l = (status == BabStatus.CLOSED ? babPcsDetailHistoryService.findByBabForMap(bab.getId()) : new ArrayList());
+            l = (status != BabStatus.NO_RECORD ? babPcsDetailHistoryService.findByBabForMap(bab.getId()) : new ArrayList());
             worktimeAllowances = babStandardTimeService.findMaxAndMinAllowanceByBabFromHistory(bab.getId());
         }
 

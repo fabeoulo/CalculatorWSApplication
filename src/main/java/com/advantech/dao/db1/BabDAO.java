@@ -171,7 +171,7 @@ public class BabDAO extends AbstractDao<Integer, Bab> implements BasicDAO_1<Bab>
                 .add(Restrictions.in("line", lines))
                 .list();
     }
-    
+
     public List<Bab> findByPreAssyModuleType(int preAssyModuleTypeId, String po) {
         return super.createEntityCriteria()
                 .createAlias("preAssyModuleTypes", "type")

@@ -11,7 +11,9 @@ import com.advantech.helper.HibernateObjectPrinter;
 import com.advantech.model.view.db1.BabAvg;
 import com.advantech.model.view.db3.WorktimeCobots;
 import static com.google.common.collect.Lists.newArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.joda.time.DateTime;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -63,7 +65,27 @@ public class TestSqlView {
     @Transactional
     @Rollback(true)
     public void testSqlViewService() {
-        List<String> l = sqlViewDAO.findSensorDIDONames();
+//        List<Map> result = sqlViewDAO.findProcessBabHasMaxGroup();
+//        Map<String, Integer> stationUnclose = new HashMap<>();
+//        result.forEach(m -> {
+//            String key = (int) m.get("babId") + "-st-" + (int) m.get("station");
+//            stationUnclose.put(key, (int) m.get("autoClose"));
+//        });
+//        HibernateObjectPrinter.print(stationUnclose);
+//        int test = stationUnclose.getOrDefault("5", 0);
+
+        List<Map> m = sqlViewDAO.checkSettingHasMaxGroup(190473);
+        Map<String, Integer> stationUncloseM = new HashMap<>();
+        m.forEach(resultM -> {
+            int unClose = (int) resultM.get("autoClose");
+            if (unClose == 1) {
+                stationUncloseM.put((String) resultM.get("tagName"), unClose);
+            }
+        });
+        HibernateObjectPrinter.print(stationUncloseM);
+        int checkResult = stationUncloseM.getOrDefault(5, 0);
+
+//        List<String> l = sqlViewDAO.findSensorDIDONames();
     }
 
 //    @Test

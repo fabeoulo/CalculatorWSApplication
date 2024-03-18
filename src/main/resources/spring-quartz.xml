@@ -77,7 +77,7 @@
     
     <bean id="HandleUncloseBab-MorningShift" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="HandleUncloseBab" />
-        <property name="cronExpression" value="0 40 23 ? * MON-SAT *" />
+        <property name="cronExpression" value="0 30 23 ? * MON-SAT *" />
     </bean>
     
     <bean id="HandleUncloseBab-NightShift" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
@@ -360,10 +360,10 @@
                 <ref bean="BabGenerateData-Trig"/>
                 <ref bean="TestGenerateData-Trig"/>
                 
-                <!--<ref bean="DataBaseInit-Trig-MorningShift"/>-->
-                <ref bean="DataBaseInit-Trig-NightShift"/>
-                <!--<ref bean="HandleUncloseBab-MorningShift"/>-->
-                <ref bean="HandleUncloseBab-NightShift"/>
+                <ref bean="DataBaseInit-Trig-MorningShift"/>
+                <!--<ref bean="DataBaseInit-Trig-NightShift"/>-->
+                <ref bean="HandleUncloseBab-MorningShift"/>
+                <!--<ref bean="HandleUncloseBab-NightShift"/>-->
                 
                 <ref bean="CleanSensorData-Trig"/>
                 <ref bean="TestLineTypeRecord-Trig"/>

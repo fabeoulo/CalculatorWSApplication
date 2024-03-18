@@ -10,6 +10,7 @@ import com.advantech.helper.PropertiesReader;
 import com.advantech.model.db1.Bab;
 import com.advantech.model.view.db1.BabAvg;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -62,6 +63,18 @@ public class SqlViewService {
         return sqlViewDAO.findBalanceDetailWithBarcode(bab_id);
     }
 
+    public Map<String, Integer> checkSettingHasMaxGroup(int bab_id) {
+        Map<String, Integer> stationUnclose = new HashMap<>();
+        List<Map> result = sqlViewDAO.checkSettingHasMaxGroup(bab_id);
+        result.forEach(m -> {
+            int unClose = (int) m.get("autoClose");
+            if (unClose == 1) {
+                stationUnclose.put((String) m.get("tagName"), unClose);
+            }
+        });
+        return stationUnclose;
+    }
+
     public List<Map> findSensorStatusPerStationToday() {
         return sqlViewDAO.findSensorStatusPerStationToday();
     }
@@ -74,9 +87,16 @@ public class SqlViewService {
         return sqlViewDAO.findSensorDIDONames();
     }
 
-    public List<String> findSensorDIDONames2() {
-        List<Object[]> map = sqlViewDAO.findSensorDIDONames2();
+    public List<String> findSensorDIDONamesNativeQuery() {
+        List<Object[]> map = sqlViewDAO.findSensorDIDONamesNativeQuery();
         return map.stream().map(arr -> arr[1].toString())
+                .collect(Collectors.toList());
+    }
+
+    // error
+    public List<String> findSensorDIDONamesHQL() {
+        List<Map> map = sqlViewDAO.findSensorDIDONamesHQL();
+        return map.stream().map(m -> m.get("dido_names").toString())
                 .collect(Collectors.toList());
     }
 }

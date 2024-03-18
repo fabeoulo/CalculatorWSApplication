@@ -341,8 +341,8 @@ public class TestService {
         Bab b = babService.findByPrimaryKey(188982);
         BabSettingHistory setting = babSettingHistoryService.findFirstProcessingByTagName("L2-S-2");
 //        BabSettingHistory setting = babSettingHistoryService.findByBabAndStation(b, 2);
-        
-        babService.stationComplete(b, setting,true);
+
+        babService.stationComplete(b, setting, true);
 //        babService.closeBab(b);
 
 //        String tagname = setting.getTagName().getName();
@@ -358,15 +358,15 @@ public class TestService {
 
         BabSettingHistory setting = babSettingHistoryService.findByPrimaryKey(22457);
         BabSettingHistory setting2 = babSettingHistoryService.findByPrimaryKey(22458);
-        
+
         setting.setLastUpdateTime(new Date());
 //        setting.setCompleteTime(new Date());
         babSettingHistoryService.update(setting);
-                
+
         setting2.setLastUpdateTime(new Date());
 //        setting2.setCompleteTime(new Date());
         babSettingHistoryService.update(setting2);
-        
+
 //        BabSettingHistory setting2 = babSettingHistoryService.findFirstProcessingByTagName("PKG_L4-S-2");
 //        assertNotNull(setting2);
 //
@@ -574,6 +574,14 @@ public class TestService {
         List<BabProcessDetail> l = babService.findBabTimeGapPerLine(sD, eD);
         List<BabProcessDetail> checkD = l.stream().filter(b -> b.getLineId() == 28).collect(toList());
         HibernateObjectPrinter.print(checkD);
+    }
+
+//    @Test
+    @Transactional
+    @Rollback(true)
+    public void testFindProcessing() {
+        List<Bab> processingBabs = babService.findProcessing();
+        processingBabs = processingBabs.stream().filter(b -> b.getId() == 3078).collect(Collectors.toList());
     }
 
 //    @Test

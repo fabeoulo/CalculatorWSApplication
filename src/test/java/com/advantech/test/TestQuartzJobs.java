@@ -31,9 +31,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -80,6 +82,8 @@ public class TestQuartzJobs {
     }
     
 //    @Test
+//    @Transactional
+//    @Rollback(false)
     public void testBabDataSaver() throws JobExecutionException {
         HandleUncloseBab b = new HandleUncloseBab();
         b.executeInternal(null);

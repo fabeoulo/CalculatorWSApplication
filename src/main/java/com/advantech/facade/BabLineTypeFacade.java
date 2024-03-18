@@ -21,6 +21,7 @@ import com.advantech.service.db1.BabStandardTimeService;
 import com.advantech.service.db2.LineBalancingService;
 import com.advantech.service.db1.LineService;
 import com.advantech.service.db1.SqlProcedureService;
+import com.advantech.service.db1.SqlViewService;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,6 +67,9 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
     private SqlProcedureService procService;
 
     @Autowired
+    private SqlViewService viewService;
+
+    @Autowired
     private BabSettingHistoryService babSettingHistoryService;
 
     @Autowired
@@ -81,9 +85,6 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
 
     private Double PKG_STANDARD;
 
-    private BigDecimal ASSY_WORKTIME_ALLOWANCE_STANDARD;
-    private BigDecimal PACKING_WORKTIME_ALLOWANCE_STANDARD;
-
     private BabDataCollectMode collectMode;
 
     private boolean isWorktimeUnderStandard = false, isSomeBabUnderStandard = false;
@@ -95,9 +96,6 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
         log.info(BabLineTypeFacade.class.getName() + " init inner setting and db object.");
         this.ASSY_STANDARD = p.getAssyLineBalanceStandard().doubleValue();
         this.PKG_STANDARD = p.getPackingLineBalanceStandard().doubleValue();
-
-        this.ASSY_WORKTIME_ALLOWANCE_STANDARD = p.getAssyWorktimeAllowanceStandard();
-        this.PACKING_WORKTIME_ALLOWANCE_STANDARD = p.getPackingWorktimeAllowanceStandard();
 
         this.collectMode = p.getBabDataCollectMode();
 
@@ -215,34 +213,57 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
     }
 
     private JSONArray getBabLineBalanceResultWithSensor(List<Bab> processingBabs, List<BabSettingHistory> allBabSettings) {
-        JSONArray transBabData = new JSONArray();
+        Map<String, JSONObject> transBabDataMap = new HashMap<>();
 
         /*
                 Because BabLastGroupStatus.class is a sql view object
                 Get all data in one transaction to prevent sql deadlock.
                 on vw_FbnToday in DB using NOLOCK
          */
-        List<BabLastGroupStatus> status = procService.findBabLastGroupStatusBatch(processingBabs);
+        List<BabLastGroupStatus> status = procService.findBabLastGroupStatusBatch(processingBabs); // List.size()=0 or  no. of people by each bab
 
         processingBabs.forEach((bab) -> {
+//            //dev
+//            int babId2 = bab.getId();
+//            if (babId2 == 190152) {
+//                int babId3 = bab.getId();
+//            }
+
             List<BabSettingHistory> babSettings = allBabSettings.stream()
                     .filter(rec -> rec.getBab().getId() == bab.getId()).collect(toList());
             List<BabLastGroupStatus> matchesStatus = status.stream()
                     .filter(stat -> stat.getBab_id() == bab.getId()).collect(toList());
             if (!(babSettings.isEmpty())) {
+                Map<String, Integer> unclosedMap = getUnclosedMap(bab, babSettings);
+
                 int currentGroupSum = matchesStatus.size();//看目前組別人數是否有到達bab裏頭設定的人數
                 int peoples = bab.getPeople();
                 if (currentGroupSum == 0 || currentGroupSum != peoples) {
                     /*
-                    Insert an empty status
+                    Insert an empty status if none group of the last bab.
                     BabSettingHistory in allBabSettings are proxy object generate by hibernate
                     Can't transform to json by google.Gson directly
                      */
                     babSettings.forEach((setting) -> {
+                        int station = setting.getStation();
+                        String tagName = setting.getTagName().getName();
+
                         JSONObject obj = new JSONObject();
-                        obj.put("tagName", setting.getTagName().getName());
-                        obj.put("station", setting.getStation());
-                        transBabData.put(obj);
+                        obj.put("tagName", tagName);
+                        obj.put("station", station);
+
+                        // if the first process bab of tag need to cloes, put the tag with unclosed sign into map and never cover it.
+                        // else put the last process bab's tag into map directly.
+                        if (unclosedMap.containsKey(tagName)) {
+                            obj.put("isUnclosed", unclosedMap.get(tagName));
+                            transBabDataMap.put(tagName, obj);
+                        } else {
+                            if (!(transBabDataMap.containsKey(tagName)
+                                    && transBabDataMap.get(tagName).has("isUnclosed"))) {
+
+                                transBabDataMap.put(tagName, obj);
+                            }
+                        }
                     });
 
                     isWorktimeUnderStandard = true;
@@ -261,12 +282,26 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
                         bgs.setIsmax((isWorktimeUnderStandard || isSomeBabUnderStandard) && Objects.equals(bgs, maxStatus));
                         return bgs;
                     }).forEachOrdered((bgs) -> {
-                        transBabData.put(new JSONObject(bgs));
+                        JSONObject obj = new JSONObject(bgs);
+                        String tagName = bgs.getTagName();
+                        if (unclosedMap.containsKey(tagName)) {
+                            obj.put("isUnclosed", unclosedMap.get(tagName));
+                        }
+                        transBabDataMap.put(bgs.getTagName(), obj);
                     });
                 }
             }
         });
-        return transBabData;
+
+        return new JSONArray(transBabDataMap.values());
+    }
+
+    private Map<String, Integer> getUnclosedMap(Bab b, List<BabSettingHistory> processSettings) {
+        Map<String, Integer> unclosedMap = new HashMap<>();
+        if (processSettings.size() != b.getPeople()) {
+            unclosedMap = viewService.checkSettingHasMaxGroup(b.getId());
+        }
+        return unclosedMap;
     }
 
     private boolean checkIsWorktimeExceedTheRange(Bab b, double max) {

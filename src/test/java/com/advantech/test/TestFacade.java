@@ -8,6 +8,13 @@ package com.advantech.test;
 import com.advantech.facade.BabLineTypeFacade;
 import com.advantech.facade.FqcLineTypeFacade;
 import com.advantech.facade.TestLineTypeFacade;
+import com.advantech.model.db1.Bab;
+import com.advantech.model.db1.BabSettingHistory;
+import com.advantech.service.db1.BabService;
+import com.advantech.service.db1.BabSettingHistoryService;
+import java.util.List;
+import java.util.Map;
+import static java.util.stream.Collectors.toList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +43,25 @@ public class TestFacade {
 
     @Autowired
     private FqcLineTypeFacade fF;
+
+    @Autowired
+    private BabService babService;
+
+    @Autowired
+    private BabSettingHistoryService babSettingHistoryService;
+
+//    @Test
+    @Transactional
+    @Rollback(false)
+    public void testBabLineTypeUnclosedMap() {
+
+        Bab bab = babService.findByPrimaryKey(190043);//189174
+//        List<BabSettingHistory> babSettings = babSettingHistoryService.findByBab(bab);
+        List<BabSettingHistory> allBabSettings = babSettingHistoryService.findProcessing();
+        List<BabSettingHistory> babSettings = allBabSettings.stream()
+                .filter(rec -> rec.getBab().getId() == bab.getId()).collect(toList());
+//        Map<String, Integer> unclosedMap = bF.getUnclosedMap(bab, babSettings);
+    }
 
 //    @Test
 //    @Transactional

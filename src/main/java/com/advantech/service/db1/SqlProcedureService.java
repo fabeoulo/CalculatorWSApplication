@@ -72,6 +72,10 @@ public class SqlProcedureService {
     public List<SensorCurrentGroupStatus> findSensorCurrentGroupStatus(int bab_id) {
         return sqlProcedureDAO.findSensorCurrentGroupStatus(bab_id);
     }
+    
+//    public List<SensorCurrentGroupStatus> findSensorHistoryStatus(int bab_id) {
+//        return sqlProcedureDAO.findSensorHistoryStatus(bab_id);
+//    }
 
     public List<Map> findBabDetail(int lineType_id, int floor_id, DateTime sD, DateTime eD, boolean isAboveStandard) {
         switch (reader.getBabDataCollectMode()) {
@@ -177,5 +181,4 @@ public class SqlProcedureService {
     public List<Map> findPreAssyPercentage(int lineTypeId, DateTime sD) {
         return sqlProcedureDAO.findPreAssyPercentage(lineTypeId, sD);
     }
-
 }

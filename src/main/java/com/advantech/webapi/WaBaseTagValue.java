@@ -85,7 +85,7 @@ public abstract class WaBaseTagValue {
 
     private RestTemplate createRestTemplateWithTimeouts() {
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-         requestFactory.setConnectTimeout(connectionTimeout);
+        requestFactory.setConnectTimeout(connectionTimeout);
 //        ((HttpComponentsClientHttpRequestFactory) requestFactory).setReadTimeout(readTimeout);
         return new RestTemplate(requestFactory);
     }

@@ -307,17 +307,13 @@ public class BabService {
         List<BabSettingHistory> babSettings = babSettingHistoryService.findByBab(bab);
 
         if (bab.getIspre() == 0) {
-            List<BabAvg> babAvgs = sqlViewService.findBabAvg(bab.getId()); //先各站別取平衡率再算平均
-            if (babAvgs != null && !babAvgs.isEmpty() && babAvgs.size() == bab.getPeople()) {
-                bab.setBabAvgs(babAvgs);
-                if (bab.getPeople() > 2) {
-                    BabSettingHistory prev = babSettings.stream()
-                            .filter(b -> b.getStation() == bab.getPeople() - 1)
-                            .reduce((first, second) -> second).orElse(null);
-                    checkArgument(prev.getLastUpdateTime() != null, "關閉失敗，請檢查上一站是否關閉");
-                }
-                needToSave = true;
+            if (bab.getPeople() > 2) {
+                BabSettingHistory prev = babSettings.stream()
+                        .filter(b -> b.getStation() == bab.getPeople() - 1)
+                        .reduce((first, second) -> second).orElse(null);
+                checkArgument(prev.getLastUpdateTime() != null, "關閉失敗，請檢查上一站是否關閉");
             }
+            needToSave = true;
         }
 
         if (needToSave) {
@@ -328,7 +324,7 @@ public class BabService {
         } else {
             this.closeBabDirectly(bab);
         }
-        
+
         BabSettingHistory setting = babSettings.stream()
                 .filter(b -> b.getStation() == bab.getPeople())
                 .reduce((first, second) -> second).orElse(null);
@@ -353,6 +349,11 @@ public class BabService {
                 throw new IllegalStateException("BabDataCollectMode doesn't exist");
         }
         if (isResultWriteToOldDatabase) {
+            //save avg data into Line_Balancing.dbo.Line_Balancing_Main
+            List<BabAvg> babAvgs = sqlViewService.findBabAvgInHistory(b.getId()); //先各站別取平衡率再算平均
+            if (babAvgs != null && !babAvgs.isEmpty() && babAvgs.size() == b.getPeople()) {
+                b.setBabAvgs(babAvgs);
+            }
             lineBalancingService.insert(b);
         }
         return 1;

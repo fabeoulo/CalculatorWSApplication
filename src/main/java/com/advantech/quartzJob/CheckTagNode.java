@@ -90,7 +90,7 @@ public class CheckTagNode extends QuartzJobBean {
     private void sendMail(Set<String> leakTagNames, Set<String> moreTagNames) throws MessagingException {
         List<User> ccLoops = userService.findByUserNotification("admin_alarm_cc");
         List<User> to = ccLoops;
-        String subject = "[藍燈系統]Sensor異常通知";
+        String subject = "[藍燈系統]Sensor異動通知";
         String mailBody = generateMailBody(leakTagNames, moreTagNames);
         mailManager.sendMail(to, ccLoops, subject, mailBody);
     }
@@ -99,7 +99,7 @@ public class CheckTagNode extends QuartzJobBean {
         return new StringBuilder()
                 .append("<p>時間 <strong>")
                 .append(new Date())
-                .append(" Sensor異常訊息如下</strong></p>")
+                .append(" 上次檢查後，Sensor異動訊息如下</strong></p>")
                 .append("<p style='color:red'>新增 : ")
                 .append(sortSetByDefault(moreTagNames).toString())
                 .append("</p><p style='color:red'>減少 : ")
