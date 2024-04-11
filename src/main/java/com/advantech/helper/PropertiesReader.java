@@ -65,6 +65,9 @@ public class PropertiesReader {
 
     @Value("${bab.data.collect.mode: AUTO}")
     private BabDataCollectMode babDataCollectMode;
+    
+    @Value("${bab.notPre.autoSave: false}")
+    private Boolean isBabNotPreAutoSave;
 
     //*******Settings inject from database*******
     private BigDecimal assyLineBalanceStandard = new BigDecimal(0.8);
@@ -276,6 +279,10 @@ public class PropertiesReader {
 
     public BabDataCollectMode getBabDataCollectMode() {
         return babDataCollectMode;
+    }
+
+    public Boolean getIsBabNotPreAutoSave() {
+        return isBabNotPreAutoSave;
     }
 
     public int getBabCountermeasureAlertDay() {

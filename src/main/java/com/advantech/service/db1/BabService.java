@@ -5,11 +5,13 @@ import com.advantech.dao.db1.BabDAO;
 import com.advantech.helper.DateTimeGapFinder;
 import com.advantech.helper.PropertiesReader;
 import com.advantech.model.db1.Bab;
+import com.advantech.model.db1.BabAlarmHistory;
 import com.advantech.model.db1.BabDataCollectMode;
 import com.advantech.model.db1.BabSettingHistory;
 import com.advantech.model.db1.BabStatus;
 import com.advantech.model.db1.Line;
 import com.advantech.model.db1.LineType;
+import com.advantech.model.db1.ReplyStatus;
 import com.advantech.model.db1.TagNameComparison;
 import com.advantech.model.view.db1.BabAvg;
 import com.advantech.model.view.db1.BabProcessDetail;
@@ -57,6 +59,9 @@ public class BabService {
 
     @Autowired
     private BabStandardTimeHistoryService babStandardTimeHistoryService;
+
+    @Autowired
+    private BabAlarmHistoryService babAlarmHistoryService;
 
     @Autowired
     private SqlViewService sqlViewService;
@@ -272,11 +277,37 @@ public class BabService {
         return babDAO.update(pojo);
     }
 
+    public void autoCloseNotPreByJob(Bab b, List<BabSettingHistory> settings) {
+        for (BabSettingHistory setting : settings) {
+            if (setting.getLastUpdateTime() == null) {
+                this.autoCloseNotPre(b, setting);
+            }
+        }
+    }
+
+    public void autoCloseNotPre(Bab b, BabSettingHistory setting) {
+        if (setting.getStation() > 1) {
+            if (setting.getStation() == b.getPeople()) {
+                this.closeBabTrigger(b, b.getId());
+                this.changeBabStatusFollowCloseBab(b.getId(), BabStatus.AUTO_CLOSED);
+            } else {
+                this.stationComplete(b, setting);
+            }
+        }
+    }
+
+    public void changeBabStatusFollowCloseBab(int babId, BabStatus status) {
+        Bab savedBab = this.findByPrimaryKey(babId);
+        savedBab.setBabStatus(status);
+        this.update(savedBab);
+    }
+
+    // Manual and auto close
     public int stationComplete(Bab bab, BabSettingHistory setting) {
         return this.stationComplete(bab, setting, true);
     }
 
-    public int stationComplete(Bab bab, BabSettingHistory setting, boolean isNeedCheckPrev) {
+    private int stationComplete(Bab bab, BabSettingHistory setting, boolean isNeedCheckPrev) {
         Date now = new Date();
         if (isNeedCheckPrev) {
             BabSettingHistory prev = babSettingHistoryService.findByBabAndStation(bab, setting.getStation() - 1);
@@ -296,6 +327,21 @@ public class BabService {
 
     }
 
+    // Manual and auto close
+    public void closeBabTrigger(Bab b, int bab_id) {
+        this.closeBab(b);
+
+        BabAlarmHistory bah = babAlarmHistoryService.findByBab(bab_id);
+        if (bah != null && bah.getTotalPcs() < 10) {
+            //Get object again and set reply flag
+            //Get bab again because object bab close by procedure not by update object itself
+            //bab object is old, babStatus is null
+            b = this.findByPrimaryKey(bab_id);
+            b.setReplyStatus(ReplyStatus.NO_NEED_TO_REPLY);
+            this.update(b);
+        }
+    }
+
     /*
         檢查統計值是否為空，空值直接讓使用者作結束
         檢查上一顆sensor使否有在紀錄中，有把紀錄記在LineBalancingMain
@@ -311,7 +357,7 @@ public class BabService {
                 BabSettingHistory prev = babSettings.stream()
                         .filter(b -> b.getStation() == bab.getPeople() - 1)
                         .reduce((first, second) -> second).orElse(null);
-                checkArgument(prev.getLastUpdateTime() != null, "關閉失敗，請檢查上一站是否關閉");
+                checkArgument(prev.getLastUpdateTime() != null, "關閉失敗，請確認工單、上一站是否關閉 (Fail. Please check PO or preStation.)");
             }
             needToSave = true;
         }
@@ -337,7 +383,7 @@ public class BabService {
         return procService.closeBabDirectly(b);
     }
 
-    public int closeBabWithSaving(Bab b) {
+    private int closeBabWithSaving(Bab b) {
         switch (mode) {
             case AUTO:
                 procService.closeBabWithSaving(b);

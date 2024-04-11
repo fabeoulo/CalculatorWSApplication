@@ -477,6 +477,8 @@
                             "data": "isused",
                             'render': function (data, type, row) {
                                 switch (data) {
+                                    case 3:
+                                        return "系統關閉";
                                     case 1:
                                         return "已經關閉";
                                     case - 1:

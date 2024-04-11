@@ -85,7 +85,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
                 .list();
     }
 
-    public List<Map> checkSettingHasMaxGroup(int bab_id) {
+    public List<Map> checkSettingHasMaxGroupToday(int bab_id) {
         return super.getSession()
                 .createSQLQuery("select * from {h-schema}tbfn_GetBabHasMaxGroup(:bab_id)")
                 .setParameter("bab_id", bab_id)
@@ -107,22 +107,17 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
                 .list();
     }
 
-    public List<String> findSensorDIDONames() {
+    public List<Map> findSensorDIDONames() {
         return super.getSession()
-                .createSQLQuery("select * from {h-schema}vw_SensorDIDONames")
-                .getResultList();
-    }
-
-    public List<Object[]> findSensorDIDONamesNativeQuery() {
-        return super.getSession()
-                .createSQLQuery("select dido_names, dido_names name2 from {h-schema}vw_SensorDIDONames")
+                .createSQLQuery("select * from {h-schema}vw_SensorDIDONames") //NativeQuery
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .getResultList();
     }
 
     // error
     public List<Map> findSensorDIDONamesHQL() {
         return super.getSession()
-                .createQuery("select new Map(dido_names as dido_names, dido_names as name2) from vw_SensorDIDONames")//vw_SensorDIDONames must be entity
+                .createQuery("select new Map(dido_names as dido_names, dido_names as name2) from vw_SensorDIDONames")//HQL, vw_SensorDIDONames must be entity
                 .getResultList();
     }
 }

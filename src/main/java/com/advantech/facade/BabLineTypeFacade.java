@@ -29,10 +29,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import javax.annotation.PostConstruct;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -91,14 +93,17 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
 
     private Map<String, Worktime> worktimeQuickMap = new HashMap();
 
+    private Boolean isAutoSave;
+
     @PostConstruct
     protected void init() {
         log.info(BabLineTypeFacade.class.getName() + " init inner setting and db object.");
         this.ASSY_STANDARD = p.getAssyLineBalanceStandard().doubleValue();
         this.PKG_STANDARD = p.getPackingLineBalanceStandard().doubleValue();
-
         this.collectMode = p.getBabDataCollectMode();
 
+        isAutoSave = p.getIsBabNotPreAutoSave();
+        
         this.initWorktimes();
         this.initMap();
 //        this.initAlarmSign();
@@ -221,11 +226,12 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
                 on vw_FbnToday in DB using NOLOCK
          */
         List<BabLastGroupStatus> status = procService.findBabLastGroupStatusBatch(processingBabs); // List.size()=0 or  no. of people by each bab
+        String UnclosedKey = "isUnclosed";
 
         processingBabs.forEach((bab) -> {
 //            //dev
 //            int babId2 = bab.getId();
-//            if (babId2 == 190152) {
+//            if (babId2 == 190807) {
 //                int babId3 = bab.getId();
 //            }
 
@@ -255,12 +261,16 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
                         // if the first process bab of tag need to cloes, put the tag with unclosed sign into map and never cover it.
                         // else put the last process bab's tag into map directly.
                         if (unclosedMap.containsKey(tagName)) {
-                            obj.put("isUnclosed", unclosedMap.get(tagName));
-                            transBabDataMap.put(tagName, obj);
+                            if (isAutoSave) {
+                                babService.autoCloseNotPre(bab, setting);
+                            } else {
+                                obj.put(UnclosedKey, unclosedMap.get(tagName));
+                                transBabDataMap.put(tagName, obj);
+                            }
                         } else {
-                            if (!(transBabDataMap.containsKey(tagName)
-                                    && transBabDataMap.get(tagName).has("isUnclosed"))) {
-
+                            boolean preBabUnclosed = transBabDataMap.containsKey(tagName)
+                                    && transBabDataMap.get(tagName).has(UnclosedKey);
+                            if (!preBabUnclosed) {
                                 transBabDataMap.put(tagName, obj);
                             }
                         }
@@ -284,10 +294,23 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
                     }).forEachOrdered((bgs) -> {
                         JSONObject obj = new JSONObject(bgs);
                         String tagName = bgs.getTagName();
+
                         if (unclosedMap.containsKey(tagName)) {
-                            obj.put("isUnclosed", unclosedMap.get(tagName));
+                            if (isAutoSave) {
+                                Optional<BabSettingHistory> setting = babSettings.stream()
+                                        .filter(
+                                                rec -> rec.getBab().getId() == bab.getId()
+                                                && rec.getTagName().getName().equalsIgnoreCase(tagName)
+                                        ).findFirst();
+                                if (setting.isPresent()) {
+                                    babService.autoCloseNotPre(bab, setting.get());
+                                }
+                            } else {
+                                obj.put(UnclosedKey, unclosedMap.get(tagName));
+                            }
                         }
-                        transBabDataMap.put(bgs.getTagName(), obj);
+
+                        transBabDataMap.put(tagName, obj);
                     });
                 }
             }
@@ -296,10 +319,10 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
         return new JSONArray(transBabDataMap.values());
     }
 
-    private Map<String, Integer> getUnclosedMap(Bab b, List<BabSettingHistory> processSettings) {
+    private Map<String, Integer> getUnclosedMap(Bab b, @NotEmpty List<BabSettingHistory> processSettings) {
         Map<String, Integer> unclosedMap = new HashMap<>();
         if (processSettings.size() != b.getPeople()) {
-            unclosedMap = viewService.checkSettingHasMaxGroup(b.getId());
+            unclosedMap = viewService.getUnclosedLineStation(b.getId());
         }
         return unclosedMap;
     }

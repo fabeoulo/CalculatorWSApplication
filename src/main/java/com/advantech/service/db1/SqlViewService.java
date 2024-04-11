@@ -32,6 +32,8 @@ public class SqlViewService {
     @Autowired
     private PropertiesReader reader;
 
+    private String vwDiDoColumn = "", vwSysTagName = "";
+
     public List<BabAvg> findBabAvg(int bab_id) {
         switch (reader.getBabDataCollectMode()) {
             case AUTO:
@@ -63,9 +65,9 @@ public class SqlViewService {
         return sqlViewDAO.findBalanceDetailWithBarcode(bab_id);
     }
 
-    public Map<String, Integer> checkSettingHasMaxGroup(int bab_id) {
+    public Map<String, Integer> getUnclosedLineStation(int bab_id) {
         Map<String, Integer> stationUnclose = new HashMap<>();
-        List<Map> result = sqlViewDAO.checkSettingHasMaxGroup(bab_id);
+        List<Map> result = sqlViewDAO.checkSettingHasMaxGroupToday(bab_id);
         result.forEach(m -> {
             int unClose = (int) m.get("autoClose");
             if (unClose == 1) {
@@ -83,14 +85,26 @@ public class SqlViewService {
         return sqlViewDAO.findBabLastInputPerLine();
     }
 
-    public List<String> findSensorDIDONames() {
+    public List<Map> findSensorDIDONames() {
+        this.setVwDiDoColumn("dido_name");
+        this.setVwSysTagName("tagName");
         return sqlViewDAO.findSensorDIDONames();
     }
 
-    public List<String> findSensorDIDONamesNativeQuery() {
-        List<Object[]> map = sqlViewDAO.findSensorDIDONamesNativeQuery();
-        return map.stream().map(arr -> arr[1].toString())
-                .collect(Collectors.toList());
+    public String getVwDiDoColumn() {
+        return vwDiDoColumn;
+    }
+
+    public void setVwDiDoColumn(String vwDiDoColumn) {
+        this.vwDiDoColumn = vwDiDoColumn;
+    }
+
+    public String getVwSysTagName() {
+        return vwSysTagName;
+    }
+
+    public void setVwSysTagName(String vwSysTagName) {
+        this.vwSysTagName = vwSysTagName;
     }
 
     // error

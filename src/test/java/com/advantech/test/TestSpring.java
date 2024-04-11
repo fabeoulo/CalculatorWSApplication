@@ -67,7 +67,7 @@ public class TestSpring {
 //    @Transactional
 //    @Rollback(true)
     public void testSqlViewService() {
-        List<String> l = sqlViewService.findSensorDIDONames();
+        List<Map> l = sqlViewService.findSensorDIDONames();
     }
     
 //    @Test

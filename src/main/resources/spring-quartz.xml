@@ -321,7 +321,7 @@
     
     <bean id="SyncWorktimeFromRemote-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="SyncWorktimeFromRemote-Job" />
-        <property name="cronExpression" value="0 0 08 ? * MON-FRI *" />
+        <property name="cronExpression" value="0 0 08 ? * MON-SAT *" />
     </bean>
 
     <!--
@@ -348,7 +348,7 @@
     
     <bean id="CheckTagNode-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="CheckTagNode" />
-        <property name="cronExpression" value="0 35,55 8-21 ? * MON-FRI *" />
+        <property name="cronExpression" value="0 35,55 8-21 ? * MON-SAT *" />
     </bean>
     
     <!--schedule jobs-->

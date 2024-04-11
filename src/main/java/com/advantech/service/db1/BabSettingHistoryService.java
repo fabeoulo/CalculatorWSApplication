@@ -96,7 +96,7 @@ public class BabSettingHistoryService {
         for (TagNameComparison tagNameComp : tagNameSetting) {
             SensorTransform sensor = tagNameComp.getId().getLampSysTagName();
             BabSensorLoginRecord rec = babLogins.stream()
-                    .filter(r -> r.getTagName().equals(sensor))
+                    .filter(r -> r.getTagName().getName().equals(sensor.getName()))
                     .findFirst().orElse(null);
             checkArgument(rec != null, "Can't find user login in tagName " + sensor.getName());
             BabSettingHistory setting = new BabSettingHistory(b, i++, sensor, rec.getJobnumber());

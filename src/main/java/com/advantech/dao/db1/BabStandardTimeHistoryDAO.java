@@ -30,6 +30,7 @@ public class BabStandardTimeHistoryDAO extends AbstractDao<Integer, BabStandardT
     public BabStandardTimeHistory findByBab(int babId){
         return (BabStandardTimeHistory) super.createEntityCriteria()
                 .add(Restrictions.eq("bab.id", babId))
+                .setMaxResults(1)
                 .uniqueResult();
     }
 

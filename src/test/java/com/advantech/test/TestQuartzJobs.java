@@ -75,10 +75,10 @@ public class TestQuartzJobs {
     public void testCheckTagNode() throws JobExecutionException {
         CheckTagNode b = new CheckTagNode();
         b.executeInternal(null);
-        CheckTagNode b2 = new CheckTagNode();
-        b2.executeInternal(null);
-        CheckTagNode b3 = new CheckTagNode();
-        b3.executeInternal(null);
+//        CheckTagNode b2 = new CheckTagNode();
+//        b2.executeInternal(null);
+//        CheckTagNode b3 = new CheckTagNode();
+//        b3.executeInternal(null);
     }
     
 //    @Test

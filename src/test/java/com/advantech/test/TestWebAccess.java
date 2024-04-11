@@ -136,7 +136,11 @@ public class TestWebAccess {
 
 //    @Test
     public void testCheckTagNode() {
-        List<String> allDIDO = sqlViewService.findSensorDIDONames();
+        List<Map> _DIDONamesMaps = sqlViewService.findSensorDIDONames();
+        String key = sqlViewService.getVwDiDoColumn();
+        List<String> allDIDO = _DIDONamesMaps.stream()
+                .map(m -> (String) m.getOrDefault(key, ""))
+                .collect(Collectors.toList());
         Map<String, Integer> map = waGetTagValue.getMapByTagNames(allDIDO);
 
         Map<String, Integer> mapDO = map.entrySet().parallelStream()

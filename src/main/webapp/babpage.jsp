@@ -111,7 +111,7 @@
 
             //i18n message paramaters
             const serverModelNameNotFoundMessage = "data not found";
-            
+
             const serverErrorConnMessage = "Error, the textbox can't connect to server now.";
             const userNotFoundMessage = "<fmt:message key="assy.label.userNotFoundMessage" />";
             const paramNotVaildMessage = "<fmt:message key="assy.label.paramNotVaildMessage" />";
@@ -146,11 +146,11 @@
             const preAssyModuleTypeDefaultSelectMessage = "<fmt:message key="assy.select.step2.moduleDefault" />";
             //
 
-            var userInfoCookieName = "userInfo", 
-                    testLineTypeCookieName = "testLineTypeCookieName", 
+            var userInfoCookieName = "userInfo",
+                    testLineTypeCookieName = "testLineTypeCookieName",
                     cellCookieName = "cellCookieName";
-            var STATION_LOGIN = "LOGIN", 
-                    STATION_LOGOUT = "LOGOUT", 
+            var STATION_LOGIN = "LOGIN",
+                    STATION_LOGOUT = "LOGOUT",
                     CHANGE_USER = "changeUser";
             var BAB_END = "stationComplete";
 
@@ -325,12 +325,12 @@
                         return false;
                     }
 
-                    if (confirm(startProcessingMessage1_1 + 
-                            startProcessingMessage1_2 + 
-                            po + 
-                            startProcessingMessage1_3 + 
-                            modelName + 
-                            startProcessingMessage1_4 + 
+                    if (confirm(startProcessingMessage1_1 +
+                            startProcessingMessage1_2 +
+                            po +
+                            startProcessingMessage1_3 +
+                            modelName +
+                            startProcessingMessage1_4 +
                             people)) {
                         startBab(po, modelName, people);
                     }
@@ -344,17 +344,20 @@
 
                     if (searchResult == null) {
                         var data = searchProcessing();
-                        searchResult = data[0].bab;//取最先投入的工單做關閉
+                        if (data.length > 0) {
+                            searchResult = data[0].bab;//取最先投入的工單做關閉
+                        }
                     }
 
                     if (searchResult == null) { //當查第二次還是沒有結果
+                        $("#searchProcessing").trigger("click");
                         showMsg(notFirstStationStep2Message1);
                     } else {
                         if (confirm(
                                 endProcessingMessage1_1 +
                                 endProcessingMessage1_2 + searchResult.po + "\n" +
                                 endProcessingMessage1_3 + searchResult.modelName + "\n" +
-                                 + searchResult.people
+                                searchResult.people
                                 )) {
                             var pcsCnt = $("#pcsCnt").val();
                             if (searchResult.ispre == 1) {
@@ -376,6 +379,8 @@
                                 action: BAB_END,
                                 "pcs": pcsCnt
                             });
+                        } else {
+                            $("#searchProcessing").trigger("click");
                         }
                     }
                 });
@@ -543,11 +548,11 @@
                     return false;
                 }
 
-                if (!confirm(saveUserInfoMessage1_1 + 
-                        saveUserInfoMessage1_2 + 
-                        tagName.id.lampSysTagName.name + 
-                        saveUserInfoMessage1_3 + 
-                        jobnumber + 
+                if (!confirm(saveUserInfoMessage1_1 +
+                        saveUserInfoMessage1_2 +
+                        tagName.id.lampSysTagName.name +
+                        saveUserInfoMessage1_3 +
+                        jobnumber +
                         "\n")) {
                     return false;
                 }
@@ -815,6 +820,7 @@
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
                         showMsg(xhr.responseText);
+                        $("#searchProcessing").trigger("click");
                     }
                 });
             }

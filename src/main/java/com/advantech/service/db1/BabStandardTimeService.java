@@ -45,7 +45,8 @@ public class BabStandardTimeService {
 
     public BigDecimal[] findMaxAndMinAllowanceByBabFromWorktime(int babId) {
         Bab b = babService.findWithLineInfo(babId);
-        Worktime w = worktimeService.findByModelName(b.getModelName());
+        String modelName = b == null ? "" : b.getModelName();
+        Worktime w = worktimeService.findByModelName(modelName);
         return this.findMaxAndMinAllowanceByBabFromWorktime(b, w);
     }
 

@@ -12,6 +12,7 @@ import com.advantech.model.db1.Bab;
 import com.advantech.model.db1.BabCollectModeChangeEvent;
 import com.advantech.model.db1.BabDataCollectMode;
 import com.advantech.model.db1.BabSettingHistory;
+import com.advantech.model.db1.BabStandardTimeHistory;
 import com.advantech.model.db1.Floor;
 import com.advantech.model.db1.Fqc;
 import com.advantech.model.db1.FqcLine;
@@ -35,6 +36,7 @@ import com.advantech.service.db1.BabPassStationRecordService;
 import com.advantech.service.db1.BabSensorLoginRecordService;
 import com.advantech.service.db1.BabService;
 import com.advantech.service.db1.BabSettingHistoryService;
+import com.advantech.service.db1.BabStandardTimeHistoryService;
 import com.advantech.service.db1.FloorService;
 import com.advantech.service.db1.FqcLineService;
 import com.advantech.service.db1.FqcProductivityHistoryService;
@@ -342,7 +344,7 @@ public class TestService {
         BabSettingHistory setting = babSettingHistoryService.findFirstProcessingByTagName("L2-S-2");
 //        BabSettingHistory setting = babSettingHistoryService.findByBabAndStation(b, 2);
 
-        babService.stationComplete(b, setting, true);
+        babService.stationComplete(b, setting);
 //        babService.closeBab(b);
 
 //        String tagname = setting.getTagName().getName();
@@ -721,5 +723,13 @@ public class TestService {
     public void testFindBabByPreAssyModuleType() {
         List l = babService.findByPreAssyModuleType(1, "");
         assertEquals(1, l.size());
+    }
+
+    @Autowired
+    private BabStandardTimeHistoryService babStandardTimeHistoryService;
+
+//    @Test
+    public void testBabStandardTimeHistory() {
+        BabStandardTimeHistory bsth = babStandardTimeHistoryService.findByBab(194487);
     }
 }

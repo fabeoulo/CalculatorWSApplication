@@ -16,7 +16,7 @@ import java.util.Map;
 public enum BabStatus implements Encodeable {
     CLOSED(1),
     PAUSE(2),
-//    AUTO_CLOSED(3),
+    AUTO_CLOSED(3),
     NO_RECORD(-1),
     UNFINSHED(-2),
     UNFINSHED_RECONNECTABLE(-3);

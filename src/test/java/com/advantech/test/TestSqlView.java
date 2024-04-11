@@ -11,9 +11,14 @@ import com.advantech.helper.HibernateObjectPrinter;
 import com.advantech.model.view.db1.BabAvg;
 import com.advantech.model.view.db3.WorktimeCobots;
 import static com.google.common.collect.Lists.newArrayList;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -65,6 +70,27 @@ public class TestSqlView {
     @Transactional
     @Rollback(true)
     public void testSqlViewService() {
+        List<Map> map = sqlViewDAO.findSensorDIDONames();
+        Map<String, String> m2 = map.stream()
+                .collect(Collectors.toMap(
+                        entry -> (String) entry.getOrDefault("dido_name", ""),
+                        entry -> (String) entry.getOrDefault("tagName", ""),
+                        (existingValue, newValue) -> existingValue,
+                        LinkedHashMap::new
+                ));
+
+//        HibernateObjectPrinter.print(m2.toString());
+//        List<String> r2 = new ArrayList<>(m2.keySet());
+
+        Set<String> ss = new HashSet<>();
+        ss.add("Sensor_71:DI_00");
+        ss.add("Sensor_71:DI_01");
+
+        Map<String, String> filterM = m2.entrySet().stream()
+                .filter(mm -> ss.contains(mm.getKey()))
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+        HibernateObjectPrinter.print(filterM.toString());
+
 //        List<Map> result = sqlViewDAO.findProcessBabHasMaxGroup();
 //        Map<String, Integer> stationUnclose = new HashMap<>();
 //        result.forEach(m -> {
@@ -73,19 +99,18 @@ public class TestSqlView {
 //        });
 //        HibernateObjectPrinter.print(stationUnclose);
 //        int test = stationUnclose.getOrDefault("5", 0);
+        String stop = "";
 
-        List<Map> m = sqlViewDAO.checkSettingHasMaxGroup(190473);
-        Map<String, Integer> stationUncloseM = new HashMap<>();
-        m.forEach(resultM -> {
-            int unClose = (int) resultM.get("autoClose");
-            if (unClose == 1) {
-                stationUncloseM.put((String) resultM.get("tagName"), unClose);
-            }
-        });
-        HibernateObjectPrinter.print(stationUncloseM);
-        int checkResult = stationUncloseM.getOrDefault(5, 0);
-
-//        List<String> l = sqlViewDAO.findSensorDIDONames();
+//        List<Map> m = sqlViewDAO.checkSettingHasMaxGroup(190473);
+//        Map<String, Integer> stationUncloseM = new HashMap<>();
+//        m.forEach(resultM -> {
+//            int unClose = (int) resultM.get("autoClose");
+//            if (unClose == 1) {
+//                stationUncloseM.put((String) resultM.get("tagName"), unClose);
+//            }
+//        });
+//        HibernateObjectPrinter.print(stationUncloseM);
+//        int checkResult = stationUncloseM.getOrDefault(5, 0);
     }
 
 //    @Test
