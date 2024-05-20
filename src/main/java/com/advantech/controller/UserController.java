@@ -11,6 +11,7 @@ import com.advantech.webservice.atmc.AtmcEmployeeUtils;
 import com.advantech.helper.CustomPasswordEncoder;
 import com.advantech.helper.SecurityPropertiesUtils;
 import com.advantech.model.db1.User;
+import com.advantech.security.State;
 import com.advantech.service.db1.UserService;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
@@ -68,10 +69,10 @@ public class UserController {
             return true;
         } catch (Exception ex) {
             log.info("Have some issue on checking user on ATMC service...", ex);
-//            User user = userService.findByJobnumber(jobnumber);
-//            return user != null;
-            checkState(1 == 0, "Have some issue on checking user on ATMC service...");//Just show server error message to user.
-            return false;
+            User user = userService.findByJobnumber(jobnumber);
+            boolean result = user != null && user.getState().equals(State.ACTIVE);
+            checkState(result, "User with jobnumber " + jobnumber + " not found both on ATMC and FIMP.");//Just show server error message to user.
+            return true;
         }
     }
 

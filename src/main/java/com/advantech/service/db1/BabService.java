@@ -8,6 +8,7 @@ import com.advantech.model.db1.Bab;
 import com.advantech.model.db1.BabAlarmHistory;
 import com.advantech.model.db1.BabDataCollectMode;
 import com.advantech.model.db1.BabSettingHistory;
+import com.advantech.model.db1.BabStandardTimeHistory;
 import com.advantech.model.db1.BabStatus;
 import com.advantech.model.db1.Line;
 import com.advantech.model.db1.LineType;
@@ -178,8 +179,8 @@ public class BabService {
 
         result.forEach((k, v) -> {
             v.forEach((k1, v1) -> {
-                Interval rest1 = new Interval(new DateTime(k1).withTime(12, 0, 0, 0), new DateTime(k1).withTime(12, 50, 0, 0));
-                Interval rest2 = new Interval(new DateTime(k1).withTime(15, 30, 0, 0), new DateTime(k1).withTime(15, 40, 0, 0));
+                Interval rest1 = new Interval(new DateTime(k1).withTime(12, 0, 0, 0), new DateTime(k1).withTime(13, 0, 0, 0));
+                Interval rest2 = new Interval(new DateTime(k1).withTime(15, 0, 0, 0), new DateTime(k1).withTime(15, 10, 0, 0));
 
                 DateTime sDOD = new DateTime(k1).withTime(8, 30, 0, 0);
                 DateTime eDOD = new DateTime(k1).withTime(17, 30, 0, 0);
@@ -366,7 +367,10 @@ public class BabService {
             this.closeBabWithSaving(bab);
 
             //額外將當下工時紀錄
-            babStandardTimeHistoryService.insertByBab(bab);
+            BabStandardTimeHistory bsth = babStandardTimeHistoryService.findByBab(bab.getId());
+            if (bsth == null) {
+                babStandardTimeHistoryService.insertByBab(bab);
+            }
         } else {
             this.closeBabDirectly(bab);
         }

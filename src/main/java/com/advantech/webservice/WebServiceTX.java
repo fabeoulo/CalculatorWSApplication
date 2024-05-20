@@ -86,7 +86,7 @@ public class WebServiceTX extends SimpleWebServiceTX {
     }
 
     private void checkUserIsAvailable(UserOnMes user) {
-        checkArgument(user != null && user.getUserId() != null && user.getUserNo() != null, "The user is not exist.");
+        checkArgument(user != null && user.getUserId() != null && user.getUserNo() != null, "The user is not exist in FIMP.");
     }
 
 }

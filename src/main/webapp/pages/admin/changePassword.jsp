@@ -42,7 +42,7 @@
         <script>
             ﻿$(function () {
                 function savePass() {
-                    var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[0-9])(?=.{6,})");
+                    var strongRegex = new RegExp("^(?=.*[a-zA-Z])(?=.*[0-9])(?=.{6,})");
                     var pass = $("#pass").val();
                     var valid = pass == $("#passConfirm").val();
                     if (!valid) {

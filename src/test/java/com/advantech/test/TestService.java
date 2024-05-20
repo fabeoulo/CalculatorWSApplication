@@ -61,6 +61,7 @@ import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.Lists.newArrayList;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -91,6 +92,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+import sun.security.util.Debug;
 
 /**
  *
@@ -730,6 +732,16 @@ public class TestService {
 
 //    @Test
     public void testBabStandardTimeHistory() {
-        BabStandardTimeHistory bsth = babStandardTimeHistoryService.findByBab(194487);
+        List<Integer> ids = newArrayList(195400, 195401, 195402, 195407, 195415, 195417, 195419, 195427, 195428, 195429, 195430, 195433, 195436, 195437, 195439, 195440, 195441, 195442, 195444, 195447, 195448, 195452, 195458, 195463, 195468, 195469);
+
+        ids.forEach(id -> {
+            Bab bab = babService.findWithLineInfo(id);
+
+            BabStandardTimeHistory bsth = babStandardTimeHistoryService.findByBab(bab.getId());
+            if (bsth == null) {
+                HibernateObjectPrinter.print(id);
+                babStandardTimeHistoryService.insertByBab(bab);
+            }
+        });
     }
 }

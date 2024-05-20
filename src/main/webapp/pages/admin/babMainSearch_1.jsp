@@ -1141,7 +1141,7 @@
                             <div class='input-group date' id='endTime'>
                                 <input type="text" id="ffin" placeholder="請選擇結束時間"> 
                             </div>
-                            <label for="aboveStandard"><input type="checkbox" id="aboveStandard">只顯示數量大於十台</label>
+                            <label for="aboveStandard"><input type="checkbox" id="aboveStandard">只顯示數量十台以上</label>
                             <input type="button" id="searchAvailableBab" value="查詢">
                             <input type="button" id="generateExcel" class="excel_export" value="產出excel">
                         </div>
