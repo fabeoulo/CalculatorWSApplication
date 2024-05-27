@@ -51,8 +51,6 @@ public class HandleUncloseBab extends QuartzJobBean {
 
         List<Bab> unClosedBabs = this.getUnclosedBabs();
         List<BabSettingHistory> allBabSettings = this.getUnclosedSettings();
-//        //dev
-//        unClosedBabs = unClosedBabs.stream().filter(b -> b.getId() == 190204).collect(Collectors.toList());
         log.info("Unclosed babList size = " + unClosedBabs.size());
 
         for (Bab bab : unClosedBabs) {

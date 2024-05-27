@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,6 +42,9 @@ public class BabPcsDetailHistory implements Serializable {
     private int groupid;
     private int diff;
     private Date lastUpdateTime;
+    private BigDecimal avgDiff;
+    private Integer isAdjust;
+    private Integer diffAdj;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -111,6 +115,33 @@ public class BabPcsDetailHistory implements Serializable {
 
     public void setLastUpdateTime(Date lastUpdateTime) {
         this.lastUpdateTime = lastUpdateTime;
+    }
+
+    @Column(name = "avg", precision = 10, scale = 2, nullable = true)
+    public BigDecimal getAvgDiff() {
+        return avgDiff;
+    }
+
+    public void setAvgDiff(BigDecimal avgDiff) {
+        this.avgDiff = avgDiff;
+    }
+
+    @Column(name = "isAdjust", nullable = true)
+    public Integer getIsAdjust() { 
+        return isAdjust;
+    }
+
+    public void setIsAdjust(Integer isAdjust) {
+        this.isAdjust = isAdjust;
+    }
+
+    @Column(name = "diffAdj", nullable = true)
+    public Integer getDiffAdj() {
+        return diffAdj;
+    }
+
+    public void setDiffAdj(Integer diffAdj) {
+        this.diffAdj = diffAdj;
     }
 
 }

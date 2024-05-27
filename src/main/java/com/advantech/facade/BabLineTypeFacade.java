@@ -229,11 +229,6 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
         String UnclosedKey = "isUnclosed";
 
         processingBabs.forEach((bab) -> {
-//            //dev
-//            int babId2 = bab.getId();
-//            if (babId2 == 190807) {
-//                int babId3 = bab.getId();
-//            }
 
             List<BabSettingHistory> babSettings = allBabSettings.stream()
                     .filter(rec -> rec.getBab().getId() == bab.getId()).collect(toList());

@@ -155,7 +155,7 @@ public class SqlViewController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate) {
 
-        return new DataTableResponse(procSerice.findBabLineProductivity(po, modelName, line_id, lineType_id, jobnumber, minPcs, startDate, endDate));
+        return new DataTableResponse(procSerice.findBabLineProductivityAvg(po, modelName, line_id, lineType_id, jobnumber, minPcs, startDate, endDate));
 
     }
 

@@ -99,7 +99,7 @@
                     const beginDate = e.date;
                     const endDate = endTimeObj.data("DateTimePicker").date();
                     const dateDiff = endDate.diff(beginDate, 'days');
-                    if (dateDiff > 30) {
+                    if (dateDiff > lockDays) {
                         endTimeObj.data("DateTimePicker").date(beginDate.add(lockDays, 'days'));
                     }
                 });
@@ -108,7 +108,7 @@
                     const beginDate = beginTimeObj.data("DateTimePicker").date();
                     const endDate = e.date;
                     const dateDiff = endDate.diff(beginDate, 'days');
-                    if (dateDiff > 30) {
+                    if (dateDiff > lockDays) {
                         beginTimeObj.data("DateTimePicker").date(endDate.add(-lockDays, 'days'));
                     }
                 });
@@ -263,25 +263,34 @@
                         {data: "s1tag", visible: false},
                         {data: "s1usr", visible: false},
                         {data: "s1time", visible: false},
+                        {data: "s1timeA", visible: false},
                         {data: "s2tag", visible: false},
                         {data: "s2usr", visible: false},
                         {data: "s2time", visible: false},
+                        {data: "s2timeA", visible: false},
                         {data: "s3tag", visible: false},
                         {data: "s3usr", visible: false},
                         {data: "s3time", visible: false},
+                        {data: "s3timeA", visible: false},
                         {data: "s4tag", visible: false},
                         {data: "s4usr", visible: false},
                         {data: "s4time", visible: false},
+                        {data: "s4timeA", visible: false},
                         {data: "s5tag", visible: false},
                         {data: "s5usr", visible: false},
                         {data: "s5time", visible: false},
+                        {data: "s5timeA", visible: false},
                         {data: "s6tag", visible: false},
                         {data: "s6usr", visible: false},
                         {data: "s6time", visible: false},
-                        {data: "totalPcs"},
+                        {data: "s6timeA", visible: false},
                         {data: "standardTime"},
+                        {data: "totalPcs"},
                         {data: "timeCost"},
                         {data: "productivity"},
+                        {data: "totalPcsA", visible: false},
+                        {data: "timeCostA", visible: false},
+                        {data: "productivityA", visible: false},
                         {data: "btime"},
                         {data: "lastUpdateTime"},
                         {data: "solution", visible: false},
@@ -290,6 +299,13 @@
                         {data: "replyFlag"}
                     ],
                     "columnDefs": [
+                        {
+                            "type": "html",
+                            "targets": [-8, -9],
+                            'render': function (data, type, row) {
+                                return data === null ? 0 : data.toString(); // for excel
+                            }
+                        },
                         {
                             'targets': 0,
                             'searchable': false,
@@ -301,35 +317,35 @@
                         },
                         {
                             "type": "html",
-                            "targets": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+                            "targets": [7 - 30],
                             'render': function (data, type, full, meta) {
                                 return data == null ? 0 : data;
                             }
                         },
                         {
                             "type": "html",
-                            "targets": [29, 30],
+                            "targets": [-5, -6],
                             'render': function (data, type, full, meta) {
                                 return formatDate(data);
                             }
                         },
                         {
                             "type": "html",
-                            "targets": [27],
+                            "targets": [-8, -11],
                             'render': function (data, type, full, meta) {
                                 return roundDecimal(data, 2);
                             }
                         },
                         {
                             "type": "html",
-                            "targets": [28],
+                            "targets": [-7, -10],
                             'render': function (data, type, full, meta) {
                                 return getPercent(data);
                             }
                         },
                         {
                             "type": "html",
-                            "targets": [34],
+                            "targets": [-1],
                             'render': function (data, type, full, meta) {
                                 switch (data) {
                                     case 1:
@@ -525,25 +541,34 @@
                             <th>站1</th>
                             <th>站1人員</th>
                             <th>站1時間</th>
+                            <th>站1時間調整</th>
                             <th>站2</th>
                             <th>站2人員</th>
                             <th>站2時間</th>
+                            <th>站2時間調整</th>
                             <th>站3</th>
                             <th>站3人員</th>
                             <th>站3時間</th>
+                            <th>站3時間調整</th>
                             <th>站4</th>
                             <th>站4人員</th>
                             <th>站4時間</th>
+                            <th>站4時間調整</th>
                             <th>站5</th>
                             <th>站5人員</th>
                             <th>站5時間</th>
+                            <th>站5時間調整</th>
                             <th>站6</th>
                             <th>站6人員</th>
                             <th>站6時間</th>
-                            <th>數量</th>
+                            <th>站6時間調整</th>
                             <th>標工</th>
+                            <th>數量</th>
                             <th>總耗時(分)</th>
                             <th>效率</th>
+                            <th>數量調整</th>
+                            <th>總耗時(分)調整</th>
+                            <th>效率調整</th>
                             <th>開始</th>
                             <th>結束</th>
                             <th>異常原因</th>
@@ -559,6 +584,15 @@
                                     <input type="button" value="Del" class="btn btn-danger" id="babDel" />
                                 </c:if>
                             </th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
                             <th></th>
                             <th></th>
                             <th></th>

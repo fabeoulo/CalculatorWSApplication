@@ -57,15 +57,6 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .setResultTransformer(Transformers.aliasToBean(SensorCurrentGroupStatus.class))
                 .list();
     }
-    
-    // dev
-//    public List<SensorCurrentGroupStatus> findSensorHistoryStatus(int bab_id) {
-//        return super.getSession()
-//                .createSQLQuery("{CALL M3_BW.usp_GetSensorHistoryStatus_NotTodoay(:bab_id)}")
-//                .setParameter("bab_id", bab_id)
-//                .setResultTransformer(Transformers.aliasToBean(SensorCurrentGroupStatus.class))
-//                .list();
-//    }
 
     //Join detail with alarmPercent in /pages/admin/BabTotal page
     public List<Map> findBabDetail(int lineType_id, int floor_id, DateTime sD, DateTime eD, boolean isAboveStandard) {
@@ -96,7 +87,7 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
     //Get bananceCompare with alarmPercent in /pages/admin/BabTotal page
     public List<Map> findLineBalanceCompareByBab(int bab_id) {
         return super.getSession()
-                .createSQLQuery("{CALL M3_BW.usp_GetLineBalanceCompareByBab(:bab_id)}")   // dev usp_GetLineBalanceCompareByBab_dev
+                .createSQLQuery("{CALL M3_BW.usp_GetLineBalanceCompareByBab(:bab_id)}")
                 .setParameter("bab_id", bab_id)
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .list();
@@ -155,9 +146,9 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .list();
     }
 
-    public List<Map> findBabLineProductivity(String po, String modelName, Integer line_id, Integer lineTypeId, String jobnumber, Integer minPcs, DateTime sD, DateTime eD) {
+    public List<Map> findBabLineProductivityAvg(String po, String modelName, Integer line_id, Integer lineTypeId, String jobnumber, Integer minPcs, DateTime sD, DateTime eD) {
         return super.getSession()
-                .createSQLQuery("{CALL M3_BW.usp_Excel_LineProductivity(:po, :modelName, :lineId, :lineTypeId, :jobnumber, :minPcs, :sD, :eD)}")
+                .createSQLQuery("{CALL M3_BW.usp_Excel_LineProductivity_Avg(:po, :modelName, :lineId, :lineTypeId, :jobnumber, :minPcs, :sD, :eD)}")
                 .setParameter("po", po)
                 .setParameter("modelName", modelName)
                 .setParameter("lineId", line_id)
@@ -257,7 +248,7 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
 
     public int closeBabWithSaving(Bab b) {
         super.getSession()
-                .createSQLQuery("{CALL M3_BW.usp_CloseBabWithSaving(:bab_id)}")   // dev usp_CloseBabWithSaving_NotTodoay
+                .createSQLQuery("{CALL M3_BW.usp_CloseBabWithSaving(:bab_id)}")
                 .setParameter("bab_id", b.getId())
                 .executeUpdate();
         return 1;

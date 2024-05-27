@@ -167,7 +167,10 @@
                         {data: "station", title: "站別"},
                         {data: "groupid", title: "組別"},
                         {data: "diff", title: "花費時間"},
-                        {data: "lastUpdateTime", title: "最後更新"}
+                        {data: "lastUpdateTime", title: "最後更新"},
+                        {data: "avgDiff", title: "平均時間", visible: false},
+                        {data: "isAdjust", title: "是否排除", visible: false},
+                        {data: "diffAdj", title: "調整時間", visible: false}
                     ],
                     "oLanguage": {
                         "sLengthMenu": "顯示 _MENU_ 筆記錄",
@@ -184,9 +187,23 @@
                     "columnDefs": [
                         {
                             "type": "html",
+                            "targets": [4, 8],
+                            'render': function (data, type, row) {
+                                return data === null ? 0 : data.toString(); // for excel
+                            }
+                        },
+                        {
+                            "type": "html",
                             "targets": 5,
                             'render': function (data, type, full, meta) {
                                 return formatDate(moment(data).format('YYYY-MM-DDTHH:mm:ss.SSS'));
+                            }
+                        },
+                        {
+                            "type": "html",
+                            "targets": -2,
+                            'render': function (data, type, full, meta) {
+                                return data == 1 ? "是" : "否";
                             }
                         },
                         {

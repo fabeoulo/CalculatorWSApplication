@@ -55,7 +55,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
 
     public List<Map> findSensorStatus(int bab_id) {
         return super.getSession()
-                .createSQLQuery("select * from {h-schema}tbfn_GetSensorStatus(:bab_id) ORDER BY groupid, station")
+                .createSQLQuery("select * from {h-schema}tbfn_GetSensorStatusAvg(:bab_id) ORDER BY groupid, station")
                 .setParameter("bab_id", bab_id)
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .list();
@@ -117,7 +117,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
     // error
     public List<Map> findSensorDIDONamesHQL() {
         return super.getSession()
-                .createQuery("select new Map(dido_names as dido_names, dido_names as name2) from vw_SensorDIDONames")//HQL, vw_SensorDIDONames must be entity
+                .createQuery("select new Map(dido_names as dido_names, dido_names as name2) from vw_SensorDIDONames")//createQuery is HQL, vw_SensorDIDONames must be entity
                 .getResultList();
     }
 }
