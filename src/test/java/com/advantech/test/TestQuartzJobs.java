@@ -21,10 +21,10 @@ import com.advantech.quartzJob.TestLineTypeRecordUnrepliedAlarm;
 import com.advantech.quartzJob.ArrangePrepareScheduleImpl_Assy;
 import com.advantech.quartzJob.ArrangePrepareScheduleImpl_Packing;
 import com.advantech.quartzJob.CheckTagNode;
+import com.advantech.quartzJob.HandleUncloseBabProcess;
 import com.advantech.quartzJob.PreAssyModuleStandardTimeJob;
 import com.advantech.quartzJob.SyncPrepareScheduleForPacking;
 import com.advantech.quartzJob.SyncWorktimeFromRemote;
-import com.advantech.webapi.WaGetTagValue;
 import static com.google.common.collect.Lists.newArrayList;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -88,6 +88,15 @@ public class TestQuartzJobs {
         HandleUncloseBab b = new HandleUncloseBab();
         b.executeInternal(null);
     }
+    
+//    @Test
+//    @Transactional
+//    @Rollback(false)
+    public void testHandleUncloseBabProcess() throws JobExecutionException {
+        HandleUncloseBabProcess b = new HandleUncloseBabProcess();
+        b.executeInternal(null);
+    }
+
 
 //    @Test
     public void testCleanSensorData() throws JobExecutionException {

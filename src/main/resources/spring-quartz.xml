@@ -85,6 +85,16 @@
         <property name="cronExpression" value="0 0 8 ? * MON-SAT *" />
     </bean>
 
+    <bean name="HandleUncloseBabProcess" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.advantech.quartzJob.HandleUncloseBabProcess" />
+        <property name="durability" value="true" />
+    </bean>
+    
+    <bean id="HandleUncloseBabProcess-MorningShift" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="HandleUncloseBabProcess" />
+        <property name="cronExpression" value="0,20,40 * 8-20 ? * MON-SAT *" />
+    </bean>
+    
     <!--
         Job4 setting
         定時查看sensor是否異常，回報
@@ -360,11 +370,13 @@
                 <ref bean="BabGenerateData-Trig"/>
                 <ref bean="TestGenerateData-Trig"/>
                 
+                <ref bean="HandleUncloseBabProcess-MorningShift"/>
+                
                 <ref bean="DataBaseInit-Trig-MorningShift"/>
                 <!--<ref bean="DataBaseInit-Trig-NightShift"/>-->
                 <ref bean="HandleUncloseBab-MorningShift"/>
                 <!--<ref bean="HandleUncloseBab-NightShift"/>-->
-                
+                                
                 <ref bean="CleanSensorData-Trig"/>
                 <ref bean="TestLineTypeRecord-Trig"/>
                 <ref bean="SyncTestPassStationData-Trig"/>

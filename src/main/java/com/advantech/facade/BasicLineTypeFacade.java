@@ -165,7 +165,7 @@ public abstract class BasicLineTypeFacade implements com.advantech.service.db1.A
         }
     }
 
-    protected void resetAlarmSignWa(List alarmActions) {
+    protected <T extends com.advantech.model.db1.AlarmAction> void resetAlarmSignWa(List<T> alarmActions) {
         //find DO by TableIds & active DOs        
         Map<String, String> mapTableIdToDO = this.findFilterMapByTables(alarmActions);
 

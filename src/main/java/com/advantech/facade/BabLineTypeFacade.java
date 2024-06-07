@@ -34,7 +34,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import javax.annotation.PostConstruct;
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -101,9 +101,8 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
         this.ASSY_STANDARD = p.getAssyLineBalanceStandard().doubleValue();
         this.PKG_STANDARD = p.getPackingLineBalanceStandard().doubleValue();
         this.collectMode = p.getBabDataCollectMode();
+        this.isAutoSave = p.getIsBabNotPreAutoSave();
 
-        isAutoSave = p.getIsBabNotPreAutoSave();
-        
         this.initWorktimes();
         this.initMap();
 //        this.initAlarmSign();
@@ -235,7 +234,7 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
             List<BabLastGroupStatus> matchesStatus = status.stream()
                     .filter(stat -> stat.getBab_id() == bab.getId()).collect(toList());
             if (!(babSettings.isEmpty())) {
-                Map<String, Integer> unclosedMap = getUnclosedMap(bab, babSettings);
+                Map<String, Integer> unclosedMap = new HashMap<>();//getUnclosedMap(bab, babSettings);
 
                 int currentGroupSum = matchesStatus.size();//看目前組別人數是否有到達bab裏頭設定的人數
                 int peoples = bab.getPeople();
@@ -255,10 +254,8 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
 
                         // if the first process bab of tag need to cloes, put the tag with unclosed sign into map and never cover it.
                         // else put the last process bab's tag into map directly.
-                        if (unclosedMap.containsKey(tagName)) {
-                            if (isAutoSave) {
-                                babService.autoCloseNotPre(bab, setting);
-                            } else {
+                        if (bab.getIspre() != 1 && unclosedMap.containsKey(tagName)) {
+                            if (!isAutoSave) {
                                 obj.put(UnclosedKey, unclosedMap.get(tagName));
                                 transBabDataMap.put(tagName, obj);
                             }
@@ -290,17 +287,8 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
                         JSONObject obj = new JSONObject(bgs);
                         String tagName = bgs.getTagName();
 
-                        if (unclosedMap.containsKey(tagName)) {
-                            if (isAutoSave) {
-                                Optional<BabSettingHistory> setting = babSettings.stream()
-                                        .filter(
-                                                rec -> rec.getBab().getId() == bab.getId()
-                                                && rec.getTagName().getName().equalsIgnoreCase(tagName)
-                                        ).findFirst();
-                                if (setting.isPresent()) {
-                                    babService.autoCloseNotPre(bab, setting.get());
-                                }
-                            } else {
+                        if (unclosedMap.containsKey(tagName) && bab.getIspre() != 1) {
+                            if (!isAutoSave) {
                                 obj.put(UnclosedKey, unclosedMap.get(tagName));
                             }
                         }
@@ -314,7 +302,7 @@ public class BabLineTypeFacade extends BasicLineTypeFacade {
         return new JSONArray(transBabDataMap.values());
     }
 
-    private Map<String, Integer> getUnclosedMap(Bab b, @NotEmpty List<BabSettingHistory> processSettings) {
+    private Map<String, Integer> getUnclosedMap(Bab b, @NotNull List<BabSettingHistory> processSettings) {
         Map<String, Integer> unclosedMap = new HashMap<>();
         if (processSettings.size() != b.getPeople()) {
             unclosedMap = viewService.getUnclosedLineStation(b.getId());

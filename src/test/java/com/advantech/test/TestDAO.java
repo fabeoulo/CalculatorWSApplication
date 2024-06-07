@@ -101,7 +101,7 @@ public class TestDAO {
 
     @Autowired
     private WebServiceRV rv;
-    
+
     @Autowired
     private PrepareScheduleDailyRemarkDAO preRemarkDAO;
 
@@ -348,8 +348,8 @@ public class TestDAO {
         HibernateObjectPrinter.print(l);
     }
 
-    @Autowired
-    @Qualifier("sqlViewDAO4")
+//    @Autowired
+//    @Qualifier("sqlViewDAO4")
     private com.advantech.dao.db4.SqlViewDAO sqlViewDAO4;
 
 //    @Test
@@ -387,7 +387,7 @@ public class TestDAO {
         HibernateObjectPrinter.print(list.get(0));
 
     }
-    
+
 //    @Test
     @Transactional
     @Rollback(true)
@@ -397,11 +397,11 @@ public class TestDAO {
         HibernateObjectPrinter.print(list.get(0));
 
     }
-    
+
     @Autowired
     @Qualifier("sqlViewDAO5")
     private com.advantech.dao.db5.SqlViewDAO sqlViewDAO5;
-    
+
 //    @Test
     @Transactional
     @Rollback(true)
@@ -409,15 +409,14 @@ public class TestDAO {
         List<LackingInfo> list = sqlViewDAO5.findLackingInfo();
 
         HibernateObjectPrinter.print(list);
-        
-//        HibernateObjectPrinter.print(list.get(0).getCnt().getClass().getName());
 
+//        HibernateObjectPrinter.print(list.get(0).getCnt().getClass().getName());
     }
-    
+
     @Autowired
     @Qualifier("sqlViewDAO6")
     private com.advantech.dao.db6.SqlViewDAO sqlViewDAO6;
-    
+
 //    @Test
     @Transactional
     @Rollback(true)
@@ -425,25 +424,22 @@ public class TestDAO {
         List list = sqlViewDAO6.findShortageInfo();
 
         HibernateObjectPrinter.print(list);
-        
-//        HibernateObjectPrinter.print(list.get(0).getCnt().getClass().getName());
 
+//        HibernateObjectPrinter.print(list.get(0).getCnt().getClass().getName());
     }
-    
-    @Test
-    @Transactional
-    @Rollback(true)
+
+//    @Test
+//    @Transactional
+//    @Rollback(true)
     public void testFindBabProcessing() {
         List list = babDAO.findProcessing();
-
         assertEquals(13, list.size());
-
     }
-    
+
     @Autowired
     @Qualifier("sqlViewDAO7")
     private com.advantech.dao.db7.SqlViewDAO sqlViewDAO7;
-    
+
     @Test
     @Transactional("transactionManager7")
     @Rollback(true)

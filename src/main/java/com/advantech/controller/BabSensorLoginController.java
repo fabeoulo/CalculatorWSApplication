@@ -88,10 +88,10 @@ public class BabSensorLoginController {
         } else {
             if (isFirstStation) {
                 checkArgument(setting.getStation() == 1,
-                        "無法切換站別，此Sensor尚在上套的工單站別 " + setting.getStation() + " 進行中");
+                        "無法切換站別，此Sensor尚在上套的工單站別 " + setting.getStation() + " 進行中(Cannot switch while processing.)");
             } else {
                 checkArgument(setting.getStation() != 1,
-                        "無法切換站別，此Sensor尚在上套的工單站別 " + setting.getStation() + " 進行中");
+                        "無法切換站別，此Sensor尚在上套的工單站別 " + setting.getStation() + " 進行中(Cannot switch while processing.)");
             }
             return true;
         }

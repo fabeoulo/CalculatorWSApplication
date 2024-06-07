@@ -263,10 +263,12 @@
                                 .append(`<li>` + firstStationStep2Hint5 + `</li>`);
                         $("#people").show();
                     }
+
+                    showProcessing();
                 });
 
                 $("#isNotFirstStation").click(function () {
-                    var processData = searchProcessing();
+                    var processData = showProcessing();
                     if (processData == null || processData.length == 0 || processData[0].bab.people == 1
                             || checkStation($("#tagName").val(), false) == true) {
                         $(this).attr("disabled", true);
@@ -276,8 +278,6 @@
                         $("#step2Hint").html("")
                                 .append(`<li>` + notFirstStationStep2Hint1 + `</li>`)
                                 .append(`<li>` + notFirstStationStep2Hint2 + `</li>`);
-
-                        $(".preAssy-pcs-insert").toggle(processData.length != 0 && processData[0].bab.ispre == 1);
                     }
                 });
 
@@ -336,42 +336,40 @@
                     }
                 });
 
-                var searchResult = null;
-
                 //其他站別結束命令
                 $("#babEnd").click(function () {
                     var userInfo = $.parseJSON(userInfoCookie);
+                    var searchResult = null;
 
-                    if (searchResult == null) {
-                        var data = searchProcessing();
-                        if (data.length > 0) {
-                            searchResult = data[0].bab;//取最先投入的工單做關閉
-                        }
+                    var data = showProcessing();
+                    if (data && data.length > 0) {
+                        searchResult = data[0].bab;//取最先投入的工單做關閉
                     }
 
-                    if (searchResult == null) { //當查第二次還是沒有結果
-                        $("#searchProcessing").trigger("click");
+                    if (searchResult === null) {
                         showMsg(notFirstStationStep2Message1);
                     } else {
+                        var pcsCnt = $("#pcsCnt").val();
+                        if (searchResult.ispre == 1) {
+                            preAssyPcsToggle(true);
+
+                            if (pcsCnt == "") {
+                                alert(endProcessingMessage3);
+                                return false;
+                            }
+
+                            if (/^[0-9]+$/.test(pcsCnt) == false) {
+                                alert(endProcessingMessage2);
+                                return false;
+                            }
+                        }
+
                         if (confirm(
                                 endProcessingMessage1_1 +
                                 endProcessingMessage1_2 + searchResult.po + "\n" +
                                 endProcessingMessage1_3 + searchResult.modelName + "\n" +
-                                searchResult.people
+                                endProcessingMessage1_4 + searchResult.people
                                 )) {
-                            var pcsCnt = $("#pcsCnt").val();
-                            if (searchResult.ispre == 1) {
-                                $(".preAssy-pcs-insert").show();
-                                if (pcsCnt == "") {
-                                    alert(endProcessingMessage3);
-                                    return false;
-                                }
-
-                                if (/^[0-9]+$/.test(pcsCnt) == false) {
-                                    alert(endProcessingMessage2);
-                                    return false;
-                                }
-                            }
                             otherStationUpdate({
                                 bab_id: searchResult.id,
                                 tagName: userInfo.tagName,
@@ -380,7 +378,7 @@
                                 "pcs": pcsCnt
                             });
                         } else {
-                            $("#searchProcessing").trigger("click");
+                            showProcessing();
                         }
                     }
                 });
@@ -697,23 +695,24 @@
 
             function showProcessing() {
                 showInfo("");
+
                 var data = searchProcessing();
-                if (data.length != 0) {
+                if (data && data.length !== 0) {
                     for (var i = 0; i < data.length; i++) {
                         var processingBab = data[i].bab;
                         $("#processingBab").append(
-                                "<p" + (i == 0 ? " class='alarm'" : "") + ">工單: " + processingBab.po +
+                                "<p" + (i === 0 ? " class='alarm'" : "") + ">工單: " + processingBab.po +
                                 " / 機種: " + processingBab.modelName +
                                 " / 人數: " + processingBab.people +
-                                (processingBab.ispre == 1 ? " / 前置" : "") +
+                                (processingBab.ispre === 1 ? " / 前置" : "") +
                                 "</p>");
-                        if (processingBab.ispre == 1) {
+                        if (processingBab.ispre === 1) {
                             var preModules = data[i].standardTimes;
                             var str = "";
-                            if (preModules.length == 0) {
+                            if (preModules.length === 0) {
                                 str = "<p class='alarm'>無設定模組</p>";
                             } else {
-                                str += "<ul" + (i == 0 ? " class='alarm'" : "") + ">";
+                                str += "<ul" + (i === 0 ? " class='alarm'" : "") + ">";
                                 for (var j = 0; j < preModules.length; j++) {
                                     str += "<li>模組: " + preModules[j].preAssyModuleType.name +
                                             " / SOP: " + preModules[j].sopName +
@@ -725,14 +724,27 @@
                             $("#processingBab").append(str);
                         }
                         $("#processingBab").append("<p>---------------</p>");
-                        if (i == 0 && processingBab.ispre == 1) {
-                            $(".preAssy-pcs-insert").show();
+
+                        if (i === 0 && processingBab.ispre === 1) {
+                            preAssyPcsToggle(true);
+                        } else if (i === 0 && processingBab.ispre !== 1) {
+                            preAssyPcsToggle(false);
                         }
                     }
                     findModelSopRemark();
                 } else {
                     showInfo("No data");
+                    preAssyPcsToggle(false);
                 }
+
+                return data;
+            }
+
+            function preAssyPcsToggle(show) {
+                if (!show) {
+                    $("#pcsCnt").val("");
+                }
+                $(".preAssy-pcs-insert").toggle(show);
             }
 
             //步驟一，維持各站別的唯一性
@@ -820,7 +832,7 @@
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
                         showMsg(xhr.responseText);
-                        $("#searchProcessing").trigger("click");
+                        showProcessing();
                     }
                 });
             }
@@ -1088,7 +1100,7 @@
                                         <fmt:message key="assy.label.step2.userHint.preAssy" />
                                     </td>
                                     <td>
-                                        <input type="text" id="pcsCnt" placeholder="<fmt:message key="assy.txtbox.step2.preAssyCnt" />" />
+                                        <input type="text" id="pcsCnt" value="" placeholder="<fmt:message key="assy.txtbox.step2.preAssyCnt" />" />
                                         <input type="button" id="open-barcode-input" class="btn btn-info" value="Open barcode input">
                                     </td>
                                 </tr>

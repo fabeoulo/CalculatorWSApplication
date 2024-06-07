@@ -72,8 +72,8 @@ public class BabOtherStationController {
     ) {
         Bab b = babService.findByPrimaryKey(bab_id);
         BabSettingHistory setting = babSettingHistoryService.findFirstProcessingByTagName(tagName);
-        checkArgument(setting != null, "找不到該站使用者(User incorrect.)");
-        checkArgument(setting.getLastUpdateTime() == null, "感應器已經關閉");
+        checkArgument(setting != null, "無投入工單(Can't find processing data.)");
+        checkArgument(setting.getBab().getId() == bab_id && setting.getLastUpdateTime() == null, "工單已經關閉(PO is closed.)");
         checkStation(b, setting.getStation());
 
         if (setting.getStation() == b.getPeople()) { // if the station is the last station
