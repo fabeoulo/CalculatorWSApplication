@@ -351,6 +351,10 @@
                                 loopCount++;
                             });
                         }
+
+                        if (omitTestTableNo.includes(loopCount)) {
+                            loopCount = nextTestTableNo;
+                        }
                     });
                 }
 

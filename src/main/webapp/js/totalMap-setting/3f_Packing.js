@@ -53,6 +53,8 @@ var fqcGroup = [
 ];
 
 var minTestTableNo = 31;
+var omitTestTableNo = [17, 18, 19, 20];
+var nextTestTableNo = 21;
 var maxTestTableNo = 36;
 
 var sitefloor = 3; //for test table
