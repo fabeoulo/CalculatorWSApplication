@@ -37,7 +37,7 @@
                 color:red;
             }
             .title, .subTitle{
-                display: inline !important; 
+                display: inline !important;
             }
             .subTitle{
                 color: red;
@@ -65,9 +65,9 @@
             var lineTypeId;
             $(function () {
                 urlLineType = getQueryVariable("lineType");
-                lineTypeId = (urlLineType == null || urlLineType == "ASSY" ? 1 : 3);
+                lineTypeId = (urlLineType == "Packing" ? 3 : urlLineType == "IDS" ? 11 : 1);
 
-                $("#floor").val(urlLineType == "ASSY" ? 2 : 1);
+                $("#floor").val(urlLineType == "ASSY" ? 2 : urlLineType == "Packing" ? 1 : urlLineType == "IDS" ? 6 : -1);
 
                 var momentFormatString = 'YYYY-MM-DD';
                 $(":text,input[type='number'],select").addClass("form-control");
@@ -219,6 +219,7 @@
                     </div>
                 </div>
                 <select id="floor">
+                    <option value="6">M3F</option>
                     <option value="1">5F</option>
                     <option value="2">6F</option>
                     <option value="-1">All</option>

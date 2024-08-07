@@ -143,6 +143,10 @@
             }
             .adjustPosition{
                 position: absolute;
+                z-index: 0;
+            }
+            .topToShow{
+                z-index: 3;
             }
             #infoArea {
                 background: white;
@@ -248,12 +252,13 @@
                 function initTitleGroup() {
                     for (var i = 0; i < titleGroup.length; i++) {
                         var groupStatus = titleGroup[i];
+                        var lineNameHtml = groupStatus.hasOwnProperty("lineNameHtml") ? groupStatus.lineNameHtml : groupStatus.lineName;
                         $("#titleArea").append("<div></div>");
                         $("#titleArea>div")
                                 .eq(i)
                                 .attr("id", groupStatus.lineName + "_title")
                                 .addClass("titleWiget")
-                                .html(groupStatus.lineName)
+                                .html(lineNameHtml)
                                 .css({left: groupStatus.x + pXa, top: groupStatus.y + pYa});
                     }
                 }
@@ -325,6 +330,7 @@
                     obj.addClass("blub-empty")
                             .removeClass("blub-alarm blub-normal blub-abnormal blub-prepared")
                             .removeAttr("title");
+                    obj.parent().removeClass("topToShow");
                 }
 
                 function testObjectInit() {
@@ -439,6 +445,7 @@
                                 var childElement = $("#" + people.tagName);
                                 if (childElement.length) {
                                     childElement.removeClass("blub-empty blub-prepared");
+                                    childElement.parent().addClass("topToShow");
 
                                     if ("isUnclosed" in people) {
                                         var closeFlag = people.isUnclosed === 1;

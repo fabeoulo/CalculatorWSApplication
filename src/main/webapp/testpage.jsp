@@ -10,6 +10,7 @@
 <!DOCTYPE html>
 <html>
     <c:set var="userSitefloor" value="${param.sitefloor}" />
+    <c:set var="userLinetype" value="${param.linetype}" />
     <c:if test="${(userSitefloor == null) || (userSitefloor == '')}">
         <c:redirect url="/" />
     </c:if>
@@ -176,7 +177,9 @@
             }
 
             function setLineOptions(line) {
-                $("#table").append("<option value=" + line.id + " " + (line.lock == 1 ? "disabled style='opacity:0.5'" : "") + ">線別 " + line.name + "</option>");
+                if ($("#userSitefloorSelect").val() === line.floor.name && "${userLinetype}".indexOf(line.lineType.name) !== -1) {
+                    $("#table").append("<option value=" + line.id + " " + (line.lock == 1 ? "disabled style='opacity:0.5'" : "") + ">線別 " + line.name + "</option>");
+                }
             }
 
             function getLine() {
@@ -353,7 +356,7 @@
             <fmt:message key="assy.label.step1.content" />
             <a href="${pageContext.request.contextPath}">
                 <button id="redirectBtn">
-                    <c:out value="${userSitefloor}" /><fmt:message key="assy.label.floor.hint2" />
+                    <c:out value="${userSitefloor}" />f_<c:out value="${userLinetype}" /> <fmt:message key="assy.label.floor.hint2" />
                 </button>
             </a>
         </div>

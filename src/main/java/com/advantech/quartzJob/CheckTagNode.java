@@ -52,7 +52,6 @@ public class CheckTagNode extends QuartzJobBean {
         userService = (UserService) ApplicationContextHelper.getBean("userService");
         if (liveTagNames == null) {
             liveTagNames = getDIDOValueMap().keySet();
-//            liveTagNames = new HashSet<>();
         }
     }
 

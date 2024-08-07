@@ -122,21 +122,16 @@
                     var sitefloors = data.sitefloors;
                     for (var i = 0, j = sitefloors.length; i < j; i++) {
                         var sitefloor = sitefloors[i].floor;
-                        var section = "";
-                        switch (sitefloor) {
-                            case 3:
-                                section = "<fmt:message key="index.label.section1" />";
-                                break;
-                            case 7:
-                                section = "<fmt:message key="index.label.section2" />";
-                                break;
-                        }
+                        var linetype = sitefloors[i].lineType;
+                        var testLineType = sitefloors[i].testLineType;
+                        var section = sitefloors[i].section;
+                        
                         var cloneObj = $selectGroup.clone();
 
                         cloneObj.find("label>font").html(section + " ");
-                        cloneObj.find(".bab").attr("href", "Bab?sitefloor=" + sitefloor);
-                        cloneObj.find(".test").attr("href", "Test?sitefloor=" + sitefloor);
-                        cloneObj.find(".cell").attr("href", "Cell?sitefloor=" + sitefloor);
+                        cloneObj.find(".bab").attr("href", "Bab?sitefloor=" + sitefloor + "&linetype=" + linetype);
+                        cloneObj.find(".test").attr("href", "Test?sitefloor=" + sitefloor + "&linetype=" + testLineType);
+                        cloneObj.find(".cell").attr("href", "Cell?sitefloor=" + sitefloor + "&linetype=" + linetype);
 
                         $("#selectGroupArea").append(cloneObj);
                     }

@@ -33,6 +33,7 @@ public class TestTable implements Serializable {
     private int id;
     private String name;
     private Floor floor;
+    private LineType lineType;
 
     @JsonIgnore
     private Set<Test> tests = new HashSet<Test>(0);
@@ -68,6 +69,16 @@ public class TestTable implements Serializable {
 
     public void setFloor(Floor floor) {
         this.floor = floor;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lineType_id")
+    public LineType getLineType() {
+        return lineType;
+    }
+
+    public void setLineType(LineType lineType) {
+        this.lineType = lineType;
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "testTable")

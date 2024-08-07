@@ -35,6 +35,7 @@ public class TagNameComparisonDAO extends AbstractDao<TagNameComparisonId, TagNa
         Criteria c = super.createEntityCriteria();
         c.createAlias("line", "line");
         c.createAlias("line.floor", "f");
+        c.createAlias("line.lineType", "lt");
         c.add(Restrictions.eq("tagNameEncode", encodeStr));
         return (TagNameComparison) c.uniqueResult();
     }

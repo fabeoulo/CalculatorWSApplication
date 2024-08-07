@@ -23,6 +23,7 @@ import com.advantech.model.db1.PreAssyModuleType;
 import com.advantech.model.db1.PrepareSchedule;
 import com.advantech.model.db1.PrepareScheduleEndtimeSetting;
 import com.advantech.model.db1.TagNameComparison;
+import com.advantech.model.db1.TestTable;
 import com.advantech.model.db1.Unit;
 import com.advantech.model.db1.User;
 import com.advantech.model.db1.UserInfoOnMes;
@@ -52,6 +53,7 @@ import com.advantech.service.db1.PrepareScheduleEndtimeSettingService;
 import com.advantech.service.db1.PrepareScheduleService;
 import com.advantech.service.db1.SystemReportService;
 import com.advantech.service.db1.TagNameComparisonService;
+import com.advantech.service.db1.TestTableService;
 import com.advantech.service.db1.UnitService;
 import com.advantech.service.db1.UserProfileService;
 import com.advantech.service.db1.UserService;
@@ -715,9 +717,18 @@ public class TestService {
     @Autowired
     private com.advantech.service.db1.TestService testLineTypeService;
 
-    @Test
+    @Autowired
+    private TestTableService testTableService;
+
+//    @Test
     public void testTestLineTypeUserCheck() {
         testLineTypeService.checkUserIsAvailable("A-11018");
+    }
+
+//    @Test
+    public void testGetFactory() {
+        TestTable table = testTableService.findByPrimaryKey(31);
+//        Factory f = testLineTypeService.getFactory(table);
     }
 
     @Test

@@ -34,6 +34,9 @@ public class LineType implements Serializable {
     private Set<Line> lines = new HashSet<>(0);
 
     @JsonIgnore
+    private Set<TestTable> testTables = new HashSet<>(0);
+    
+    @JsonIgnore
     private Set<LineTypeConfig> lineTypeConfigs = new HashSet<>(0);
 
     @JsonIgnore
@@ -69,6 +72,15 @@ public class LineType implements Serializable {
 
     public void setLines(Set<Line> lines) {
         this.lines = lines;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lineType")
+    public Set<TestTable> getTestTables() {
+        return testTables;
+    }
+
+    public void setTestTables(Set<TestTable> testTables) {
+        this.testTables = testTables;
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "lineType")

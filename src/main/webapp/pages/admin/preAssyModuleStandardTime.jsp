@@ -62,27 +62,28 @@
                 var typeOptions = [];
                 var lineTypeOptions = [];
                 var standardTimeEditable = '${isAdmin || isMfgOper || isBackDoor4876 || isIeOper}';
-
+                var typeMap = new Map();
                 setTypeOptions();
                 setLineTypeOptions();
-
                 //This function will load the datatable
                 loadTable();
-
                 $(":text").on("keyup change", function () {
                     $(this).val($(this).val().toUpperCase());
                 });
-
                 //Hook up the click event for the save button on the add/edit popup window
                 $("#AddRemarkButton").click(function () {
                     //validate that name and last name were entered
 
                     var modelName = $("#modelName").val();
                     var standardTime = $("#standardTime").val();
-
+                    var moduleId = $("#preAssyModuleType\\.id").val();
                     var errorMsg = "";
                     if (!modelName) {
                         errorMsg += "\n* enter the modelName";
+                    }
+                    
+                    if (!moduleId) {
+                        errorMsg += "\n* select the ModuleType";
                     }
 
                     if (!standardTime) {
@@ -121,14 +122,12 @@
                         });
                     }
                 });
-
                 //Hook up the click event for the save button on the add/edit popup window
                 $("#AddRemarkButton2").click(function () {
                     //validate that name and last name were entered
 
                     var baseModelName = $("#baseModelName").val();
                     var targetModelName = $("#targetModelName").val();
-
                     var errorMsg = "";
                     if (!baseModelName || !targetModelName) {
                         errorMsg += "\n* enter the modelName";
@@ -160,13 +159,11 @@
                         });
                     }
                 });
-
                 //Hook up the click event for the save button on the add/edit popup window
                 $("#AddRemarkButton3").click(function () {
                     //validate that name and last name were entered
 
                     var name = $("#preAssyModuleType\\.name").val();
-
                     var errorMsg = "";
                     if (!name) {
                         errorMsg += "\n* enter the modelName";
@@ -199,34 +196,27 @@
                         });
                     }
                 });
-
                 //hook up event for edit record buttons
                 $(document).on('click', '#remark-info .EditButton', function (event) { //any element with the class EditButton will be handled here
                     var data = table.row($(this).parents('tr')).data();
                     clearForm($("#addEditRemark"));
-
                     $("#modelName").val(data.modelName);
                     $("#standardTime").val(data.standardTime);
                     $("#currentID").val(data.id);
                     $("#preAssyModuleType\\.id").val(data.preAssyModuleType.id);
                     $("#sopName").val(data.sopName);
                     $("#sopPage").val(data.sopPage);
-
                     $('#addEditRemark').modal('show');
                 });
-
                 //hook up event for edit record buttons
                 $(document).on('click', '#preAssyModuleType-info .EditButton', function (event) { //any element with the class EditButton will be handled here
                     var data = typeTable.row($(this).parents('tr')).data();
                     clearForm($("#addEditRemark3"));
-
                     $("#currentID2").val(data.id);
                     $("#preAssyModuleType\\.name").val(data.name);
                     $("#lineType\\.id").val(data.lineType.id);
-
                     $('#addEditRemark3').modal('show');
                 });
-
                 if (standardTimeEditable == 'false') {
                     $("#standardTimeField").hide().attr("disabled", true);
                 }
@@ -234,6 +224,7 @@
                 function clearForm(dialog) {//blank the add/edit popup form
                     dialog.find(":text, textarea, input[type='number']").val("");
                     dialog.find("#currentID, #currentID2").val(0);
+                    $(".worktimeLineType").val(-1).trigger("change");
                 }
 
                 function loadTable() {
@@ -306,7 +297,7 @@
                                 "width": "10%",
                                 'render': function (data, type, row) {
                                     if (data != null)
-                                        return moment(data).format('YYYY-MM-DD HH:mm');//YYYY-MM-DDTHH:mm:ss.SSS
+                                        return moment(data).format('YYYY-MM-DD HH:mm'); //YYYY-MM-DDTHH:mm:ss.SSS
                                     else
                                         return "";
                                 }
@@ -332,7 +323,6 @@
                         "pageLength": 20,
                         "order": [[6, 'desc'], [1, 'asc'], [2, 'asc']]
                     });
-
                     typeTable = $('#preAssyModuleType-info').DataTable({
                         dom: 'Bfrtip',
                         "buttons": [
@@ -397,6 +387,14 @@
                                 var obj = arr[i];
                                 sel.append("<option value=" + obj.id + ">" + obj.name + "</option>");
                                 typeOptions[obj.id] = obj.name;
+
+                                var key = obj.lineType.id.toString();
+                                var value = obj.name;
+                                if (typeMap.has(key)) {
+                                    typeMap.get(key).push(value);
+                                } else {
+                                    typeMap.set(key, [value]);
+                                }
                             }
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
@@ -426,6 +424,42 @@
                     });
                 }
 
+                $(".worktimeLineType").on('change', function () {
+                    var key = $(this).val();
+                    var sel = $("#preAssyModuleType\\.id");
+                    var selOpts = sel.find("option");
+                    
+                    sel.val("");
+                    var firstShownOption = null;
+
+                    if (key === "-1") {
+                        selOpts.each(function () {
+                            $(this).show();
+                            if (!firstShownOption) {
+                                firstShownOption = $(this);
+                            }
+                        });
+                    } else if (typeMap.has(key)) {
+                        var moduleTypeTexts = typeMap.get(key);
+                        selOpts.each(function () {
+                            if (moduleTypeTexts.includes($(this).html())) {
+                                $(this).show();
+                                if (!firstShownOption) {
+                                    firstShownOption = $(this);
+                                }
+                            } else {
+                                $(this).hide();
+                            }
+                        });
+                    } else {
+                        selOpts.hide();
+                    }
+
+                    if (firstShownOption) {
+                        sel.val(firstShownOption.val());
+                    }
+                });
+
                 $(document).on('click', '#remark-info .DeleteButton', function (event) {
                     if (confirm('1 This action will delete the selected record. Plese click OK to confirm.')) {
                         var data = table.row($(this).parents('tr')).data();
@@ -449,7 +483,6 @@
                         });
                     }
                 });
-
                 $(document).on('click', '#preAssyModuleType-info .DeleteButton', function (event) {
                     if (confirm('2 This action will delete the selected record. Plese click OK to confirm.')) {
                         var data = typeTable.row($(this).parents('tr')).data();
@@ -515,6 +548,14 @@
                                         <td>機種</td>
                                         <td>
                                             <input id="modelName" name="modelName" type="text" class="form-control">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>製程</td>
+                                        <td>
+                                            <select id="lineType.id" name="lineType.id" class="form-control worktimeLineType">
+                                                <option value="-1">All</option>
+                                            </select>
                                         </td>
                                     </tr>
                                     <tr>

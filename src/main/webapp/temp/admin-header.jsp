@@ -55,7 +55,7 @@
                 navbar.find(".totalMapSelect").append("<li><a href='TotalMap?sitefloor=" + sitefloor + "&lineType=" + siteLineType + "'>狀態平面圖 " + siteSection + "</a></li>");
 //                navbar.find(".totalMapSelect").append("<li><a href='changeover.jsp?sitefloor=" + sitefloor + "'>換線" + sitefloor + "F</a></li>");
                 navbar.find(".sensorAdjustSelect").append("<li><a href='" + (mode === "auto" ? "Sensor" : "Barcode") +
-                        "Adjust?sitefloor=" + sitefloor + "&lineType=" + siteLineType + "'>" + siteSection + "-感應器狀態(校正用)</a></li>");
+                        "Adjust?sitefloor=" + sitefloor + "&lineType=" + siteLineType + "'>" + siteSection + "-感應器狀態</a></li>");
             }
         });
 
@@ -65,7 +65,7 @@
 </script>
 <!-- Navigation -->
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container">
+    <div class="container" style="width: 90%">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -148,13 +148,37 @@
                             <li class="divider"></li>
                             </c:if>
                         <li class="hide-when-auto"><a href="BabPassStationRecord?lineType=Packing">Barcode過站紀錄</a></li>
-                        <li><a href="BabPreAssyProductivity?lineType=Packing">前置資料查詢</a></li>
+                        <li><a href="BabPreAssyProductivity?lineType=Packing&sitefloor=3">前置資料查詢</a></li>
                         <li><a href="babModuleUsageRate.jsp?lineType=Packing">前置機種模組使用狀態</a></li>
                         <li class="divider"></li>
                         <li><a href="babLineUsageRate.jsp">線體使用率統計</a></li>
                         <li class="divider"></li>
                         <li><a href="lineUserReference.jsp?lineType=Packing">附件盒當日線別人員維護</a></li>
                         <li><a href="prepareSchedule.jsp?lineType=Packing">附件盒當日自動排站</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <span class="glyphicon glyphicon-list-alt" aria-hidden="true" /> 
+                        IDS
+                        <span class="caret" />
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="BabTotal?lineType=IDS">線平衡資訊查詢</a></li>
+                        <li class="divider"></li>
+                        <li class="hide-when-manual"><a href="BabDetailInfo">各站機台時間查詢</a></li>
+                        <li><a href="BabDetailInfo2?lineType=IDS">各站時間查詢(報表格式)</a></li>
+                        <li class="divider"></li>
+                        <li><a href="BabLineProductivity?lineType=IDS">線體效率查詢</a></li>
+                        <li class="divider"></li>
+                            <c:if test="${isIeOper || isBackDoor4876 || isAdmin || isMfgLineOwner || isMfgOper}">
+                            <li><a href="modelSopRemark.jsp">Sop維護</a></li>
+                            <li class="divider"></li>
+                            </c:if>
+                        <li class="hide-when-auto"><a href="BabPassStationRecord?lineType=IDS">Barcode過站紀錄</a></li>
+                        <li><a href="BabPreAssyProductivity?lineType=IDS&sitefloor=3">前置資料查詢</a></li>
+                        <!--<li><a href="babModuleUsageRate.jsp?lineType=IDS">前置機種模組使用狀態</a></li>-->
+                        <li class="divider"></li>
                     </ul>
                 </li>
                 <li>

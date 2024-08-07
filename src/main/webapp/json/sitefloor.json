@@ -1,10 +1,16 @@
 {
     "sitefloors": [
         {
-            "floor": 3
+            "floor": 3,
+            "section": "M9_3F",
+            "lineType": "ASSY/Packing",
+            "testLineType": "Test"
         },
         {
-            "floor": 7
+            "floor": 3,
+            "section": "IDS",
+            "lineType": "IDS",
+            "testLineType": "IDS"
         }
     ],
     "sitefloors_mgr": [
@@ -15,13 +21,13 @@
         },
         {
             "floor": 3,
-            "section": "組/測",
+            "section": "組裝",
             "lineType": "ASSY"
         },
         {
-            "floor": 7,
+            "floor": 3,
             "section": "IDS",
-            "lineType": "ids"
+            "lineType": "IDS"
         }
     ]
 }

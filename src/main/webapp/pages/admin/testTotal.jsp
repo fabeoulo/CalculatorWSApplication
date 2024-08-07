@@ -23,8 +23,8 @@ Auto polling test record page by client.
                 opacity: 0.5;
                 position: fixed;
                 right: 10px;
-                bottom: 10px;    
-                padding: 5px 5px;    
+                bottom: 10px;
+                padding: 5px 5px;
                 font-size: 14px;
                 background: #777;
                 color: white;
@@ -57,7 +57,7 @@ Auto polling test record page by client.
                 var d = new Date();
                 $("#final_time").text(d);//Get the final polling database time.
                 var interval = null;//Polling database variable.
-                var testtables = 42;//測試table數量(空值要塞入null)
+                var testtables = 34;//測試table數量(空值要塞入null)
 
                 //DataTable sort init.
                 jQuery.fn.dataTableExt.oSort['pct-asc'] = function (x, y) {
@@ -156,9 +156,9 @@ Auto polling test record page by client.
 
                 //後端丟出的map中把空隙塞入null值
                 function insertempty() {
-                    var obj = table.column(2).data();
+                    var obj = table.column(2).data().toArray();
                     for (var i = 1; i <= testtables; i++) {
-                        if (obj.indexOf(i) == -1) {
+                        if (obj.indexOf(i.toString()) === -1) {
                             table.rows.add([
                                 {
                                     name: 'null',

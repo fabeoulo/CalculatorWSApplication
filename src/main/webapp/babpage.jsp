@@ -10,6 +10,7 @@
 <!DOCTYPE html>
 <html>
     <c:set var="userSitefloor" value="${param.sitefloor}" />
+    <c:set var="userLinetype" value="${param.linetype}" />
     <c:if test="${(userSitefloor == null) || (userSitefloor == '' || userSitefloor < 1 || userSitefloor > 7)}">
         <c:redirect url="/" />
     </c:if>
@@ -541,7 +542,9 @@
                     return false;
                 }
 
-                if ($("#userSitefloorSelect").val() != tagName.line.floor.name) {
+                var userLineType = "${userLinetype}";
+                if ($("#userSitefloorSelect").val() !== tagName.line.floor.name ||
+                        userLineType.indexOf(tagName.line.lineType.name) === -1) {
                     showMsg(floorCheckMessage2);
                     return false;
                 }
@@ -988,7 +991,7 @@
             <fmt:message key="assy.label.step1.content" />
             <a href="${pageContext.request.contextPath}">
                 <button id="redirectBtn" class="btn btn-default btn-xs" >
-                    <c:out value="${userSitefloor}" /><fmt:message key="assy.label.floor.hint2" />
+                    <c:out value="${userSitefloor}" />f_<c:out value="${userLinetype}" /> <fmt:message key="assy.label.floor.hint2" />
                 </button>
             </a>
         </div>

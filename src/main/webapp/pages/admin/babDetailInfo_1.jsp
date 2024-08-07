@@ -223,6 +223,7 @@
                                     <option value="-1">All</option>
                                     <option value="ASSY">ASSY</option>
                                     <option value="Packing">Packing</option>
+                                    <option value="IDS">IDS</option>
                                 </select>
                                 <input type="button" id="send" value="確定(Ok)">
                             </div>

@@ -20,8 +20,8 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
     public List<Worktime> findWorktime() {
         return super.getSession()
                 .createSQLQuery("select modelName, floorName, speOwnerName, eeOwnerName, qcOwnerName, "
-                        + "assy assy, t1 t1, t2 t2, 0.0 t3, 0.0 t4, "
-                        + "packing packing, 0.0 preAssy, 1 assyPeople, 1 packingPeople, 0.0 packingLeadTime "
+                        + "assy assy, t1 t1, t2 t2, t3 t3, 0.0 t4, "
+                        + "packing packing, pi preAssy, 1 assyPeople, 1 packingPeople, 0.0 packingLeadTime "
                         + "from Sheet_Main_view")
                 .setResultTransformer(Transformers.aliasToBean(Worktime.class))
                 .list();

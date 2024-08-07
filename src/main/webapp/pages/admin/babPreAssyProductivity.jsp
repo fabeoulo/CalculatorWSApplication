@@ -66,6 +66,8 @@
                     return false;
                 }
 
+                var urlSitefloor = getQueryVariable("sitefloor") + "F";
+
                 var datePickerLockDays = 7;
                 var momentFormatString = 'YYYY-MM-DD';
                 $(":text,input[type='number'],select").addClass("form-control");
@@ -167,13 +169,13 @@
                 });
 
                 $("#lineType").val($('#lineType option:contains(' + urlLineType + ')').val());
-                $("#sitefloor").val(1);
+                $("#sitefloor").val($('#sitefloor option:contains(' + urlSitefloor + ')').val());
             });
 
             function formatDate(dateString) {
                 return moment(dateString).format('YYYY-MM-DD hh:mm:ss');
             }
-            
+
             function getPercent(val) {
                 return roundDecimal((val * 100), round_digit) + '%';
             }

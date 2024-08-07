@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import javax.annotation.PostConstruct;
 import org.joda.time.DateTime;
@@ -136,7 +138,7 @@ public class TestLineTypeFacade extends BasicLineTypeFacade {
                             status = NORMAL_SIGN;
                         }
 
-                        userArr.put(newTestUser(userName, jobnumber, tableName.replace("T", ""), productivity, table.getFloor().getName(), status));
+                        userArr.put(newTestUser(userName, jobnumber, findTableNo(tableName), productivity, table.getFloor().getName(), status));
                         it.remove();//把比對過的資料移除，剩下的就是有在本系統XML卻找不到人的使用者
                         isInTheWebService = true;//對到人之後跳出迴圈，換下一個人做比對
                         break;
@@ -161,12 +163,18 @@ public class TestLineTypeFacade extends BasicLineTypeFacade {
         return IntStream.of(testByPassHours).anyMatch(x -> x == hours);
     }
 
+    private String findTableNo(String tableName) {
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(tableName);
+        return matcher.find() ? matcher.group() : "0";
+    }
+
     private JSONArray separateAbnormalUser(List<Test> l, JSONArray j) {
         String emptyUserName = "n/a";
         Double emptyProductivity = 0.0;
         l.forEach((ti) -> {
             TestTable table = ti.getTestTable();
-            j.put(newTestUser(emptyUserName, ti.getUserId(), table.getName().replace("T", ""), emptyProductivity, table.getFloor().getName(), TEST_USER_NOT_IN_XML_SIGN));
+            j.put(newTestUser(emptyUserName, ti.getUserId(), findTableNo(table.getName()), emptyProductivity, table.getFloor().getName(), TEST_USER_NOT_IN_XML_SIGN));
         });
         return j;
     }

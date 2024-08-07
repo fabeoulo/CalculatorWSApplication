@@ -73,7 +73,7 @@
                                  */
                                 continue;
                             }
-                            var time = arrobj.LogDate + arrobj.LogTime + " " + arrobj.LogMilliSecond;
+                            var time = arrobj.LogDate + " " + arrobj.LogTime + " " + arrobj.LogMilliSecond;
                             var diff = arrobj.diff;
                             string +=
                                     "<tr style='background-color:" + (arrobj.LogValue != 0 ? "#008800" : "#CC0000") + "'>" +

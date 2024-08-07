@@ -306,6 +306,16 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .list();
     }
 
+    public List<Map> findBabModuleUsageRateForIDS(DateTime sD, DateTime eD, Floor f) {
+        return super.getSession()
+                .createSQLQuery("{CALL M3_BW.usp_GetBabModuleUsageRate_ForIds(:sD, :eD, :floor_id)}")
+                .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
+                .setParameter("eD", eD != null ? eD.withHourOfDay(23).toDate() : null)
+                .setParameter("floor_id", f == null ? null : f.getId())
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+    }
+    
     public List<Map> findPreAssyPercentage(int lineTypeId, DateTime sD) {
         return super.getSession()
                 .createSQLQuery("{CALL M3_BW.usp_Excel_PreAssyPercentage(:lineTypeId, :sD)}")

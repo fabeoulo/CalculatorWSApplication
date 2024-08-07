@@ -262,6 +262,8 @@ public class SqlViewController {
             l = procSerice.findBabModuleUsageRateForAssy(startDate, endDate, f);
         } else if (lineType_id == 3) {
             l = procSerice.findBabModuleUsageRateForPacking(startDate, endDate, f);
+        } else if (lineType_id == 11) {
+            l = procSerice.findBabModuleUsageRateForIDS(startDate, endDate, f);
         } else {
             l = new ArrayList();
         }

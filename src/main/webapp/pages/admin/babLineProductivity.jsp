@@ -63,7 +63,7 @@
         <script>
             var table;
             const urlLineType = getQueryVariable("lineType");
-            const lineTypeId = (urlLineType == null || urlLineType == "ASSY" ? 1 : 3);
+            const lineTypeId = (urlLineType == "Packing" ? 3 : urlLineType == "IDS" ? 11 : 1);
             $(function () {
                 const countermeasureType = "Bab_Abnormal_LineProductivity";
 
@@ -391,8 +391,10 @@
                         const lineWiget = $("#line");
                         const arr = response;
                         for (let i = 0; i < arr.length; i++) {
-                            const {id, name} = arr[i];
-                            lineWiget.append("<option value=" + id + ">" + name + "</option>");
+                            const {id, name, lock} = arr[i];
+                            if (lock !== 1) {
+                                lineWiget.append("<option value=" + id + ">" + name + "</option>");
+                            }
                         }
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
