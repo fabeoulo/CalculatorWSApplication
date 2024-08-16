@@ -187,7 +187,7 @@ public class TestQuartzJobs {
     @Autowired
     private SyncWorktimeFromRemote swr;
 
-    @Test
+//    @Test
     public void testSyncWorktimeFromRemote() throws Exception {
         swr.execute();
     }

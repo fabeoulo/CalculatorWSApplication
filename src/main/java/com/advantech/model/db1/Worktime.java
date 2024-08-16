@@ -29,6 +29,7 @@ public class Worktime implements Serializable {
     private String eeOwnerName;
     private String qcOwnerName;
     private BigDecimal preAssy;
+    private BigDecimal cleanPanel;
     private BigDecimal assy;
     private BigDecimal t1;
     private BigDecimal t2;
@@ -102,6 +103,15 @@ public class Worktime implements Serializable {
 
     public void setPreAssy(BigDecimal preAssy) {
         this.preAssy = preAssy;
+    }
+
+    @Column(name = "cleanPanel")
+    public BigDecimal getCleanPanel() {
+        return cleanPanel;
+    }
+
+    public void setCleanPanel(BigDecimal cleanPanel) {
+        this.cleanPanel = cleanPanel;
     }
 
     @Column(name = "assy")

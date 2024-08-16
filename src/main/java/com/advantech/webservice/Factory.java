@@ -11,8 +11,8 @@ import java.util.Map;
 
 /**
  *
- * @author Wei.Cheng 假如要用其他廠區的話，Factory必須吻合DB設定
- * Use for webservice and FactoryConverter
+ * @author Wei.Cheng 假如要用其他廠區的話，Factory必須吻合DB設定 //Use for webservice and
+ * FactoryConverter
  */
 public enum Factory implements Encodeable {
 
@@ -25,9 +25,9 @@ public enum Factory implements Encodeable {
      */
     TWM6("M6"),
     /**
-     * Temp2: M2
+     * Temp2: M9
      */
-    TWM2("M2");
+    TWM9("M9");
 
     private final String s;
     private static final Map<String, Factory> map = new HashMap<>();
@@ -55,7 +55,7 @@ public enum Factory implements Encodeable {
         throw new IllegalArgumentException("Can't find enum with value " + t);
     }
 
-    public String getWsDept(){
+    public String getWsDept() {
         return "PD03";
     }
 }

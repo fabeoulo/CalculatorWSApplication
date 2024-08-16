@@ -33,7 +33,7 @@ public class MultiWsClient {
 
     @Autowired
     @Qualifier("wsClient2")
-    private WsClient m2Client;
+    private WsClient m9Client;
 
     public WsClient getClient(final Factory f) {
         switch (f) {
@@ -41,8 +41,8 @@ public class MultiWsClient {
                 return m3Client;
             case TWM6:
                 return m6Client;
-            case TWM2:
-                return m2Client;
+            case TWM9:
+                return m9Client;
             default:
                 return null;
         }

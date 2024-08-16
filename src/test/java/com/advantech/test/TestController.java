@@ -205,8 +205,8 @@ public class TestController {
     }
 
 //    @Test
-    public void testM2Model() throws Exception {
-        assertEquals("APAX-5580-433AE", getModel("FII6245ZA", Factory.TWM2)); //Test M2 model
+    public void testM9Model() throws Exception {
+        assertEquals("SPC821MLA2202-T", getModel("TYO000227ZA", Factory.TWM9)); //Test M2 model
     }
 
 //    @Test

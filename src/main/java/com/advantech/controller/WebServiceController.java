@@ -34,8 +34,8 @@ public class WebServiceController {
             case "M6":
                 f = Factory.TWM6;
                 break;
-            case "M2":
-                f = Factory.TWM2;
+            case "M9":
+                f = Factory.TWM9;
                 break;
             default:
                 f = Factory.TWM3;

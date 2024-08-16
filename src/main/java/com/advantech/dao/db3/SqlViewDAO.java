@@ -23,7 +23,8 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
         return super.getSession()
                 .createSQLQuery("select modelName, floorName, speOwnerName, eeOwnerName, qcOwnerName, "
                         + "assy assy, t1 t1, t2 t2, t3 t3, t4 t4, "
-                        + "packing packing, totalModule preAssy, assyStation assyPeople, packingStation packingPeople, packingLeadTime "
+                        + "packing packing, totalModule preAssy, assyStation assyPeople, packingStation packingPeople, packingLeadTime, "
+                        + "cleanPanel cleanPanel "
                         + "from Sheet_Main_view")
                 .setResultTransformer(Transformers.aliasToBean(Worktime.class))
                 .list();
