@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.annotation.PostConstruct;
 import org.joda.time.DateTime;
@@ -106,6 +107,11 @@ public class TestLineTypeFacade extends BasicLineTypeFacade {
             List<TestRecord> kanbanUsersRecord = rv.getTestLineTypeRecords(Factory.TWM3);
             List<TestRecord> kanbanUsersRecord2 = rv.getTestLineTypeRecords(Factory.TWM6);
             kanbanUsersRecord.addAll(kanbanUsersRecord2);
+            kanbanUsersRecord =  new ArrayList<>(
+                    kanbanUsersRecord.stream().collect(
+                            Collectors.toMap(TestRecord::getUserId, v -> v, (curr, next) -> curr)
+                    ).values()
+            );
 
             processingJsonObject = new JSONObject();
             boolean isInTheWebService = false;

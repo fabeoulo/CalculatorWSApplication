@@ -90,7 +90,12 @@ public class SqlViewController {
                 : 0);
 
         Integer ctrl_bab = (Integer) m.get("ctrl_id");
-        m.put("ctrl_avgs", ctrl_bab == null ? 0 : getAvg(sqlViewService.findBabAvgInHistory(ctrl_bab)));
+        Integer ctrl_babStatus = (Integer) m.get("ctrl_isused");
+        m.put("ctrl_avgs",
+                ctrl_bab == null ? 0
+                        : ctrl_babStatus == null ? getAvg(sqlViewService.findBabAvg(ctrl_bab))
+                                : getAvg(sqlViewService.findBabAvgInHistory(ctrl_bab)));
+
         return new DataTableResponse(l);
     }
 
@@ -104,7 +109,23 @@ public class SqlViewController {
             @RequestParam String modelName,
             @RequestParam String lineTypeName) {
 
-        List l = procSerice.findLineBalanceCompare(modelName, lineTypeName);
+        List<Map> l = procSerice.findLineBalanceCompare(modelName, lineTypeName);
+        Map m = l.get(0);
+
+        Integer bab_id = (Integer) m.get("exp_id");
+        Integer exp_babStatus = (Integer) m.get("exp_isused");
+        m.put("exp_avgs",
+                exp_babStatus == null ? getAvg(sqlViewService.findBabAvg(bab_id))
+                        : exp_babStatus != BabStatus.NO_RECORD.token() ? getAvg(sqlViewService.findBabAvgInHistory(bab_id))
+                        : 0);
+
+        Integer ctrl_bab = (Integer) m.get("ctrl_id");
+        Integer ctrl_babStatus = (Integer) m.get("ctrl_isused");
+        m.put("ctrl_avgs",
+                ctrl_bab == null ? 0
+                        : ctrl_babStatus == null ? getAvg(sqlViewService.findBabAvg(ctrl_bab))
+                                : getAvg(sqlViewService.findBabAvgInHistory(ctrl_bab)));
+
         return new DataTableResponse(l);
 
     }
