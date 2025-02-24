@@ -86,8 +86,8 @@ public class SqlViewService {
     }
 
     public List<Map> findSensorDIDONames() {
-        this.setVwDiDoColumn("dido_name");
-        this.setVwSysTagName("tagName");
+        this.vwDiDoColumn = "dido_name";
+        this.vwSysTagName = "tagName";
         return sqlViewDAO.findSensorDIDONames();
     }
 

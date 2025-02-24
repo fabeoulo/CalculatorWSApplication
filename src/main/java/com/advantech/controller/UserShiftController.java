@@ -27,12 +27,11 @@ public class UserShiftController {
     public Map findDateShiftInfo() {
         Shift shift = getShift();
 
-//        DateTime sd = getCurrentShiftStart(), ed = getCurrentShiftEnd();
+        DateTime sd = getCurrentShiftStart(), ed = getCurrentShiftEnd();
 
-        //暫時設定shift end time 固定在早上8點
-        DateTime sd = DateTime.now(), ed = (shift == Shift.MORNING_SHIFT ? new DateTime(sd).plusDays(1) : new DateTime(sd));
-        ed = ed.withTime(8, 0, 0, 0);
-
+//        //暫時設定shift end time 固定在早上8點
+//        DateTime sd = DateTime.now(), ed = (shift == Shift.MORNING_SHIFT ? new DateTime(sd).plusDays(1) : new DateTime(sd));
+//        ed = ed.withTime(8, 0, 0, 0);
         Map m = new HashMap();
         m.put("SHIFT_TYPE", shift);
         m.put("SHIFT_START", sd);

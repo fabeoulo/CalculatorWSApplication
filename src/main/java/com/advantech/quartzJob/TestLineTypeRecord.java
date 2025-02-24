@@ -20,9 +20,12 @@ import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
 import static com.google.common.base.Preconditions.checkState;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import org.joda.time.DateTime;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -35,22 +38,23 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
  * @author Wei.Cheng
  */
 public class TestLineTypeRecord extends QuartzJobBean {
-    
+
     private static final Logger log = LoggerFactory.getLogger(TestLineTypeRecord.class);
     private final int EXCLUDE_HOUR = 12;
-    
+    private final Set<Integer> EXCLUDE_HOUR_SET = new HashSet<>(Arrays.asList(8, 12, 20, 0));
+
     private final TestService testService;
     private final TestRecordService testRecordService;
     private final LineTypeService lineTypeService;
     private final LineTypeConfigService lineTypeConfigService;
     private final WebServiceRV rv;
     private final PropertiesReader p;
-    
+
     private Double minProductivity, maxProductivity;
 
     //Orign productivity change here
     private final Double testSaltProductivity;
-    
+
     public TestLineTypeRecord() {
         testService = (TestService) ApplicationContextHelper.getBean("testService");
         testRecordService = (TestRecordService) ApplicationContextHelper.getBean("testRecordService");
@@ -60,26 +64,26 @@ public class TestLineTypeRecord extends QuartzJobBean {
         p = (PropertiesReader) ApplicationContextHelper.getBean("propertiesReader");
         testSaltProductivity = p.getTestSaltProductivity();
     }
-    
+
     @Override
     public void executeInternal(JobExecutionContext jec) throws JobExecutionException {
         DateTime d = new DateTime();
         log.info("It's " + d.toString() + " right now, begin record the testLineType...");
-        if (d.getHourOfDay() == EXCLUDE_HOUR) {
+        if (EXCLUDE_HOUR_SET.contains(d.getHourOfDay())) {
             log.info("No need to record right now.");
         } else {
             //只存下已經刷入的使用者
             List<com.advantech.model.db1.TestRecord> testLineTypeStatus = separateOfflineUser(rv.getTestLineTypeRecords(Factory.TWM3));
             List<com.advantech.model.db1.TestRecord> testLineTypeStatus2 = separateOfflineUser(rv.getTestLineTypeRecords(Factory.TWM6));
             testLineTypeStatus.addAll(testLineTypeStatus2);
-            
+
             updateReplyFlag(testLineTypeStatus);
             addSaltProductivity(testLineTypeStatus);
             testRecordService.insert(testLineTypeStatus);
             log.info("Record success");
         }
     }
-    
+
     private List<com.advantech.model.db1.TestRecord> separateOfflineUser(List<com.advantech.model.db1.TestRecord> l) {
         List<Test> tests = testService.findAll();
         List list = new ArrayList();
@@ -93,13 +97,13 @@ public class TestLineTypeRecord extends QuartzJobBean {
         });
         return list;
     }
-    
+
     private void addSaltProductivity(List<com.advantech.model.db1.TestRecord> l) {
         l.forEach((rec) -> {
             rec.setProductivity(rec.getProductivity() + this.testSaltProductivity);
         });
     }
-    
+
     private void updateReplyFlag(List<com.advantech.model.db1.TestRecord> l) {
         initProductivityStandard();
         l.forEach((rec) -> {
@@ -108,7 +112,7 @@ public class TestLineTypeRecord extends QuartzJobBean {
                     ? ReplyStatus.UNREPLIED : ReplyStatus.NO_NEED_TO_REPLY);
         });
     }
-    
+
     private void initProductivityStandard() {
         LineType lineType = lineTypeService.findByName("Test");
         checkState(lineType != null, "Can't find lineType name Test.");
@@ -120,5 +124,5 @@ public class TestLineTypeRecord extends QuartzJobBean {
         checkState(maxConf.getValue() != null, "Can't find PRODUCTIVITY_STANDARD_MAX setting in lineTypeConfig.");
         this.maxProductivity = maxConf.getValue().doubleValue();
     }
-    
+
 }

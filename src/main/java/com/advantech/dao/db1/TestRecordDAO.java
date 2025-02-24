@@ -34,8 +34,10 @@ public class TestRecordDAO extends AbstractDao<Integer, TestRecord> implements B
     }
 
     public List<TestRecord> findByDate(DateTime sD, DateTime eD, boolean unReplyOnly) {
-        sD = sD.withHourOfDay(0);
-        eD = eD.withHourOfDay(23);
+        if (eD.getHourOfDay() == 0) {
+            sD = sD.withHourOfDay(0);
+            eD = eD.plusDays(1);
+        }
         Criteria c = super.createEntityCriteria();
         c.setFetchMode("testTable", FetchMode.JOIN);
         c.add(Restrictions.between("lastUpdateTime", sD.toDate(), eD.toDate()));

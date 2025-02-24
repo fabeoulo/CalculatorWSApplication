@@ -18,10 +18,10 @@ public class ShiftScheduleUtils {
         MORNING_SHIFT, NIGHT_SHIFT, UNSUPPORT_SHIFT;
     }
 
-    private static final LocalTime MORNING_SHIFT_STARTTIME = new LocalTime(8, 20, 0);
-    private static final LocalTime MORNING_SHIFT_ENDTIME = new LocalTime(23, 50, 0);
-    private static final LocalTime NIGHT_SHIFT_STARTTIME = new LocalTime(23, 55, 0);
-    private static final LocalTime NIGHT_SHIFT_ENDTIME = new LocalTime(8, 20, 0);
+    private static final LocalTime MORNING_SHIFT_STARTTIME = new LocalTime(8, 30, 0);
+    private static final LocalTime MORNING_SHIFT_ENDTIME = new LocalTime(20, 30, 0);
+    private static final LocalTime NIGHT_SHIFT_STARTTIME = new LocalTime(20, 30, 0);
+    private static final LocalTime NIGHT_SHIFT_ENDTIME = new LocalTime(8, 30, 0);
     
     private static final String UNHANDLE_SHIFT_MESSAGE = "Can't handle shift in current datetime.";
 

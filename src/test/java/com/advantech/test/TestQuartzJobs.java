@@ -65,10 +65,10 @@ public class TestQuartzJobs {
         DataBaseInit d = new DataBaseInit();
         d.executeInternal(null);
         
-        CheckTagNode b = new CheckTagNode();
-        b.executeInternal(null);
-        
-        d.executeInternal(null);
+//        CheckTagNode b = new CheckTagNode();
+//        b.executeInternal(null);
+//        
+//        d.executeInternal(null);
     }
 
 //    @Test
@@ -127,7 +127,7 @@ public class TestQuartzJobs {
         i.executeInternal(null);
     }
 
-//    @Test
+    @Test
     public void testSyncTestPassStationData() throws JobExecutionException {
         job2.execute();
     }
@@ -143,7 +143,7 @@ public class TestQuartzJobs {
         //先設定好當日出勤名單, 才會給予字動排站
         //This is assy schedule
 
-        DateTime d = new DateTime("2024-01-04");
+        DateTime d = new DateTime("2025-06-02");
 
 //        sps.execute(d);
         aps.execute(newArrayList(d));
