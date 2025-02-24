@@ -30,6 +30,7 @@ public class BabAlarmHistoryDAO extends AbstractDao<Integer, BabAlarmHistory> im
     public BabAlarmHistory findByBab(int bab_id){
         return (BabAlarmHistory) super.createEntityCriteria()
                 .add(Restrictions.eq("bab.id", bab_id))
+                .setMaxResults(1)
                 .uniqueResult();
     }
 

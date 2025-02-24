@@ -388,9 +388,12 @@ public class TestService {
     @Rollback(true)
     public void testBabSensorLoginRecordService() throws JsonProcessingException {
 
-        List l = babSensorLoginRecordService.findByLine(3);
+        List l = babSensorLoginRecordService.findByLine(7);
         assertTrue(!l.isEmpty());
-
+        HibernateObjectPrinter.print(l);
+            
+        l = babSensorLoginRecordService.findAll();
+        assertTrue(!l.isEmpty());
         HibernateObjectPrinter.print(l);
     }
 

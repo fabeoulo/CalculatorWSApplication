@@ -65,10 +65,10 @@ public class TestQuartzJobs {
         DataBaseInit d = new DataBaseInit();
         d.executeInternal(null);
         
-        CheckTagNode b = new CheckTagNode();
-        b.executeInternal(null);
-        
-        d.executeInternal(null);
+//        CheckTagNode b = new CheckTagNode();
+//        b.executeInternal(null);
+//        
+//        d.executeInternal(null);
     }
 
 //    @Test
@@ -127,7 +127,7 @@ public class TestQuartzJobs {
         i.executeInternal(null);
     }
 
-//    @Test
+    @Test
     public void testSyncTestPassStationData() throws JobExecutionException {
         job2.execute();
     }

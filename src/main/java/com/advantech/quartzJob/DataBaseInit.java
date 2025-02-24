@@ -53,7 +53,7 @@ public class DataBaseInit extends QuartzJobBean {
 
     private void dataInitialize() {
         try {
-            babSettingHistoryService.init();
+//            babSettingHistoryService.init(); // handle by HandleUncloseBab.java
             babSensorLoginRecordService.init();
             testService.cleanTests();
 

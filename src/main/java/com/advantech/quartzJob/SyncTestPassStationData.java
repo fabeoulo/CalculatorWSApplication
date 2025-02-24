@@ -50,8 +50,13 @@ public class SyncTestPassStationData {
     public void execute() {
 
         DateTime today = new DateTime();
-        DateTime sD = new DateTime(today).minusDays(today.getDayOfWeek() == 1 ? 3 : 1).withTime(8, 0, 0, 0);
-        DateTime eD = new DateTime(today).withTime(8, 0, 0, 0);
+        
+//        DateTime sD = new DateTime(today).minusDays(today.getDayOfWeek() == 1 ? 3 : 1).withTime(8, 0, 0, 0);
+//        DateTime eD = new DateTime(today).withTime(8, 0, 0, 0);
+
+        int hr = today.getHourOfDay() >= 20 ? 20 : 8;
+        DateTime eD = new DateTime(today).withTime(hr, 30, 0, 0);
+        DateTime sD = eD.minusHours(12);
 
         syncPassStationDetail(sD, eD);
     }

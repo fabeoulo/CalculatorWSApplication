@@ -47,10 +47,12 @@ public class WebServiceRV extends SimpleWebServiceRV {
 
     private static final Logger log = LoggerFactory.getLogger(WebServiceRV.class);
 
+    private final DateTimeFormatter fmtDetail = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+	
     @Autowired
     private MultiWsClient mClient;
 
-    private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
+    private final DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
 
     @PostConstruct
     private void init() {
@@ -193,8 +195,8 @@ public class WebServiceRV extends SimpleWebServiceRV {
                     + "<UNIT_NO>" + section.getCode() + "</UNIT_NO>"
                     + "<STATION_ID>" + station + "</STATION_ID>"
                     + "<USER_NO>" + jobnumberStr + "</USER_NO>"
-                    + "<START_DATE>" + fmt.print(sD) + "</START_DATE>"
-                    + "<END_DATE>" + fmt.print(eD) + "</END_DATE>"
+                    + "<START_DATE>" + fmtDetail.print(sD) + "</START_DATE>"
+                    + "<END_DATE>" + fmtDetail.print(eD) + "</END_DATE>"
                     + "<WERKS>" + f.toString()+ "</WERKS>"
                     + "</RPT404>"
                     + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT>"
