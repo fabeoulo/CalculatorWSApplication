@@ -7,6 +7,7 @@ package com.advantech.service.db7;
 
 import com.advantech.dao.db7.SqlViewDAO;
 import com.advantech.model.db1.Worktime;
+import com.advantech.model.db1.WorktimeM6;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,4 +30,7 @@ public class SqlViewService {
         return sqlViewDAO.findWorktime();
     }
 
+    public List<WorktimeM6> findWorktimeM6() {
+        return sqlViewDAO.findWorktimeM6();
+    }
 }

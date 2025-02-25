@@ -6,6 +6,8 @@
 package com.advantech.quartzJob;
 
 import com.advantech.model.db1.Worktime;
+import com.advantech.model.db1.WorktimeM6;
+import com.advantech.service.db1.WorktimeM6Service;
 import com.advantech.service.db1.WorktimeService;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,9 @@ public class SyncWorktimeFromRemote {
     private WorktimeService worktimeService;
 
     @Autowired
+    private WorktimeM6Service worktimeM6Service;
+    
+    @Autowired
     @Qualifier("sqlViewService3")
     private com.advantech.service.db3.SqlViewService sqlViewServiceM3;
     
@@ -48,6 +53,10 @@ public class SyncWorktimeFromRemote {
         worktimeService.deleteAll();
         worktimeService.insert(remoteData);
         
+        
+        List<WorktimeM6> remoteM6Model = sqlViewServiceM6.findWorktimeM6();
+        worktimeM6Service.deleteAll();
+        worktimeM6Service.insert(remoteM6Model);
     }
 
 }

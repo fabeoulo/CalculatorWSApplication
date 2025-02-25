@@ -196,7 +196,7 @@ public class WebServiceRVTest {
         }
     }
 
-    @Test//245 l size0
+//    @Test//245 l size0
     public void testGetTestLineTypeRecord() throws JsonProcessingException {
         System.out.println("getTestLineTypeRecord");
         List<TestRecord> l = rv.getTestLineTypeRecords(Factory.TWM3);
@@ -235,11 +235,15 @@ public class WebServiceRVTest {
     @Autowired
     private TestRecordService testRecordService;
 
-//    @Test//245
+    @Test//245
     public void testGetTestPassStationDetails() {
-        DateTime eD = new DateTime().withTime(8, 0, 0, 0);
-        DateTime sD = eD.minusDays(2).withTime(8, 0, 0, 0);
-        List<String> users = newArrayList("'A-9043'", "'A-5131'");
+        DateTime today = new DateTime("2025-02-24");
+
+        int hr = today.getHourOfDay() >= 20 ? 20 : 8;
+        DateTime eD = new DateTime(today).withTime(hr, 30, 0, 0);
+        DateTime sD = eD.minusHours(12);//.minusDays(today.getDayOfWeek() == 1 && hr == 8 ? 2 : 0);
+
+        List<String> users = newArrayList("'A-9043'", "'A-5131'", "'A-11018'");
 
 //        List<TestRecord> records = testRecordService.findByDate(sD, eD, false);
 //        List<String> jobnumbers = records.stream().map(t -> "'" + t.getUserId() + "'").distinct().collect(Collectors.toList());

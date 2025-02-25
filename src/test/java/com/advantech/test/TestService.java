@@ -29,6 +29,7 @@ import com.advantech.model.db1.User;
 import com.advantech.model.db1.UserInfoOnMes;
 import com.advantech.model.db1.UserProfile;
 import com.advantech.model.db1.Worktime;
+import com.advantech.model.db1.WorktimeM6;
 import com.advantech.model.view.db1.BabProcessDetail;
 import com.advantech.quartzJob.HandleUncloseBab;
 import com.advantech.security.State;
@@ -57,6 +58,7 @@ import com.advantech.service.db1.TestTableService;
 import com.advantech.service.db1.UnitService;
 import com.advantech.service.db1.UserProfileService;
 import com.advantech.service.db1.UserService;
+import com.advantech.service.db1.WorktimeM6Service;
 import com.advantech.service.db1.WorktimeService;
 import com.advantech.service.db3.SqlViewService;
 import com.advantech.webservice.Factory;
@@ -682,8 +684,8 @@ public class TestService {
     @Qualifier("sqlViewService3")
     private SqlViewService sqlViewService;
 
-    @Test
-    @Rollback(false)
+//    @Test
+//    @Rollback(false)
     public void testSyncWorktime() {
         List<Worktime> l = sqlViewService.findWorktime();
 
@@ -691,6 +693,15 @@ public class TestService {
             w.setId(0);
             worktimeService.insert(w);
         });
+    }
+
+    @Autowired
+    private WorktimeM6Service worktimeM6Service;
+
+//    @Test
+    public void testWorktimeM6Service() {
+        List<WorktimeM6> l = worktimeM6Service.findAll();
+        HibernateObjectPrinter.print(l);
     }
 
     @Autowired
