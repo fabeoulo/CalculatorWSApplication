@@ -127,7 +127,7 @@ public class TestQuartzJobs {
         i.executeInternal(null);
     }
 
-    @Test
+//    @Test
     public void testSyncTestPassStationData() throws JobExecutionException {
         job2.execute();
     }

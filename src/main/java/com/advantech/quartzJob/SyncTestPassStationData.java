@@ -14,6 +14,7 @@ import com.advantech.webservice.mes.Section;
 import com.advantech.webservice.WebServiceRV;
 import static com.google.common.collect.Lists.newArrayList;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.collections.CollectionUtils;
@@ -94,7 +95,15 @@ public class SyncTestPassStationData {
         logger.info("Delete data cnt " + delData.size());
 
         List<TestPassStationDetail> newData = (List<TestPassStationDetail>) CollectionUtils.subtract(remoteData, dbData);
+        newData = getFixInsertOrder(newData); // fix order for calculate TestPassStationProductivity
         testPassStationDetailService.insert(newData);
         logger.info("New data cnt " + newData.size());
+    }
+
+    private List<TestPassStationDetail> getFixInsertOrder(List<TestPassStationDetail> l) {
+        return l.stream().sorted(
+                Comparator.comparing(TestPassStationDetail::getJobnumber)
+                        .thenComparing(TestPassStationDetail::getCreateDate))
+                .collect(Collectors.toList());
     }
 }

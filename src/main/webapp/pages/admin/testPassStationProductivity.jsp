@@ -36,7 +36,7 @@
                 color:red;
             }
             .title, .subTitle{
-                display: inline !important; 
+                display: inline !important;
             }
             .subTitle{
                 color: red;
@@ -190,13 +190,14 @@
                     },
                     filter: false,
                     destroy: true,
-                    paginate: false
+                    paginate: false,
+                    "order": [[2, "asc"], [6, "asc"]]
                 });
 
             }
 
             function formatDate(dateString) {
-                return moment(dateString).format('YYYY-MM-DD HH:mm');
+                return moment(dateString).format('YYYY-MM-DD HH:mm:ss');
             }
 
             function getPercent(val) {

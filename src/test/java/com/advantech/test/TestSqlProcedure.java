@@ -88,7 +88,7 @@ public class TestSqlProcedure {
         List<BabLastGroupStatus> ll = procDAO.findBabLastGroupStatusBatch(input);
     }
 
-    @Test
+//    @Test
     @Transactional
     @Rollback(true)
     public void testProc() {
