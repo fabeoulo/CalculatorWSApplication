@@ -29,6 +29,7 @@
     }
 </style>
 <script src="<c:url value="/webjars/bootstrap/3.3.7/js/bootstrap.min.js" />"></script>
+<script src="<c:url value="/webjars/jquery-blockui/2.70/jquery.blockUI.js" />"></script>
 
 <div style="text-align:center; color: red">
     <noscript>For full functionality of this page it is necessary to enable JavaScript. Here are the <a href="http://www.enable-javascript.com" target="_blank"> instructions how to enable JavaScript in your web browser</a></noscript>
@@ -45,7 +46,7 @@
     $(function () {
         var mode = "<fmt:message key="bab.data.collect.mode" />".toLowerCase();
 
-        $.getJSON("../../json/sitefloor.json", function (data) {
+        $.getJSON("${pageContext.request.contextPath}/json/sitefloor.json", function (data) {
             var sitefloors = data.sitefloors_mgr;
             var navbar = $("#bs-example-navbar-collapse-1");
             for (var i = 0, j = sitefloors.length; i < j; i++) {
@@ -60,6 +61,12 @@
         });
 
         $(".hide-when-" + mode).remove();
+
+        $(document).ajaxStart(function () {
+            $.blockUI({
+                message: '<h1>請稍後...</h1>'
+            });
+        }).ajaxStop($.unblockUI);
     });
     </fmt:bundle>
 </script>
@@ -93,8 +100,9 @@
                             <li><a href="TestTotalDetail">測試線別狀態</a></li>
                             </c:if>
                         <li><a href="TestTotal">測試線別紀錄</a></li>
-                            <c:if test="${isIeOper || isBackDoor4876 || isAdmin}">
-                            <li><a href="testPassStationProductivity.jsp">MES測試過站查詢</a></li>
+                            <c:if test="${isIeOper || isBackDoor4876 || isAdmin || isMfgOper}">
+                            <li><a href="TestPassStationProductivity">MES測試過站效率</a></li>
+                            <li><a href="TestSuggestionWorkTime">MES測試工時建議</a></li>
                             </c:if>
                     </ul>
                 </li>

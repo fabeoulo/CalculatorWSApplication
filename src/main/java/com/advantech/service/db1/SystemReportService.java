@@ -40,6 +40,10 @@ public class SystemReportService {
         return systemReportDao.getEmptyRecordForExcel(lineTypeId, floorId, startDate, endDate);
     }
 
+    public List<Map> getTestSuggestionWorkTimeDetailExcel(String startDate, String endDate) {
+        return systemReportDao.getTestSuggestionWorkTimeDetailExcel(startDate, endDate);
+    }
+            
     public List<Map> getBabPassStationExceptionReportDetails(String po, String modelName, String startDate, String endDate, int lineTypeId) {
         return systemReportDao.getBabPassStationExceptionReportDetails(po, modelName, startDate, endDate, lineTypeId);
     }
