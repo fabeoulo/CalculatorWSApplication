@@ -191,7 +191,7 @@
                     filter: false,
                     destroy: true,
                     paginate: false,
-                    "order": [[2, "asc"], [6, "asc"]]
+                    "order": []
                 });
 
             }

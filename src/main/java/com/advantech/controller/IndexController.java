@@ -70,6 +70,18 @@ public class IndexController {
         return "pages/admin/testTotal";
     }
 
+    @RequestMapping("/pages/admin/TestPassStationProductivity")
+    public String testPassStationProductivity(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
+        setLanguage(model, request, response, locale);
+        return "pages/admin/testPassStationProductivity";
+    }
+
+    @RequestMapping("/pages/admin/TestSuggestionWorkTime")
+    public String testSuggestionWorkTime(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
+        setLanguage(model, request, response, locale);
+        return "pages/admin/testSuggestionWorkTime";
+    }
+
     @RequestMapping("/pages/admin/BabTotal")
     public String babTotal(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
         setLanguage(model, request, response, locale);

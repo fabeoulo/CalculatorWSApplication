@@ -269,6 +269,16 @@ public class SqlViewController {
 
     }
 
+    @RequestMapping(value = "/findTestSuggestionWorkTime", method = {RequestMethod.POST})
+    @ResponseBody
+    protected DataTableResponse findTestSuggestionWorkTime(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate) {
+
+        return new DataTableResponse(procSerice.findTestSuggestionWorkTime(startDate, endDate));
+
+    }
+
     @RequestMapping(value = "/findBabModuleUsageRate", method = {RequestMethod.GET})
     @ResponseBody
     protected DataTableResponse findBabModuleUsageRate(

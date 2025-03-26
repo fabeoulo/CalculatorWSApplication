@@ -238,6 +238,15 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .list();
     }
 
+    public List<Map> findTestSuggestionWorkTime(DateTime sD, DateTime eD) {
+        return super.getSession()
+                .createSQLQuery("{CALL M3_BW.usp_Excel_TestSuggestionWorkTime(:sD, :eD)}")
+                .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
+                .setParameter("eD", eD != null ? eD.plusDays(1).withHourOfDay(0).toDate() : null)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+    }
+
     public int closeBabDirectly(Bab b) {
         super.getSession()
                 .createSQLQuery("{CALL M3_BW.usp_CloseBabDirectly(:bab_id)}")
@@ -315,7 +324,7 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .list();
     }
-    
+
     public List<Map> findPreAssyPercentage(int lineTypeId, DateTime sD) {
         return super.getSession()
                 .createSQLQuery("{CALL M3_BW.usp_Excel_PreAssyPercentage(:lineTypeId, :sD)}")

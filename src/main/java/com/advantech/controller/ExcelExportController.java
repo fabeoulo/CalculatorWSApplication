@@ -77,7 +77,7 @@ public class ExcelExportController {
             res.setContentType("text/html");
             res.getWriter().println("fail");
         } else {
-            try (Workbook w = this.generateBabDetailIntoExcel(list, list2, list3, aboveStandard)) {
+            try ( Workbook w = this.generateBabDetailIntoExcel(list, list2, list3, aboveStandard)) {
                 String fileExt = ExcelGenerator.getFileExt(w);
 
                 res.setContentType("application/vnd.ms-excel");
@@ -104,7 +104,7 @@ public class ExcelExportController {
 
         String sD = fmt.print(startDate);
         String eD = fmt.print(endDate);
-        
+
         List<Map> data = reportService.getBabPassStationExceptionReportDetails(po, modelName, sD, eD, lineType_id);
         quickGenerateExcel(data, res);
     }
@@ -142,15 +142,34 @@ public class ExcelExportController {
         quickGenerateExcel(data, res);
     }
 
-    private void quickGenerateExcel(List<Map> data, HttpServletResponse res) throws IOException {
+    @RequestMapping(value = "/getTtestSuggestionWorkTimeDetailExcel", method = {RequestMethod.GET})
+    @ResponseBody
+    protected void getTtestSuggestionWorkTimeDetailExcel(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate,
+            HttpServletResponse res) throws IOException {
+
+        endDate = endDate.plusDays(1);
+
+        String sD = fmt.print(startDate);
+        String eD = fmt.print(endDate);
+
+        List<Map> data = reportService.getTtestSuggestionWorkTimeDetailExcel(sD, eD);
+        quickGenerateExcel(data, res, 8);
+    }
+
+    private void quickGenerateExcel(List<Map> data, HttpServletResponse res, Integer... i) throws IOException {
         if (data.isEmpty()) {
             res.setContentType("text/html");
             res.getWriter().println("fail");
         } else {
             ExcelGenerator generator = new ExcelGenerator();
             generator.createExcelSheet("sheet1");
+
+            generator.addSkipDecimalFormatIndex(i);
+
             generator.generateWorkBooks(data);
-            try (Workbook w = generator.getWorkbook()) {
+            try ( Workbook w = generator.getWorkbook()) {
                 String fileExt = ExcelGenerator.getFileExt(w);
 
                 res.setContentType("application/vnd.ms-excel");

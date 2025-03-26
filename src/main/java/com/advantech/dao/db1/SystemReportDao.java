@@ -53,6 +53,13 @@ public class SystemReportDao extends BasicDAO {
                 lineTypeId, floorId, startDate, endDate);
     }
 
+    //測試工時建議details
+    public List<Map> getTtestSuggestionWorkTimeDetailExcel(String startDate, String endDate) {
+        return queryProcForMapList(getConn(),
+                "{CALL M3_BW.usp_Excel_TestPassStationProductivity(?, ?)}",
+                startDate, endDate);
+    }
+
     //異常資料details
     public List<Map> getBabPassStationExceptionReportDetails(String po, String modelName,
             String startDate, String endDate, int lineTypeId) {
@@ -68,13 +75,13 @@ public class SystemReportDao extends BasicDAO {
                 "{CALL M3_BW.usp_Excel_BabPreAssyDetail(?,?,?,?)}",
                 lineTypeId, floorId, startDate, endDate);
     }
-    
+
     //前置模組設定
     public List<Map> getPreAssyModuleStandardTimeSetting() {
         return queryProcForMapList(getConn(),
                 "{CALL M3_BW.usp_Excel_PreAssyModuleStandardTimeSetting()}");
     }
-    
+
     //組裝sop標工設定
     public List<Map> getAssyModelSopStandardTimeSetting() {
         return queryProcForMapList(getConn(),
