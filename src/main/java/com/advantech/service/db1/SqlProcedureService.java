@@ -149,6 +149,10 @@ public class SqlProcedureService {
         return sqlProcedureDAO.findTestSuggestionWorkTime(sD, eD);
     }
 
+    public List<Map> findSuggestionWorkTime(DateTime sD, DateTime eD, int lineTypeId) {
+        return sqlProcedureDAO.findSuggestionWorkTime(sD, eD, lineTypeId);
+    }
+
     public int closeBabDirectly(Bab b) {
         return sqlProcedureDAO.closeBabDirectly(b);
     }

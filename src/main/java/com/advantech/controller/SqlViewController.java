@@ -276,7 +276,16 @@ public class SqlViewController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate) {
 
         return new DataTableResponse(procSerice.findTestSuggestionWorkTime(startDate, endDate));
+    }
 
+    @RequestMapping(value = "/findSuggestionWorkTime", method = {RequestMethod.POST})
+    @ResponseBody
+    protected DataTableResponse findSuggestionWorkTime(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate,
+            @RequestParam int lineTypeId) {
+
+        return new DataTableResponse(procSerice.findSuggestionWorkTime(startDate, endDate, lineTypeId));
     }
 
     @RequestMapping(value = "/findBabModuleUsageRate", method = {RequestMethod.GET})
