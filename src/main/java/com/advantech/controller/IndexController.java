@@ -148,6 +148,12 @@ public class IndexController {
         return "pages/admin/babLineProductivity";
     }
 
+    @RequestMapping("/pages/admin/SuggestionWorkTime")
+    public String suggestionWorkTime(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
+        setLanguage(model, request, response, locale);
+        return "pages/admin/suggestionWorkTime";
+    }
+
     @RequestMapping("/pages/admin/FqcDashBoard")
     public String fqcDashBoard(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
         setLanguage(model, request, response, locale);

@@ -242,7 +242,17 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
         return super.getSession()
                 .createSQLQuery("{CALL M3_BW.usp_Excel_TestSuggestionWorkTime(:sD, :eD)}")
                 .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
-                .setParameter("eD", eD != null ? eD.plusDays(1).withHourOfDay(0).toDate() : null)
+                .setParameter("eD", eD != null ? eD.plusDays(1).withMillisOfDay(0).toDate() : null)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+    }
+
+    public List<Map> findSuggestionWorkTime(DateTime sD, DateTime eD, int lineTypeId) {
+        return super.getSession()
+                .createSQLQuery("{CALL M3_BW.usp_Excel_SuggestionWorkTime(:sD, :eD, :lineType_id)}")
+                .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
+                .setParameter("eD", eD != null ? eD.plusDays(1).withMillisOfDay(0).toDate() : null)
+                .setParameter("lineType_id", lineTypeId)
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .list();
     }

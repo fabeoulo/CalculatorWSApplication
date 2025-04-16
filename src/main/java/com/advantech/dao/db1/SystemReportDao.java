@@ -60,6 +60,13 @@ public class SystemReportDao extends BasicDAO {
                 startDate, endDate);
     }
 
+    //組/包工時建議details
+    public List<Map> getSuggestionWorkTimeDetailExcel(String startDate, String endDate, int lineTypeId) {
+        return queryProcForMapList(getConn(),
+                "{CALL M3_BW.usp_Excel_SuggestionWorkTimeDetail(?, ?, ?, ?, ?, ?, ?, ?)}",
+                null, null, -1, lineTypeId, null, null, startDate, endDate);
+    }
+
     //異常資料details
     public List<Map> getBabPassStationExceptionReportDetails(String po, String modelName,
             String startDate, String endDate, int lineTypeId) {
