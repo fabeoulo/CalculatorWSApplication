@@ -461,7 +461,7 @@
                 });
 
                 $(document).on('click', '#remark-info .DeleteButton', function (event) {
-                    if (confirm('1 This action will delete the selected record. Plese click OK to confirm.')) {
+                    if (confirm('【1】 This action will delete the selected record. Plese click OK to confirm.')) {
                         var data = table.row($(this).parents('tr')).data();
                         //load from database
                         $.ajax({
@@ -484,7 +484,7 @@
                     }
                 });
                 $(document).on('click', '#preAssyModuleType-info .DeleteButton', function (event) {
-                    if (confirm('2 This action will delete the selected record. Plese click OK to confirm.')) {
+                    if (confirm('【2】 This action will delete the selected record. Plese click OK to confirm.')) {
                         var data = typeTable.row($(this).parents('tr')).data();
                         //load from database
                         $.ajax({
@@ -548,14 +548,6 @@
                                         <td>機種</td>
                                         <td>
                                             <input id="modelName" name="modelName" type="text" class="form-control">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>製程</td>
-                                        <td>
-                                            <select id="lineType.id" name="lineType.id" class="form-control worktimeLineType">
-                                                <option value="-1">All</option>
-                                            </select>
                                         </td>
                                     </tr>
                                     <tr>
