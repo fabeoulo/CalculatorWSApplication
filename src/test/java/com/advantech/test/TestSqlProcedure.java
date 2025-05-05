@@ -125,7 +125,7 @@ public class TestSqlProcedure {
         procDAO.findSensorCurrentGroupStatus(i);
         assertTrue(!procDAO.findTestPassStationProductivity(sD, eD).isEmpty());
 
-//        procDAO.getTotalAbnormalData(i); //proc M3_BW.sensorTotalAbnormalCheck not found
+//        procDAO.getTotalAbnormalData(i); //proc M9_BW2.sensorTotalAbnormalCheck not found
 //        procDAO.getAbnormalData(i); proc not found
         Bab b = babDAO.findByPrimaryKey(185);
 //        procDAO.closeBabDirectly(b);

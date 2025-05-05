@@ -43,7 +43,7 @@
     <bean id="dataSource1" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
         <property name="connectionTestQuery" value="SELECT 1" />
         <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
-        <property name="jdbcUrl" value="jdbc:jtds:sqlserver://172.20.128.151/ATMC" />
+        <property name="jdbcUrl" value="jdbc:jtds:sqlserver://172.22.250.151/TWM9" />
         <property name="username" value="ATMCSa" />
         <property name="password" value="@tmc$a392" />
     </bean>
@@ -73,7 +73,7 @@
                 <prop key="hibernate.id.new_generator_mappings" >false</prop>
                 <!--<prop key="hibernate.show_sql">true</prop>-->
                 <!--<prop key="hibernate.format_sql">true</prop>-->
-                <prop key="hibernate.default_schema">M3_BW</prop>
+                <prop key="hibernate.default_schema">M9_BW2</prop>
                 <prop key="hibernate.dialect">com.advantech.helper.SqlServerDialectWithNvarchar</prop>
             </props> 
         </property> 
@@ -113,7 +113,7 @@
     <bean id="dataSource3" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
         <property name="connectionTestQuery" value="SELECT 1" />
         <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
-        <property name="jdbcUrl" value="jdbc:jtds:sqlserver://172.20.131.241/E_Document" />
+        <property name="jdbcUrl" value="jdbc:jtds:sqlserver://172.20.131.241/E_Document_M4f" />
         <property name="username" value="waychien" />
         <property name="password" value="m3server" />
     </bean>

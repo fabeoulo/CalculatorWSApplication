@@ -1,35 +1,18 @@
 {
     "sitefloors": [
         {
-            "floor": 3,
-            "section": "M9_3F",
+            "floor": 4,
+            "section": "4F",
             "lineType": "ASSY/Packing",
             "testLineType": "Test",
             "cellLineType": ""
-        },
-        {
-            "floor": 3,
-            "section": "IDS",
-            "lineType": "IDS",
-            "testLineType": "IDS",
-            "cellLineType": "Cell"
         }
     ],
     "sitefloors_mgr": [
         {
-            "floor": 3,
-            "section": "包裝",
-            "lineType": "Packing"
-        },
-        {
-            "floor": 3,
-            "section": "組裝",
+            "floor": 4,
+            "section": "4F",
             "lineType": "ASSY"
-        },
-        {
-            "floor": 3,
-            "section": "IDS",
-            "lineType": "IDS"
         }
     ]
 }

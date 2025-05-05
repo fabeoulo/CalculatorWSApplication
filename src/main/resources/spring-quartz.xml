@@ -418,18 +418,18 @@
                 <ref bean="CellStationRecordJob-Trig"/>
                 <ref bean="SyncCellPassStationData-Trig"/>
                 
-                <ref bean="SyncPrepareScheduleForAssy-Trig"/>
+<!--                <ref bean="SyncPrepareScheduleForAssy-Trig"/>
                 <ref bean="SyncPrepareScheduleForPacking-Trig"/>
-                <ref bean="SyncLineUserReference-Trig"/>
+                <ref bean="SyncLineUserReference-Trig"/>-->
                 <ref bean="SyncUserFromRemote-Trig"/>
                 <ref bean="SyncWorktimeFromRemote-Trig"/>
                 
-                <!--<ref bean="SaveMesCountRecord-Trig"/>-->
+                <!--<ref bean="SaveMesCountRecord-Trig"/>--> 
                 <!--<ref bean="CountermeasureAlarm-Trig"/>-->                
                 
                 <!--<ref bean="SensorDetect-Trig"/>-->
-                <ref bean="PreAssyModuleStandardTimeJob-Trig"/>
-                <ref bean="CheckTagNode-Trig"/>
+                <!--<ref bean="PreAssyModuleStandardTimeJob-Trig"/>-->
+                <!--<ref bean="CheckTagNode-Trig"/>-->
             </list>
         </property>
         <property name="schedulerName">

@@ -73,9 +73,9 @@ public class TestLineTypeRecord extends QuartzJobBean {
             log.info("No need to record right now.");
         } else {
             //只存下已經刷入的使用者
-            List<com.advantech.model.db1.TestRecord> testLineTypeStatus = separateOfflineUser(rv.getTestLineTypeRecords(Factory.TWM3));
-            List<com.advantech.model.db1.TestRecord> testLineTypeStatus2 = separateOfflineUser(rv.getTestLineTypeRecords(Factory.TWM6));
-            testLineTypeStatus.addAll(testLineTypeStatus2);
+            List<com.advantech.model.db1.TestRecord> testLineTypeStatus = separateOfflineUser(rv.getTestLineTypeRecords(Factory.TWM9));
+//            List<com.advantech.model.db1.TestRecord> testLineTypeStatus2 = separateOfflineUser(rv.getTestLineTypeRecords(Factory.TWM6));
+//            testLineTypeStatus.addAll(testLineTypeStatus2);
 
             updateReplyFlag(testLineTypeStatus);
             addSaltProductivity(testLineTypeStatus);

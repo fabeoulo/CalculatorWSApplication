@@ -104,9 +104,9 @@ public class TestLineTypeFacade extends BasicLineTypeFacade {
             initMap();
             JSONArray userArr = new JSONArray();
 
-            List<TestRecord> kanbanUsersRecord = rv.getTestLineTypeRecords(Factory.TWM3);
-            List<TestRecord> kanbanUsersRecord2 = rv.getTestLineTypeRecords(Factory.TWM6);
-            kanbanUsersRecord.addAll(kanbanUsersRecord2);
+            List<TestRecord> kanbanUsersRecord = rv.getTestLineTypeRecords(Factory.TWM9);
+//            List<TestRecord> kanbanUsersRecord2 = rv.getTestLineTypeRecords(Factory.TWM6);
+//            kanbanUsersRecord.addAll(kanbanUsersRecord2);
             kanbanUsersRecord =  new ArrayList<>(
                     kanbanUsersRecord.stream().collect(
                             Collectors.toMap(TestRecord::getUserId, v -> v, (curr, next) -> curr)

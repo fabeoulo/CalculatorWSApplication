@@ -32,11 +32,11 @@ public class SyncWorktimeFromRemote {
 
     @Autowired
     private WorktimeM6Service worktimeM6Service;
-    
+
     @Autowired
     @Qualifier("sqlViewService3")
     private com.advantech.service.db3.SqlViewService sqlViewServiceM3;
-    
+
     @Autowired
     @Qualifier("sqlViewService7")
     private com.advantech.service.db7.SqlViewService sqlViewServiceM6;
@@ -44,19 +44,18 @@ public class SyncWorktimeFromRemote {
     public void execute() throws Exception {
         List<Worktime> remoteData = new ArrayList<>();
         remoteData.addAll(sqlViewServiceM3.findWorktime());
-        
-        List<Worktime> remoteM6List = sqlViewServiceM6.findWorktime()
-                .stream()
-                .filter(w -> !remoteData.stream().anyMatch(r -> r.getModelName().equals(w.getModelName()))).collect(toList());
-        remoteData.addAll(remoteM6List);
-       
+
+//        List<Worktime> remoteM6List = sqlViewServiceM6.findWorktime()
+//                .stream()
+//                .filter(w -> !remoteData.stream().anyMatch(r -> r.getModelName().equals(w.getModelName()))).collect(toList());
+//        remoteData.addAll(remoteM6List);
+//
         worktimeService.deleteAll();
         worktimeService.insert(remoteData);
-        
-        
-        List<WorktimeM6> remoteM6Model = sqlViewServiceM6.findWorktimeM6();
-        worktimeM6Service.deleteAll();
-        worktimeM6Service.insert(remoteM6Model);
+//
+//        List<WorktimeM6> remoteM6Model = sqlViewServiceM6.findWorktimeM6();
+//        worktimeM6Service.deleteAll();
+//        worktimeM6Service.insert(remoteM6Model);
     }
 
 }

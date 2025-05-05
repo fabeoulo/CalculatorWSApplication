@@ -90,10 +90,10 @@ public class SyncTestPassStationData {
     private List<TestPassStationDetail> findRvTestPassStationDetails(List<TestPassStationDetail> result, List<String> jobnumbers, DateTime sD, DateTime eD) {
         stations.forEach(s -> {
             Section section = (s == 3 ? Section.BAB : Section.TEST);
-            List<TestPassStationDetail> l = rv.getTestPassStationDetails(jobnumbers, section, s, sD, eD, Factory.TWM3);
-            List<TestPassStationDetail> l2 = rv.getTestPassStationDetails(jobnumbers, section, s, sD, eD, Factory.TWM6);
+            List<TestPassStationDetail> l = rv.getTestPassStationDetails(jobnumbers, section, s, sD, eD, Factory.TWM9);
+//            List<TestPassStationDetail> l2 = rv.getTestPassStationDetails(jobnumbers, section, s, sD, eD, Factory.TWM6);
             result.addAll(l);
-            result.addAll(l2);
+//            result.addAll(l2);
         });
         return result;
     }

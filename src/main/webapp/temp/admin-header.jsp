@@ -125,8 +125,8 @@
                             <li><a href="SuggestionWorkTime?lineType=ASSY">工時建議</a></li>
                             <li><a href="PreAssySuggestionWorkTime">前置工時建議</a></li>
                             <li class="divider"></li>
-                            <li><a href="ModelSopRemark">Sop維護</a></li>
-                            <li class="divider"></li>
+<!--                            <li><a href="ModelSopRemark">Sop維護</a></li>
+                            <li class="divider"></li>-->
                             <li><a href="PreAssyModuleStandardTime">前置模組工時維護</a></li>
                             </c:if>
                         <li><a href="BabPreAssyDetail">前置資料查詢</a></li>
@@ -135,9 +135,9 @@
                         <li class="divider"></li>
                         <li class="hide-when-auto"><a href="BabPassStationRecord?lineType=ASSY">Barcode過站紀錄</a></li>
                         <li class="hide-when-auto"><a href="BabPassStationExceptionReport?lineType=ASSY">異常資料統計</a></li>
-                        <li><a href="lineUserReference.jsp?lineType=ASSY">組裝當日線別人員維護</a></li>
+<!--                        <li><a href="lineUserReference.jsp?lineType=ASSY">組裝當日線別人員維護</a></li>
                         <li><a href="prepareSchedule.jsp?lineType=ASSY">組裝當日自動排站</a></li>
-                        <li class="divider"></li>
+                        <li class="divider"></li>-->
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -158,18 +158,18 @@
                             <c:if test="${isIeOper || isBackDoor4876 || isAdmin || isMfgLineOwner || isMfgOper}">
                             <li><a href="SuggestionWorkTime?lineType=Packing">工時建議</a></li>
                             <li class="divider"></li>
-                            <li><a href="modelSopRemark.jsp">Sop維護</a></li>
-                            <li class="divider"></li>
-                            </c:if>
+<!--                            <li><a href="modelSopRemark.jsp">Sop維護</a></li>
+                            <li class="divider"></li>-->
+                        </c:if>
                         <li class="hide-when-auto"><a href="BabPassStationRecord?lineType=Packing">Barcode過站紀錄</a></li>
                         <li><a href="BabPreAssyProductivity?lineType=Packing&sitefloor=3">前置資料查詢</a></li>
                         <li><a href="babModuleUsageRate.jsp?lineType=Packing">前置機種模組使用狀態</a></li>
                         <li class="divider"></li>
-                        <li><a href="lineUserReference.jsp?lineType=Packing">附件盒當日線別人員維護</a></li>
-                        <li><a href="prepareSchedule.jsp?lineType=Packing">附件盒當日自動排站</a></li>
+<!--                        <li><a href="lineUserReference.jsp?lineType=Packing">附件盒當日線別人員維護</a></li>
+                        <li><a href="prepareSchedule.jsp?lineType=Packing">附件盒當日自動排站</a></li>-->
                     </ul>
                 </li>
-                <li class="dropdown">
+<!--                <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <span class="glyphicon glyphicon-list-alt" aria-hidden="true" /> 
                         IDS
@@ -193,7 +193,7 @@
                             </c:if>
                         <li class="hide-when-auto"><a href="BabPassStationRecord?lineType=IDS">Barcode過站紀錄</a></li>
                         <li><a href="BabPreAssyProductivity?lineType=IDS&sitefloor=3">前置資料查詢</a></li>
-                        <!--<li><a href="babModuleUsageRate.jsp?lineType=IDS">前置機種模組使用狀態</a></li>-->
+                        <li><a href="babModuleUsageRate.jsp?lineType=IDS">前置機種模組使用狀態</a></li>
                         <li class="divider"></li>
                     </ul>
                 </li>
@@ -204,13 +204,13 @@
                         <span class="caret" />
                     </a>
                     <ul class="dropdown-menu">
-                        <!--<li><a href="FqcDashBoard?sitefloor=6">FQC效率</a></li>-->
+                        <li><a href="FqcDashBoard?sitefloor=6">FQC效率</a></li>
                         <li><a href="FqcRecord">FQC效率記錄查詢</a></li>
                             <c:if test="${isFqcOper || isAdmin}">
                             <li><a href="FqcModelStandardTime">FQC標工維護</a></li>
                             </c:if>
                     </ul>
-                </li>
+                </li>-->
                 <li>
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <span class="glyphicon glyphicon-list-alt" aria-hidden="true" /> 
@@ -228,7 +228,7 @@
                         </a>
                         <ul class="dropdown-menu sensorAdjustSelect">
                             <c:if test="${isAdmin || isMfgOper || isDebugger}">
-                                <li><a href="SensorTest">Sensor檢測</a></li>
+                                <!--<li><a href="SensorTest">Sensor檢測</a></li>-->
                                 </c:if>
                         </ul>
                     </li>
