@@ -106,10 +106,10 @@ public class TestService {
     }
 
     private Factory getFactory(TestTable table) {
-        Factory f = Factory.TWM3;
-        if (table.getLineType().getId() == 11) {
-            f = Factory.TWM6;
-        }
+        Factory f = Factory.TWM9;
+//        if (table.getLineType().getId() == 11) {
+//            f = Factory.TWM6;
+//        }
         return f;
     }
 }

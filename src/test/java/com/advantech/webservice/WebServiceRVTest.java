@@ -76,7 +76,7 @@ public class WebServiceRVTest {
 //    @Test//245
     public void testGetKanbanUsersForString() throws Exception {
         System.out.println("getKanbanUsersForString");
-        List<String> result = rv.getKanbanUsersForString(Factory.TWM3);
+        List<String> result = rv.getKanbanUsersForString(Factory.TWM9);
         assertTrue(!result.isEmpty());
         result = rv.getKanbanUsersForString(Factory.TWM6);
         assertTrue(!result.isEmpty());
@@ -90,7 +90,7 @@ public class WebServiceRVTest {
         System.out.println("getKanbanWorkId");
         String jobnumber = "A-4960";
         String expResult = "";
-        String result = rv.getKanbanWorkId(jobnumber, Factory.TWM3);
+        String result = rv.getKanbanWorkId(jobnumber, Factory.TWM9);
         assertNotEquals(expResult, result);
         out.println(result);
 
@@ -109,7 +109,7 @@ public class WebServiceRVTest {
         System.out.println("getModelnameByPo");
         String po = "PAGB079ZA";
         String expResult = "";
-        String result = rv.getModelNameByPo(po, Factory.TWM3);
+        String result = rv.getModelNameByPo(po, Factory.TWM9);
         assertNotEquals(expResult, result);
         out.println(result);
 
@@ -125,7 +125,7 @@ public class WebServiceRVTest {
 //    @Test
 //    public void testWsRvJar() {
 //        SimpleWebServiceRV rv = new SimpleWebServiceRV();
-//        Factory f = Factory.TWM3;
+//        Factory f = Factory.TWM9;
 //        rv.setWsClient(mClient.getClient(f));
 //        String jobnumber = "A-5131";
 //        String queryString = "<root><METHOD ID='Advantech.IMG.SYS.BLL.QryLogion'/><USER_INFO><USER_NO>"
@@ -149,7 +149,7 @@ public class WebServiceRVTest {
         System.out.println("getMESUser");
         String jobnumber = "A-7275";
         UserOnMes expResult = null;
-        UserOnMes result = rv.getMESUser(jobnumber, Factory.TWM3);
+        UserOnMes result = rv.getMESUser(jobnumber, Factory.TWM9);
         assertNotEquals(expResult, result);
         out.println(new Gson().toJson(result));
 
@@ -167,7 +167,7 @@ public class WebServiceRVTest {
     public void testGetPassStationRecords() {
         System.out.println("getPassStationRecords");
         String po = "THL007939ZA";
-        List<PassStationRecord> result = rv.getPassStationRecords(po, 16, Factory.TWM3);
+        List<PassStationRecord> result = rv.getPassStationRecords(po, 16, Factory.TWM9);
         assertTrue(!result.isEmpty());
         HibernateObjectPrinter.print(result);
 
@@ -184,7 +184,7 @@ public class WebServiceRVTest {
     public void testGetTestLineTypeUsers() {
         System.out.println("getTestLineTypeUsers");
         List<TestRecord> expResult = null;
-        List<TestRecord> result = rv.getTestLineTypeRecords(Factory.TWM3);
+        List<TestRecord> result = rv.getTestLineTypeRecords(Factory.TWM9);
         assertNotEquals(expResult, result);
         for (TestRecord t : result) {
             out.println(new Gson().toJson(t));
@@ -201,7 +201,7 @@ public class WebServiceRVTest {
 //    @Test//245 l size0
     public void testGetTestLineTypeRecord() throws JsonProcessingException {
         System.out.println("getTestLineTypeRecord");
-        List<TestRecord> l = rv.getTestLineTypeRecords(Factory.TWM3);
+        List<TestRecord> l = rv.getTestLineTypeRecords(Factory.TWM9);
         assertNotNull(l);
         HibernateObjectPrinter.print(l);
 
@@ -212,7 +212,7 @@ public class WebServiceRVTest {
 
 //    @Test//245
     public void testGetModelNameByBarcode() throws JsonProcessingException {
-        String value = rv.getPoByBarcode("TPAD555444", Factory.TWM3);
+        String value = rv.getPoByBarcode("TPAD555444", Factory.TWM9);
         assertEquals(value, "TPN000181ZA");
         value = rv.getPoByBarcode("IDA0555653", Factory.TWM6);
         assertEquals(value, "TAN000010ZA");
@@ -222,7 +222,7 @@ public class WebServiceRVTest {
     public void testGetMesPassCountRecords() {
         DateTime eD = new DateTime("2023-03-29");
         DateTime sD = eD.minusDays(1);
-        List l = rv.getMesPassCountRecords(sD, eD, Factory.TWM3);
+        List l = rv.getMesPassCountRecords(sD, eD, Factory.TWM9);
         assertTrue(!l.isEmpty());
         HibernateObjectPrinter.print(l);
 
@@ -243,29 +243,29 @@ public class WebServiceRVTest {
 
         int hr = today.getHourOfDay() >= 20 ? 20 : 8;
         DateTime eD = new DateTime(today).withTime(hr, 30, 0, 0);
-        DateTime sD = eD.minusHours(12);//.minusDays(today.getDayOfWeek() == 1 && hr == 8 ? 2 : 0);
+        DateTime sD = eD.minusHours(24);//.minusDays(today.getDayOfWeek() == 1 && hr == 8 ? 2 : 0);
 
         List<String> users = newArrayList("'A-10945'");
 
 //        List<TestRecord> records = testRecordService.findByDate(sD, eD, false);
 //        List<String> jobnumbers = records.stream().map(t -> "'" + t.getUserId() + "'").distinct().collect(Collectors.toList());
-        List<Integer> stations = newArrayList(3, 11, 30, 151);
+        List<Integer> stations = newArrayList(95,3, 11, 30, 151);
 
         stations.forEach(s -> {
             Section section = (s == 3 ? Section.BAB : Section.TEST);
-            List<TestPassStationDetail> l = rv.getTestPassStationDetails(users, section, s, sD, eD, Factory.TWM3);
+            List<TestPassStationDetail> l = rv.getTestPassStationDetails(users, section, s, sD, eD, Factory.TWM9);
             //assertTrue(!l.isEmpty());
             HibernateObjectPrinter.print(l);
 
-            l = rv.getTestPassStationDetails(users, section, s, sD, eD, Factory.TWM6);
-            HibernateObjectPrinter.print(l);
+//            l = rv.getTestPassStationDetails(users, section, s, sD, eD, Factory.TWM6);
+//            HibernateObjectPrinter.print(l);
         });
     }
 
 //    @Test//245
     public void testGetUsersInfoOnMes() {
         System.out.println("getUsersInfoOnMes");
-        List l = rv.getUsersInfoOnMes(Factory.TWM3);
+        List l = rv.getUsersInfoOnMes(Factory.TWM9);
         assertTrue(!l.isEmpty());
         HibernateObjectPrinter.print(l.get(0));
 
@@ -283,7 +283,7 @@ public class WebServiceRVTest {
         DateTime sD = new DateTime().withTime(0, 0, 0, 0);
         DateTime eD = new DateTime().plusDays(1).withTime(0, 0, 0, 0);
 
-        List l = rv.getRptStationQtys("EKI-1524I-CE", 2, Factory.TWM3);
+        List l = rv.getRptStationQtys("EKI-1524I-CE", 2, Factory.TWM9);
         assertTrue(!l.isEmpty());
         HibernateObjectPrinter.print(l.get(0));
 

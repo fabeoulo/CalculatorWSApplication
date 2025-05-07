@@ -144,7 +144,7 @@ public class BabPassStationRecordService {
     }
 
     private void checkBarcodeSn(Bab b, String barcode) {
-        String po = rv.getPoByBarcode(barcode, Factory.TWM3);
+        String po = rv.getPoByBarcode(barcode, Factory.TWM9);
         checkState(Objects.equals(po, b.getPo()), "Barcode's SN not match");
     }
 

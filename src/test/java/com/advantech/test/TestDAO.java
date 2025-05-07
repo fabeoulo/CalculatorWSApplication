@@ -238,7 +238,7 @@ public class TestDAO {
         List<Integer> lineId = lines.stream().map(MesLine::getId).collect(toList());
         assertTrue(!lineId.isEmpty());
 
-        List<MesPassCountRecord> l = rv.getMesPassCountRecords(sD, eD, Factory.TWM3);
+        List<MesPassCountRecord> l = rv.getMesPassCountRecords(sD, eD, Factory.TWM9);
 
         System.out.println(l.size());
 
