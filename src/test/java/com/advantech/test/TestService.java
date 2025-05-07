@@ -167,7 +167,7 @@ public class TestService {
 //    @Transactional
 //    @Rollback(false)
     public void testInsertMfgUser() {
-//        List<UserInfoOnMes> l = rv.getUsersInfoOnMes(Factory.TWM3);
+//        List<UserInfoOnMes> l = rv.getUsersInfoOnMes(Factory.TWM9);
 //        List<UserInfoOnMes> remoteDirectUser = l.stream()
 //                .filter(ur -> (ur.getUnitNo() != null && ur.getUnitNo().matches("(A|B|T|P)")))
 //                .collect(toList());

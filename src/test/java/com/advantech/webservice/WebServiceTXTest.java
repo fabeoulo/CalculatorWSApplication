@@ -41,7 +41,7 @@ public class WebServiceTXTest {
     @Test//245
     public void testLogin() {
         out.println("testLogin");
-        tx.kanbanUserLogin(testJobnumber, Factory.TWM3);
+        tx.kanbanUserLogin(testJobnumber, Factory.TWM9);
         
         tx.kanbanUserLogin(testJobnumber, Factory.TWM6);
     }
@@ -51,7 +51,7 @@ public class WebServiceTXTest {
     @Test//245
     public void testLogout() {
         out.println("testLogout");
-        tx.kanbanUserLogout(testJobnumber, Factory.TWM3);
+        tx.kanbanUserLogout(testJobnumber, Factory.TWM9);
         
         tx.kanbanUserLogout(testJobnumber, Factory.TWM6);
     }

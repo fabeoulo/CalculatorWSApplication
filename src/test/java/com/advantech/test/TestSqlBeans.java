@@ -385,7 +385,7 @@ public class TestSqlBeans {
 
         stations.forEach(s -> {
             Section section = (s == 3 ? Section.BAB : Section.TEST);
-            List<TestPassStationDetail> l = rv.getTestPassStationDetails2(users, section, s, sD, eD, Factory.TWM3);
+            List<TestPassStationDetail> l = rv.getTestPassStationDetails2(users, section, s, sD, eD, Factory.TWM9);
             result.addAll(l);
         });
 
