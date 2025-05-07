@@ -105,7 +105,7 @@ public class PreAssyModuleStandardTime implements Serializable, Cloneable {
         this.floor = floor;
     }
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modifyDate", length = 23, nullable = true)
     public Date getStandardTimeModifyDate() {

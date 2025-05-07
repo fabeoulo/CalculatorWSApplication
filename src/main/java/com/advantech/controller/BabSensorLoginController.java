@@ -136,6 +136,6 @@ public class BabSensorLoginController {
         Integer[] lines = availableLine.stream()
                 .map(l -> l.getId())
                 .toArray(Integer[]::new);
-        return lines;
+        return lines.length > 0 ? lines : new Integer[]{0};
     }
 }

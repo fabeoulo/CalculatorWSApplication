@@ -186,7 +186,7 @@
 
                     var clientId = $("#clientId").val();
 
-                    websocket = new WebSocket("ws://" + hostname + "/CalculatorWSApplication/echo6");
+                    websocket = new WebSocket("ws://" + hostname + "${pageContext.request.contextPath}/echo6");
 
                     websocket.onopen = function () {
                         appendLog("CONNECTED", "active");

@@ -119,7 +119,7 @@ public class ExcelExportController {
             HttpServletResponse res) throws IOException {
 
         startDate = startDate.withHourOfDay(0);
-        endDate = endDate.withHourOfDay(23);
+        endDate = endDate.plusDays(1).withMillisOfDay(0);
 
         String sD = fmt.print(startDate);
         String eD = fmt.print(endDate);

@@ -59,6 +59,7 @@
         <script>
             ﻿$(function () {
                 var table, typeTable;
+                var tableRow, typeTableRow;
                 var typeOptions = [];
                 var lineTypeOptions = [];
                 var standardTimeEditable = '${isAdmin || isMfgOper || isBackDoor4876 || isIeOper}';
@@ -81,14 +82,21 @@
                     if (!modelName) {
                         errorMsg += "\n* enter the modelName";
                     }
-                    
+
                     if (!moduleId) {
                         errorMsg += "\n* select the ModuleType";
                     }
 
                     if (!standardTime) {
 //                        errorMsg += "\n* enter the standardTime";
-                        standardTime = 999;
+                        standardTime = 0;
+                    }
+
+                    var stModifyDate;
+                    if (tableRow && tableRow.standardTimeModifyDate) {
+                        stModifyDate = moment(tableRow.standardTimeModifyDate).toISOString();
+                    } else {
+                        stModifyDate = moment().toISOString();
                     }
 
                     if (errorMsg != "") {
@@ -104,10 +112,11 @@
                                 id: $("#currentID").val(),
                                 modelName: modelName,
                                 standardTime: standardTime,
-                                "preAssyModuleType.id": $("#preAssyModuleType\\.id").val(),
+                                "preAssyModuleType.id": moduleId,
                                 sopName: $("#sopName").val(),
                                 sopPage: $("#sopPage").val(),
-                                "floor.id": ${user.floor.id}
+                                "floor.id": ${user.floor.id},
+                                standardTimeModifyDate: stModifyDate
                             },
                             success: function (response) {
                                 if (response == "success") {
@@ -207,6 +216,8 @@
                     $("#sopName").val(data.sopName);
                     $("#sopPage").val(data.sopPage);
                     $('#addEditRemark').modal('show');
+
+                    tableRow = data;
                 });
                 //hook up event for edit record buttons
                 $(document).on('click', '#preAssyModuleType-info .EditButton', function (event) { //any element with the class EditButton will be handled here
@@ -216,6 +227,8 @@
                     $("#preAssyModuleType\\.name").val(data.name);
                     $("#lineType\\.id").val(data.lineType.id);
                     $('#addEditRemark3').modal('show');
+
+                    typeTableRow = data;
                 });
                 if (standardTimeEditable == 'false') {
                     $("#standardTimeField").hide().attr("disabled", true);
@@ -428,7 +441,7 @@
                     var key = $(this).val();
                     var sel = $("#preAssyModuleType\\.id");
                     var selOpts = sel.find("option");
-                    
+
                     sel.val("");
                     var firstShownOption = null;
 
@@ -461,8 +474,11 @@
                 });
 
                 $(document).on('click', '#remark-info .DeleteButton', function (event) {
-                    if (confirm('1 This action will delete the selected record. Plese click OK to confirm.')) {
-                        var data = table.row($(this).parents('tr')).data();
+                    var data = table.row($(this).parents('tr')).data();
+                    const modelName = data.modelName;
+                    const moduleName = typeOptions[data.preAssyModuleType.id];
+
+                    if (confirm('Delete ' + modelName + '/' + moduleName + '. Plese click OK to confirm.')) {
                         //load from database
                         $.ajax({
                             method: "POST",
@@ -484,8 +500,11 @@
                     }
                 });
                 $(document).on('click', '#preAssyModuleType-info .DeleteButton', function (event) {
-                    if (confirm('2 This action will delete the selected record. Plese click OK to confirm.')) {
-                        var data = typeTable.row($(this).parents('tr')).data();
+                    var data = typeTable.row($(this).parents('tr')).data();
+                    const moduleName = data.name;
+                    const lineType = lineTypeOptions[data.lineType.id];
+
+                    if (confirm('Delete ' + lineType + '/' + moduleName + '. Plese click OK to confirm.')) {
                         //load from database
                         $.ajax({
                             method: "POST",
@@ -551,14 +570,6 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>製程</td>
-                                        <td>
-                                            <select id="lineType.id" name="lineType.id" class="form-control worktimeLineType">
-                                                <option value="-1">All</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
                                         <td>模組種類</td>
                                         <td>
                                             <select id="preAssyModuleType.id" name="preAssyModuleType.id" class="form-control"></select>
@@ -583,7 +594,7 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <input type="hidden" id="currentID" value="" />                         
+                                <input type="hidden" id="currentID" value="" />                        
                             </fieldset>
                         </div>
                         <div class="modal-footer">

@@ -45,7 +45,7 @@
 
 //--------------websocket functions
                 //websocket will reconnect by reconnecting-websocket.min.js when client or server is disconnect
-                var ws = new ReconnectingWebSocket("ws://" + hostname + "/CalculatorWSApplication/echo");
+                var ws = new ReconnectingWebSocket("ws://" + hostname + "${pageContext.request.contextPath}/echo");
                 ws.timeoutInterval = 3000;
                 ws.onopen = function () {
 

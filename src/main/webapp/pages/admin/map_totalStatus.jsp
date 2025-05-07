@@ -549,7 +549,7 @@
                 };
 
                 if (testGroup.length != 0 || babGroup.length != 0) {
-                    ws2 = new ReconnectingWebSocket("ws://" + hostname + "/CalculatorWSApplication/echo2");
+                    ws2 = new ReconnectingWebSocket("ws://" + hostname + "${pageContext.request.contextPath}/echo2");
                     setWebSocketClient(ws2);
                     //Get the server message and transform into table.
                     ws2.onmessage = function (message) {
@@ -562,7 +562,7 @@
                 }
 
                 if (fqcGroup.length != 0) {
-                    ws4 = new ReconnectingWebSocket("ws://" + hostname + "/CalculatorWSApplication/echo4");
+                    ws4 = new ReconnectingWebSocket("ws://" + hostname + "${pageContext.request.contextPath}/echo4");
                     setWebSocketClient(ws4);
                     //Get the server message and transform into table.
                     ws4.onmessage = function (message) {

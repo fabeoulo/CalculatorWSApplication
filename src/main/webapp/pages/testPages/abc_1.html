@@ -15,7 +15,7 @@
 
                 //var clientId = document.getElementById("clientId").value;
 
-                websocket = new WebSocket("ws://" + hostname + "/CalculatorWSApplication/myHandler2");
+                websocket = new WebSocket("ws://" + hostname + "${pageContext.request.contextPath}/myHandler2");
 
                 websocket.onopen = function () {
                     document.getElementById("output").innerHTML += "<p>> CONNECTED</p>";
