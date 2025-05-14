@@ -31,6 +31,7 @@ import static com.advantech.helper.ShiftScheduleUtils.*;
 import com.advantech.webservice.mes.UploadType;
 import com.google.common.base.CharMatcher;
 import static oracle.security.pki.resources.OraclePKICmd.p;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.Period;
 import static org.junit.Assert.assertEquals;
 
@@ -47,12 +48,18 @@ public class TestClass {
     @Test
     public void test() {
         DateTime currentTime = new DateTime();
+        currentTime = currentTime.withMillisOfDay(0);
+        currentTime = currentTime.withTimeAtStartOfDay();
+
+        DateTime dt = new DateTime("2025-5-13").withDayOfWeek(DateTimeConstants.SUNDAY);
+        dt = new DateTime("2025-5-13").withDayOfWeek(DateTimeConstants.MONDAY);
+
         int period;
         if (currentTime.getHourOfDay() == 10 && currentTime.getMinuteOfHour() < 30) {
             period = new Period(new DateTime().withTime(13, 54, 23, 0), new DateTime().withTime(12, 00, 0, 0)).toStandardMinutes().getMinutes();
-        log.info("bab_id {} / Max: {} / Sum: {} / BANANCE: {} / STANDARD: {}", 1, 0.1,
-                0.2, 0.3, 0.4);
-        } 
+            log.info("bab_id {} / Max: {} / Sum: {} / BANANCE: {} / STANDARD: {}", 1, 0.1,
+                    0.2, 0.3, 0.4);
+        }
         log.info("bab_id {} / Max: {} / Sum: {} / BANANCE: {} / STANDARD: {}", 1, 0.1,
                 0.2, 0.3, 0.4);
     }

@@ -323,7 +323,7 @@
                             {data: "standardTime", title: "標工"},
                             {data: "sopName", title: "文件編號"},
                             {data: "sopPage", title: "頁數"},
-                            {data: "standardTimeModifyDate", title: "最後更新"},
+                            {data: "standardTimeModifyDate", title: "工時更新"},
                             {
                                 "data": "id",
                                 "width": "20%",

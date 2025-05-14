@@ -25,6 +25,7 @@ import com.advantech.model.db1.LineType;
 import com.advantech.model.db1.ModelSopRemark;
 import com.advantech.model.db1.ModelSopRemarkDetail;
 import com.advantech.model.db1.PreAssyModuleStandardTime;
+import com.advantech.model.db1.PreAssyModuleStandardTimeHistory;
 import com.advantech.model.db1.PreAssyModuleType;
 import com.advantech.model.db1.PrepareSchedule;
 import com.advantech.model.db1.TestPassStationDetail;
@@ -314,14 +315,25 @@ public class TestSqlBeans {
     @Rollback(true)
     public void testPreAssyModuleStandardTime() {
         PreAssyModuleStandardTime b = (PreAssyModuleStandardTime) session.createCriteria(PreAssyModuleStandardTime.class)
-                .add(Restrictions.idEq(1))
+                .add(Restrictions.idEq(33))
                 .uniqueResult();
 
         HibernateObjectPrinter.print(b);
 
     }
 
-    @Test
+//    @Test
+    @Rollback(true)
+    public void testPreAssyModuleStandardTimeHistory() {
+        PreAssyModuleStandardTimeHistory b = (PreAssyModuleStandardTimeHistory) session.createCriteria(PreAssyModuleStandardTimeHistory.class)
+                .add(Restrictions.idEq(3))
+                .uniqueResult();
+
+        HibernateObjectPrinter.print(b);
+
+    }
+
+//    @Test
     @Rollback(true)
     public void testPreAssyModuleType() {
         PreAssyModuleType t = (PreAssyModuleType) session.createCriteria(PreAssyModuleType.class)
@@ -381,7 +393,7 @@ public class TestSqlBeans {
         DateTime sD = eD.minusMonths(8).withTime(8, 0, 0, 0);
         List<com.advantech.model.db1.Test> users = testService.findAll();
 
-        List<Integer> stations = newArrayList(95,3, 11, 30, 151);
+        List<Integer> stations = newArrayList(95, 3, 11, 30, 151);
 
         stations.forEach(s -> {
             Section section = (s == 3 ? Section.BAB : Section.TEST);

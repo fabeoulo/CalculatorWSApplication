@@ -19,6 +19,7 @@ import com.advantech.model.db1.FqcLine;
 import com.advantech.model.db1.Line;
 import com.advantech.model.db1.LineType;
 import com.advantech.model.db1.PreAssyModuleStandardTime;
+import com.advantech.model.db1.PreAssyModuleStandardTimeHistory;
 import com.advantech.model.db1.PreAssyModuleType;
 import com.advantech.model.db1.PrepareSchedule;
 import com.advantech.model.db1.PrepareScheduleEndtimeSetting;
@@ -48,6 +49,7 @@ import com.advantech.service.db1.LineService;
 import com.advantech.service.db1.LineTypeService;
 import com.advantech.service.db1.LineUserReferenceService;
 import com.advantech.service.db1.ModelSopRemarkDetailService;
+import com.advantech.service.db1.PreAssyModuleStandardTimeHistoryService;
 import com.advantech.service.db1.PreAssyModuleStandardTimeService;
 import com.advantech.service.db1.PreAssyModuleTypeService;
 import com.advantech.service.db1.PrepareScheduleEndtimeSettingService;
@@ -341,6 +343,24 @@ public class TestService {
         return mapSt;
     }
 
+    @Autowired
+    private PreAssyModuleStandardTimeHistoryService preAssyModuleStandardTimeHistoryService;
+
+//    @Test
+//    @Transactional
+//    @Rollback(false)
+    public void testSetPreAssyModuleStandardTimeHistory() throws JobExecutionException {
+        PreAssyModuleStandardTime pms = preAssyModuleStandardTimeService.findByPrimaryKey(127);
+
+        PreAssyModuleStandardTimeHistory pojo = new PreAssyModuleStandardTimeHistory();
+        pojo.setStandardTime(BigDecimal.ONE);
+        pojo.setTotalOpTime(10000);
+        pojo.setTotalPcs(100);
+        pojo.setPreAssyModuleStandardTime(pms);
+
+        preAssyModuleStandardTimeHistoryService.insert(pojo);
+    }
+
 //    @Test
     @Transactional
     @Rollback(true)
@@ -391,7 +411,7 @@ public class TestService {
         List l = babSensorLoginRecordService.findByLine(7);
         assertTrue(!l.isEmpty());
         HibernateObjectPrinter.print(l);
-            
+
         l = babSensorLoginRecordService.findAll();
         assertTrue(!l.isEmpty());
         HibernateObjectPrinter.print(l);

@@ -351,7 +351,7 @@
     
     <bean id="PreAssyModuleStandardTimeJob-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="PreAssyModuleStandardTimeJob-Job" />
-        <property name="cronExpression" value="0 35 08 ? * WED *" />
+        <property name="cronExpression" value="0 33 08 ? * MON *" />
     </bean>
     
     <!--

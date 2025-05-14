@@ -37,6 +37,8 @@ public class PreAssyModuleStandardTime implements Serializable, Cloneable {
     private String sopPage;
     private Floor floor;
     private Date standardTimeModifyDate;
+    private Integer totalOpTime;
+    private Integer totalPcs;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -119,6 +121,24 @@ public class PreAssyModuleStandardTime implements Serializable, Cloneable {
     @Override
     public PreAssyModuleStandardTime clone() throws CloneNotSupportedException {
         return (PreAssyModuleStandardTime) super.clone(); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Column(name = "total_opTime")
+    public Integer getTotalOpTime() {
+        return totalOpTime;
+    }
+
+    public void setTotalOpTime(Integer totalOpTime) {
+        this.totalOpTime = totalOpTime;
+    }
+
+    @Column(name = "total_pcs")
+    public Integer getTotalPcs() {
+        return totalPcs;
+    }
+
+    public void setTotalPcs(Integer totalPcs) {
+        this.totalPcs = totalPcs;
     }
 
 }
