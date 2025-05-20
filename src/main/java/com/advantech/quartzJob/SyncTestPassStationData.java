@@ -44,16 +44,16 @@ public class SyncTestPassStationData {
     @Autowired
     private TestPassStationDetailService testPassStationDetailService;
 
-    private final List<Integer> stations = newArrayList(3, 11, 30, 151);
+    private final List<Integer> stations = newArrayList(95, 3, 11, 30, 151);
 
     @Transactional
     public void execute() {
 
         DateTime today = new DateTime();
-        
+
 //        DateTime sD = new DateTime(today).minusDays(today.getDayOfWeek() == 1 ? 3 : 1).withTime(8, 0, 0, 0);
 //        DateTime eD = new DateTime(today).withTime(8, 0, 0, 0);
-
+//
         int hr = today.getHourOfDay() >= 20 ? 20 : 8;
         DateTime eD = new DateTime(today).withTime(hr, 30, 0, 0);
         DateTime sD = eD.minusHours(12);
@@ -67,6 +67,10 @@ public class SyncTestPassStationData {
         List<TestPassStationDetail> dbData = testPassStationDetailService.findByDate(sD, eD);
 
         List<String> jobnumbers = findTestedJobnumber(sD, eD);
+
+        if (jobnumbers.isEmpty()) {
+            return;
+        }
 
         findRvTestPassStationDetails(remoteData, jobnumbers, sD, eD);
 

@@ -381,7 +381,7 @@ public class TestSqlBeans {
         DateTime sD = eD.minusMonths(8).withTime(8, 0, 0, 0);
         List<com.advantech.model.db1.Test> users = testService.findAll();
 
-        List<Integer> stations = newArrayList(3, 11, 30, 151);
+        List<Integer> stations = newArrayList(95,3, 11, 30, 151);
 
         stations.forEach(s -> {
             Section section = (s == 3 ? Section.BAB : Section.TEST);

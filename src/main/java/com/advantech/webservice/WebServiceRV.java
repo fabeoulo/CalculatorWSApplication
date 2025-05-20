@@ -48,7 +48,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
     private static final Logger log = LoggerFactory.getLogger(WebServiceRV.class);
 
     private final DateTimeFormatter fmtDetail = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
-	
+
     @Autowired
     private MultiWsClient mClient;
 
@@ -192,12 +192,12 @@ public class WebServiceRV extends SimpleWebServiceRV {
                     = "<root>"
                     + "<METHOD ID='Advantech.EFM.PEF.BLL.QryKPIUserPassStationDetail'/>"
                     + "<RPT404>"
-                    + "<UNIT_NO>" + section.getCode() + "</UNIT_NO>"
+                    + "<UNIT_NO>" + "</UNIT_NO>"
                     + "<STATION_ID>" + station + "</STATION_ID>"
                     + "<USER_NO>" + jobnumberStr + "</USER_NO>"
                     + "<START_DATE>" + fmtDetail.print(sD) + "</START_DATE>"
                     + "<END_DATE>" + fmtDetail.print(eD) + "</END_DATE>"
-                    + "<WERKS>" + f.toString()+ "</WERKS>"
+                    + "<WERKS>" + f.toString() + "</WERKS>"
                     + "</RPT404>"
                     + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT>"
                     + "</root>";
@@ -222,7 +222,7 @@ public class WebServiceRV extends SimpleWebServiceRV {
                     = "<root>"
                     + "<METHOD ID='Advantech.EFM.PEF.BLL.QryRPT404'/>"
                     + "<RPT404>"
-                    + "<WERKS>" + f.toString()+ "</WERKS>"
+                    + "<WERKS>" + f.toString() + "</WERKS>"
                     + "<UNIT_NO>" + unit + "</UNIT_NO>"
                     + "<START_DATE>" + fmt.print(sD) + "</START_DATE>"
                     + "<END_DATE>" + fmt.print(eD) + "</END_DATE>"

@@ -688,7 +688,7 @@ public class TestService {
     private SqlViewService sqlViewService;
 
 //    @Test
-//    @Rollback(false)
+//    @Rollback(true)
     public void testSyncWorktime() {
         List<Worktime> l = sqlViewService.findWorktime();
 

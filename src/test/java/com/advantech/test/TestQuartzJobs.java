@@ -59,12 +59,12 @@ public class TestQuartzJobs {
         TestLineTypeRecord tr = new TestLineTypeRecord();
         tr.executeInternal(null);
     }
-    
+
 //    @Test //Be careful. it will reset bab and test login immediately.
     public void testDbInit() throws JobExecutionException {
         DataBaseInit d = new DataBaseInit();
         d.executeInternal(null);
-        
+
 //        CheckTagNode b = new CheckTagNode();
 //        b.executeInternal(null);
 //        
@@ -80,7 +80,7 @@ public class TestQuartzJobs {
 //        CheckTagNode b3 = new CheckTagNode();
 //        b3.executeInternal(null);
     }
-    
+
 //    @Test
 //    @Transactional
 //    @Rollback(false)
@@ -88,7 +88,7 @@ public class TestQuartzJobs {
         HandleUncloseBab b = new HandleUncloseBab();
         b.executeInternal(null);
     }
-    
+
 //    @Test
 //    @Transactional
 //    @Rollback(false)
@@ -96,7 +96,6 @@ public class TestQuartzJobs {
         HandleUncloseBabProcess b = new HandleUncloseBabProcess();
         b.executeInternal(null);
     }
-
 
 //    @Test
     public void testCleanSensorData() throws JobExecutionException {
@@ -127,9 +126,17 @@ public class TestQuartzJobs {
         i.executeInternal(null);
     }
 
-    @Test
+//    @Test
     public void testSyncTestPassStationData() throws JobExecutionException {
-        job2.execute();
+//        job2.execute();
+
+        DateTime sD = new DateTime("2025-05-07").withTime(8, 30, 0, 0);
+        DateTime eD = sD.plusHours(12);
+        while (eD.isBeforeNow()) {
+            job2.syncPassStationDetail(sD, eD);
+            sD = eD;
+            eD = sD.plusHours(12);
+        }
     }
 
     @Autowired
@@ -196,6 +203,8 @@ public class TestQuartzJobs {
     private PreAssyModuleStandardTimeJob preAssySt;
 
 //    @Test
+//    @Transactional
+//    @Rollback(true)
     public void testPreAssyModuleStandardTimeJob() throws Exception {
         preAssySt.execute();
     }
