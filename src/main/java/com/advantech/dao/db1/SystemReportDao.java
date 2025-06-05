@@ -8,6 +8,7 @@ package com.advantech.dao.db1;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -18,6 +19,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class SystemReportDao extends BasicDAO {
 
+    private String schema;
+
+    @PostConstruct
+    public void setSchema() {
+        this.schema = getSessionSchema(SQL.WebAccess);
+    }
+
     private Connection getConn() {
         return super.getDBUtilConn(SQL.WebAccess);
     }
@@ -26,7 +34,7 @@ public class SystemReportDao extends BasicDAO {
     public List<Map> getCountermeasureForExcel(int lineTypeId, int floorId,
             String startDate, String endDate, boolean isAboveStandard) {
         return queryProcForMapList(getConn(),
-                "{CALL M3_BW.usp_Excel_Countermeasure_1(?, ?, ?, ?, ?)}",
+                "{CALL " + schema + ".usp_Excel_Countermeasure_1(?, ?, ?, ?, ?)}",
                 lineTypeId, floorId, startDate, endDate, isAboveStandard);
     }
 
@@ -34,14 +42,14 @@ public class SystemReportDao extends BasicDAO {
     public List<Map> getPersonalAlmForExcel(int lineTypeId, int floorId, String startDate,
             String endDate, boolean isAboveStandard) {
         return queryProcForMapList(getConn(),
-                "{CALL M3_BW.usp_Excel_PersonalAlarm_1(?, ?, ?, ?, ?)}",
+                "{CALL " + schema + ".usp_Excel_PersonalAlarm_1(?, ?, ?, ?, ?)}",
                 lineTypeId, floorId, startDate, endDate, isAboveStandard);
     }
 
     //For效率報表
     public List<Map> getCountermeasureAndPersonalAlarmForExcel(String startDate, String endDate) {
         return queryProcForMapList(getConn(),
-                "{CALL M3_BW.usp_Excel_CountermeasureAndPersonalAlarm(?,?)}",
+                "{CALL " + schema + ".usp_Excel_CountermeasureAndPersonalAlarm(?,?)}",
                 startDate, endDate);
     }
 
@@ -49,21 +57,21 @@ public class SystemReportDao extends BasicDAO {
     public List<Map> getEmptyRecordForExcel(int lineTypeId, int floorId,
             String startDate, String endDate) {
         return queryProcForMapList(getConn(),
-                "{CALL M3_BW.usp_Excel_EmptyRecord_1(?, ?, ?, ?)}",
+                "{CALL " + schema + ".usp_Excel_EmptyRecord_1(?, ?, ?, ?)}",
                 lineTypeId, floorId, startDate, endDate);
     }
 
     //測試工時建議details
     public List<Map> getTestSuggestionWorkTimeDetailExcel(String startDate, String endDate) {
         return queryProcForMapList(getConn(),
-                "{CALL M3_BW.usp_Excel_TestPassStationProductivity(?, ?)}",
+                "{CALL " + schema + ".usp_Excel_TestPassStationProductivity(?, ?)}",
                 startDate, endDate);
     }
 
     //組/包工時建議details
     public List<Map> getSuggestionWorkTimeDetailExcel(String startDate, String endDate, int lineTypeId) {
         return queryProcForMapList(getConn(),
-                "{CALL M3_BW.usp_Excel_SuggestionWorkTimeDetail(?, ?, ?, ?, ?, ?, ?, ?)}",
+                "{CALL " + schema + ".usp_Excel_SuggestionWorkTimeDetail(?, ?, ?, ?, ?, ?, ?, ?)}",
                 null, null, -1, lineTypeId, null, null, startDate, endDate);
     }
 
@@ -71,7 +79,7 @@ public class SystemReportDao extends BasicDAO {
     public List<Map> getBabPassStationExceptionReportDetails(String po, String modelName,
             String startDate, String endDate, int lineTypeId) {
         return queryProcForMapList(getConn(),
-                "{CALL M3_BW.usp_BabPassStation_ExceptionReport_Details(?, ?, ?, ?, ?)}",
+                "{CALL " + schema + ".usp_BabPassStation_ExceptionReport_Details(?, ?, ?, ?, ?)}",
                 po, modelName, startDate, endDate, lineTypeId);
     }
 
@@ -79,20 +87,20 @@ public class SystemReportDao extends BasicDAO {
     public List<Map> getBabPreAssyDetailForExcel(int lineTypeId, int floorId, String startDate,
             String endDate) {
         return queryProcForMapList(getConn(),
-                "{CALL M3_BW.usp_Excel_BabPreAssyDetail(?,?,?,?)}",
+                "{CALL " + schema + ".usp_Excel_BabPreAssyDetail(?,?,?,?)}",
                 lineTypeId, floorId, startDate, endDate);
     }
 
     //前置模組設定
     public List<Map> getPreAssyModuleStandardTimeSetting() {
         return queryProcForMapList(getConn(),
-                "{CALL M3_BW.usp_Excel_PreAssyModuleStandardTimeSetting()}");
+                "{CALL " + schema + ".usp_Excel_PreAssyModuleStandardTimeSetting()}");
     }
 
     //組裝sop標工設定
     public List<Map> getAssyModelSopStandardTimeSetting() {
         return queryProcForMapList(getConn(),
-                "{CALL M3_BW.usp_Excel_AssyModelSopStandardTimeSetting()}");
+                "{CALL " + schema + ".usp_Excel_AssyModelSopStandardTimeSetting()}");
     }
 
 }

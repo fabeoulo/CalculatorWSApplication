@@ -320,7 +320,7 @@
                             {data: "id", title: "id", visible: false},
                             {data: "modelName", title: "機種"},
                             {data: "preAssyModuleType.id", title: "模組種類"},
-                            {data: "standardTime", title: "標工"},
+                            {data: "standardTime", title: "標工(秒)"},
                             {data: "sopName", title: "文件編號"},
                             {data: "sopPage", title: "頁數"},
                             {data: "standardTimeModifyDate", title: "工時更新"},

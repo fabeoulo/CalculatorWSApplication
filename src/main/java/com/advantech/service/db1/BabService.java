@@ -288,7 +288,7 @@ public class BabService {
 
     public void autoCloseNotPre(Bab b, BabSettingHistory setting) {
         if (setting.getStation() > 1) {
-            if (setting.getStation() == b.getPeople()) {
+           if (setting.getStation() == b.getPeople()) {
                 this.closeBabTrigger(b, b.getId());
                 this.changeBabStatusFollowCloseBab(b.getId(), BabStatus.AUTO_CLOSED);
             } else {
@@ -317,7 +317,7 @@ public class BabService {
                 prev.setLastUpdateTime(now);
                 babSettingHistoryService.update(prev);
             } else {
-                checkArgument(prev.getLastUpdateTime() != null, "關閉失敗，請檢查上一站是否關閉");
+                checkArgument(prev.getLastUpdateTime() != null, "關閉失敗，請檢查上一站是否關閉(Fail. Please check preStation.)");
             }
         }
 

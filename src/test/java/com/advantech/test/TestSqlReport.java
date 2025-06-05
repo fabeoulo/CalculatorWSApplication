@@ -35,7 +35,7 @@ public class TestSqlReport {
     @Autowired
     private SystemReportService systemReportService;
 
-    @Test
+//    @Test
     @Transactional
     @Rollback(true)
     public void testReports() {

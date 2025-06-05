@@ -53,7 +53,7 @@ public class BabStandardTimeService {
     public BigDecimal[] findMaxAndMinAllowanceByBabFromWorktime(Bab b, Worktime w) {
 
         BigDecimal[] result = new BigDecimal[]{BigDecimal.ZERO, BigDecimal.ZERO};
-        if (b == null) {
+        if (b == null || w == null) {
             return result;
         }
         String lineTypeName = b.getLine().getLineType().getName();

@@ -76,6 +76,23 @@ public class BasicDAO {
         return conn;
     }
 
+    public String getSessionSchema(final SQL sqlType) {
+        Object schema = null;
+        String defaultSchema = "dbo";
+        switch (sqlType) {
+            case TWM3:
+                return defaultSchema;
+            case WebAccess:
+                schema = sessionFactory.getProperties().get("hibernate.default_schema");
+                break;
+            case LineBalancing:
+                schema = sessionFactory2.getProperties().get("hibernate.default_schema");
+                break;
+        }
+
+        return schema == null ? defaultSchema : schema.toString();
+    }
+
     public List<Map> queryForMapList(Connection conn, String sql, Object... params) {
         return query(conn, new MapListHandler(), sql, params);
     }
@@ -105,7 +122,7 @@ public class BasicDAO {
         boolean flag = false;
         qRunner = new QueryRunner();
         try {
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            try ( PreparedStatement ps = conn.prepareStatement(sql)) {
                 for (Object o : l) {
                     qRunner.fillStatementWithBean(ps, o, params);
                     ps.addBatch();
