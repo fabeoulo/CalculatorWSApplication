@@ -154,6 +154,12 @@ public class IndexController {
         return "pages/admin/suggestionWorkTime";
     }
 
+    @RequestMapping("/pages/admin/PreAssySuggestionWorkTime")
+    public String preAssySuggestionWorkTime(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
+        setLanguage(model, request, response, locale);
+        return "pages/admin/preAssySuggestionWorkTime";
+    }
+    
     @RequestMapping("/pages/admin/FqcDashBoard")
     public String fqcDashBoard(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
         setLanguage(model, request, response, locale);

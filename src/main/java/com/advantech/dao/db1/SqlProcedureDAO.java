@@ -265,6 +265,17 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .list();
     }
 
+    public List<Map> findPreAssySuggestionWorkTime(DateTime sD, DateTime eD, int lineTypeId, int floorId) {
+        return super.getSession()
+                .createSQLQuery("{CALL " + schema + ".usp_Excel_PreAssySuggestionWorkTime(:sD, :eD, :lineType_id, :floor_id)}")
+                .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
+                .setParameter("eD", eD != null ? eD.plusDays(1).withMillisOfDay(0).toDate() : null)
+                .setParameter("lineType_id", lineTypeId)
+                .setParameter("floor_id", floorId)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+    }
+
     public int closeBabDirectly(Bab b) {
         super.getSession()
                 .createSQLQuery("{CALL " + schema + ".usp_CloseBabDirectly(:bab_id)}")

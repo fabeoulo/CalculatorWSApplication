@@ -288,6 +288,17 @@ public class SqlViewController {
         return new DataTableResponse(procSerice.findSuggestionWorkTime(startDate, endDate, lineTypeId));
     }
 
+    @RequestMapping(value = "/findPreAssySuggestionWorkTime", method = {RequestMethod.POST})
+    @ResponseBody
+    protected DataTableResponse findPreAssySuggestionWorkTime(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate,
+            @RequestParam int lineTypeId,
+            @RequestParam int floorId) {
+
+        return new DataTableResponse(procSerice.findPreAssySuggestionWorkTime(startDate, endDate, lineTypeId, floorId));
+    }
+
     @RequestMapping(value = "/findBabModuleUsageRate", method = {RequestMethod.GET})
     @ResponseBody
     protected DataTableResponse findBabModuleUsageRate(
