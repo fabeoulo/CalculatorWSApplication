@@ -39,6 +39,9 @@ public class WorktimeM6 implements Serializable {
     private int assyPeople;
     private int packingPeople;
     private BigDecimal packingLeadTime;
+    private BigDecimal sl;
+    private BigDecimal sl1;
+    private BigDecimal assy1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -193,6 +196,30 @@ public class WorktimeM6 implements Serializable {
 
     public void setPackingLeadTime(BigDecimal packingLeadTime) {
         this.packingLeadTime = packingLeadTime;
+    }
+
+    public BigDecimal getSl() {
+        return sl;
+    }
+
+    public void setSl(BigDecimal sl) {
+        this.sl = sl;
+    }
+
+    public BigDecimal getSl1() {
+        return sl1;
+    }
+
+    public void setSl1(BigDecimal sl1) {
+        this.sl1 = sl1;
+    }
+
+    public BigDecimal getAssy1() {
+        return assy1;
+    }
+
+    public void setAssy1(BigDecimal assy1) {
+        this.assy1 = assy1;
     }
 
 }

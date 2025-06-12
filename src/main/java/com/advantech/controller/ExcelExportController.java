@@ -142,6 +142,22 @@ public class ExcelExportController {
         quickGenerateExcel(data, res);
     }
 
+    @RequestMapping(value = "/getCellSuggestionWorkTimeDetailExcel", method = {RequestMethod.GET})
+    @ResponseBody
+    protected void getCellSuggestionWorkTimeDetailExcel(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate,
+            HttpServletResponse res) throws IOException {
+
+        endDate = endDate.plusDays(1);
+
+        String sD = fmt.print(startDate);
+        String eD = fmt.print(endDate);
+
+        List<Map> data = reportService.getCellSuggestionWorkTimeDetailExcel(sD, eD);
+        quickGenerateExcel(data, res, 8);
+    }
+    
     @RequestMapping(value = "/getTestSuggestionWorkTimeDetailExcel", method = {RequestMethod.GET})
     @ResponseBody
     protected void getTestSuggestionWorkTimeDetailExcel(

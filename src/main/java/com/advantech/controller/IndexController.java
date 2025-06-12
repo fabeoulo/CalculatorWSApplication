@@ -49,7 +49,7 @@ public class IndexController {
     @RequestMapping("/Cell")
     public String cell(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
         setLanguage(model, request, response, locale);
-        return "cell";
+        return "cellpage_IDS";
     }
 
     @RequestMapping("/Error")
@@ -58,6 +58,24 @@ public class IndexController {
         return "temp/error";
     }
 
+    @RequestMapping("/pages/admin/CellTotal")
+    public String cellTotal(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
+        setLanguage(model, request, response, locale);
+        return "pages/admin/cellTotal";
+    }
+    
+    @RequestMapping("/pages/admin/CellPassStationProductivity")
+    public String cellPassStationProductivity(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
+        setLanguage(model, request, response, locale);
+        return "pages/admin/cellPassStationProductivity";
+    }
+    
+    @RequestMapping("/pages/admin/CellSuggestionWorkTime")
+    public String cellSuggestionWorkTime(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
+        setLanguage(model, request, response, locale);
+        return "pages/admin/cellSuggestionWorkTime";
+    }
+    
     @RequestMapping("/pages/admin/TestTotal")
     public String testTotal(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
         setLanguage(model, request, response, locale);

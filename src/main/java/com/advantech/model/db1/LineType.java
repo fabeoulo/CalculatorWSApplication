@@ -45,6 +45,9 @@ public class LineType implements Serializable {
     @JsonIgnore
     private Set<PrepareScheduleDailyRemark> prepareScheduleDailyRemarks = new HashSet<>(0);
 
+    @JsonIgnore
+    private Set<CellStation> cellStations = new HashSet<>(0);
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", unique = true, nullable = false)
@@ -108,6 +111,15 @@ public class LineType implements Serializable {
 
     public void setPrepareScheduleDailyRemarks(Set<PrepareScheduleDailyRemark> prepareScheduleDailyRemarks) {
         this.prepareScheduleDailyRemarks = prepareScheduleDailyRemarks;
+    }
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "lineType")
+    public Set<CellStation> getCellStations() {
+        return cellStations;
+    }
+
+    public void setCellStations(Set<CellStation> cellStations) {
+        this.cellStations = cellStations;
     }
 
 }

@@ -28,17 +28,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
 import static com.advantech.helper.ShiftScheduleUtils.*;
+import com.advantech.webservice.atmc.AtmcEmployeeUtils;
 import com.advantech.webservice.mes.UploadType;
 import com.google.common.base.CharMatcher;
 import static oracle.security.pki.resources.OraclePKICmd.p;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.Period;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import static org.junit.Assert.assertEquals;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 /**
  *
  * @author Wei.Cheng
  */
+@WebAppConfiguration
+@ContextConfiguration(locations = {
+    "classpath:servlet-context.xml"
+})
+@RunWith(SpringJUnit4ClassRunner.class)
 public class TestClass {
 
     private static final Logger log = LoggerFactory.getLogger(TestClass.class);
@@ -94,9 +107,15 @@ public class TestClass {
         System.out.println(str);
     }
 
-//    @Test
-    public void testEnum2() {
-        System.out.println(1 >> 1);
+    @Autowired
+    private AtmcEmployeeUtils employeeUtils;
+
+    @Test
+    public void testEz() throws Exception {
+        String json = employeeUtils.getUser("A-10376");
+        JSONArray jsonArray = new JSONArray(json);
+        JSONObject obj = jsonArray.getJSONObject(0);
+        String tagName = obj.getString("Local_Name");
     }
 
 //    @Test

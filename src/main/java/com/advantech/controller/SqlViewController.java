@@ -259,6 +259,25 @@ public class SqlViewController {
 
     }
 
+    @RequestMapping(value = "/findCellPassStationProductivity", method = {RequestMethod.GET})
+    @ResponseBody
+    protected DataTableResponse findCellPassStationProductivity(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate) {
+
+        return new DataTableResponse(procSerice.findCellPassStationProductivity(startDate, endDate));
+
+    }
+
+    @RequestMapping(value = "/findCellSuggestionWorkTime", method = {RequestMethod.POST})
+    @ResponseBody
+    protected DataTableResponse findCellSuggestionWorkTime(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate) {
+
+        return new DataTableResponse(procSerice.findCellSuggestionWorkTime(startDate, endDate));
+    }
+
     @RequestMapping(value = "/findTestPassStationProductivity", method = {RequestMethod.GET})
     @ResponseBody
     protected DataTableResponse findTestPassStationProductivity(

@@ -18,22 +18,25 @@ import org.springframework.stereotype.Repository;
 @Repository(value = "sqlViewDAO7")
 public class SqlViewDAO extends AbstractDao<Integer, Object> {
 
-    private final String qrySheetMain = "select modelName, floorName, speOwnerName, eeOwnerName, qcOwnerName, "
-                        + "assy assy, t1 t1, t2 t2, t3 t3, 0.0 t4, "
-                        + "packing packing, pi preAssy, 1 assyPeople, 1 packingPeople, 0.0 packingLeadTime, "
-                        + "clean_panel cleanPanel "
-                        + "from Sheet_Main_view";
-            
+    private final String qrySheetMainCommon
+            = "select modelName, floorName, speOwnerName, eeOwnerName, qcOwnerName, "
+            + "assy assy, t1 t1, t2 t2, t3 t3, 0.0 t4, "
+            + "packing packing, pi preAssy, 1 assyPeople, 1 packingPeople, 0.0 packingLeadTime, "
+            + "clean_panel cleanPanel ";
+
     public List<Worktime> findWorktime() {
         return super.getSession()
-                .createSQLQuery(qrySheetMain)
+                .createSQLQuery(qrySheetMainCommon
+                        + "from Sheet_Main_view")
                 .setResultTransformer(Transformers.aliasToBean(Worktime.class))
                 .list();
     }
 
     public List<WorktimeM6> findWorktimeM6() {
         return super.getSession()
-                .createSQLQuery(qrySheetMain)
+                .createSQLQuery(qrySheetMainCommon
+                        + ", bondedSealingFrame assy1, seal sl, seal1 sl1 "
+                        + "from Sheet_Main_view")
                 .setResultTransformer(Transformers.aliasToBean(WorktimeM6.class))
                 .list();
     }

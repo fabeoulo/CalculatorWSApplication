@@ -447,6 +447,10 @@ public class TestDAO {
         List list = sqlViewDAO7.findWorktime();
 
         HibernateObjectPrinter.print(list.get(0));
+        
+         list = sqlViewDAO7.findWorktimeM6();
+
+        HibernateObjectPrinter.print(list.get(0));
 
     }
 

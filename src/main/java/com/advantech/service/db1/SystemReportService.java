@@ -40,6 +40,10 @@ public class SystemReportService {
         return systemReportDao.getEmptyRecordForExcel(lineTypeId, floorId, startDate, endDate);
     }
 
+    public List<Map> getCellSuggestionWorkTimeDetailExcel(String startDate, String endDate) {
+        return systemReportDao.getCellSuggestionWorkTimeDetailExcel(startDate, endDate);
+    }
+            
     public List<Map> getTestSuggestionWorkTimeDetailExcel(String startDate, String endDate) {
         return systemReportDao.getTestSuggestionWorkTimeDetailExcel(startDate, endDate);
     }

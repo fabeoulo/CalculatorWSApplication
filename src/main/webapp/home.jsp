@@ -124,14 +124,15 @@
                         var sitefloor = sitefloors[i].floor;
                         var linetype = sitefloors[i].lineType;
                         var testLineType = sitefloors[i].testLineType;
+                        var cellLineType = sitefloors[i].cellLineType;
                         var section = sitefloors[i].section;
-                        
+
                         var cloneObj = $selectGroup.clone();
 
                         cloneObj.find("label>font").html(section + " ");
                         cloneObj.find(".bab").attr("href", "Bab?sitefloor=" + sitefloor + "&linetype=" + linetype);
                         cloneObj.find(".test").attr("href", "Test?sitefloor=" + sitefloor + "&linetype=" + testLineType);
-                        cloneObj.find(".cell").attr("href", "Cell?sitefloor=" + sitefloor + "&linetype=" + linetype);
+                        cloneObj.find(".cell").attr("href", "Cell?sitefloor=" + sitefloor + "&linetype=" + cellLineType).toggle(cellLineType !== "");
 
                         $("#selectGroupArea").append(cloneObj);
                     }
@@ -205,9 +206,9 @@
                         <button class="btn btn-default col-xs-2"><fmt:message key="index.btn.test" /></button>
                     </a>
 
-                    <!--                    <a class="cell">
-                                            <button class="btn btn-default col-xs-2">Cell</button>
-                                        </a>-->
+                    <a class="cell">
+                        <button class="btn btn-default col-xs-2"><fmt:message key="index.btn.cell" /></button>
+                    </a>
                 </div>
             </div>
             <div>

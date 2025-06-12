@@ -13,6 +13,9 @@ import com.advantech.model.db1.BabCollectModeChangeEvent;
 import com.advantech.model.db1.BabDataCollectMode;
 import com.advantech.model.db1.BabSettingHistory;
 import com.advantech.model.db1.BabStandardTimeHistory;
+import com.advantech.model.db1.CellLoginRecord;
+import com.advantech.model.db1.CellStation;
+import com.advantech.model.db1.CellStationRecord;
 import com.advantech.model.db1.Floor;
 import com.advantech.model.db1.Fqc;
 import com.advantech.model.db1.FqcLine;
@@ -40,6 +43,9 @@ import com.advantech.service.db1.BabSensorLoginRecordService;
 import com.advantech.service.db1.BabService;
 import com.advantech.service.db1.BabSettingHistoryService;
 import com.advantech.service.db1.BabStandardTimeHistoryService;
+import com.advantech.service.db1.CellLoginRecordService;
+import com.advantech.service.db1.CellStationRecordService;
+import com.advantech.service.db1.CellStationService;
 import com.advantech.service.db1.FloorService;
 import com.advantech.service.db1.FqcLineService;
 import com.advantech.service.db1.FqcProductivityHistoryService;
@@ -66,6 +72,7 @@ import com.advantech.service.db3.SqlViewService;
 import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Lists.newArrayList;
 import java.math.BigDecimal;
@@ -731,7 +738,7 @@ public class TestService {
     private PrepareScheduleEndtimeSettingService psesService;
 
 //    @Test
-    @Rollback(false)
+//    @Rollback(true)
     public void testPrepareScheduleEndtimeSetting() {
         PrepareScheduleEndtimeSetting setting = psesService.findByPrimaryKey(1);
 
@@ -765,7 +772,51 @@ public class TestService {
 //        Factory f = testLineTypeService.getFactory(table);
     }
 
-    @Test
+    @Autowired
+    private CellStationService cellStationService;
+    @Autowired
+    private CellLoginRecordService cellLoginRecordService;
+    @Autowired
+    private CellStationRecordService cellStationRecordService;
+
+//    @Test
+//    @Transactional
+//    @Rollback(true)
+    public void testCellStationRecordService() {
+        List l = cellStationRecordService.findAll();
+        CellStationRecord csr = cellStationRecordService.findByPrimaryKey(1);
+
+        DateTime sD = new DateTime("2025-06-19").withTime(8, 30, 0, 0);
+        DateTime eD = new DateTime("2025-06-19").withTime(17, 30, 0, 0);
+
+        List<CellStationRecord> rs = cellStationRecordService.findByDate(sD, eD, false);
+
+    }
+
+//    @Test
+//    @Transactional
+//    @Rollback(true)
+    public void testCellLoginRecordService() {
+        List l = cellLoginRecordService.findAll();
+        CellLoginRecord clr = cellLoginRecordService.findByPrimaryKey(1);
+
+        String jobnumber = "A-10376";
+        cellLoginRecordService.insert(2, jobnumber);
+        cellLoginRecordService.checkUserIsAvailable(jobnumber);
+//        cellLoginRecordService.cleanTests();
+    }
+
+//    @Test
+    public void testCellStationService() {
+        List l = cellStationService.findAll();
+        assertEquals(3, l.size());
+        l = cellStationService.findBySitefloor("3");
+        assertEquals(3, l.size());
+        CellStation cs = cellStationService.findByPrimaryKey(3);
+        assertTrue(cs != null);
+    }
+
+//    @Test
     public void testFindBabByPreAssyModuleType() {
         List l = babService.findByPreAssyModuleType(1, "");
         assertEquals(1, l.size());

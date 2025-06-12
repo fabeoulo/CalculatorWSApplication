@@ -11,6 +11,7 @@ import com.advantech.facade.BabLineTypeFacade;
 import com.advantech.service.db1.BabSensorLoginRecordService;
 import com.advantech.service.db1.BabSettingHistoryService;
 import com.advantech.facade.TestLineTypeFacade;
+import com.advantech.service.db1.CellLoginRecordService;
 import com.advantech.service.db1.TestService;
 import com.advantech.webapi.WaGetTagValue;
 import java.io.IOException;
@@ -31,16 +32,18 @@ public class DataBaseInit extends QuartzJobBean {
     private final BabSettingHistoryService babSettingHistoryService;
     private final BabSensorLoginRecordService babSensorLoginRecordService;
     private final TestService testService;
+    private final CellLoginRecordService cellLoginRecordService;
 
     private final BabLineTypeFacade bF;
     private final TestLineTypeFacade tF;
 
     private final WaGetTagValue waGetTagValue;
-    
+
     public DataBaseInit() {
         babSettingHistoryService = (BabSettingHistoryService) ApplicationContextHelper.getBean("babSettingHistoryService");
         babSensorLoginRecordService = (BabSensorLoginRecordService) ApplicationContextHelper.getBean("babSensorLoginRecordService");
         testService = (TestService) ApplicationContextHelper.getBean("testService");
+        cellLoginRecordService = (CellLoginRecordService) ApplicationContextHelper.getBean("cellLoginRecordService");
         tF = (TestLineTypeFacade) ApplicationContextHelper.getBean("testLineTypeFacade");
         bF = (BabLineTypeFacade) ApplicationContextHelper.getBean("babLineTypeFacade");
         waGetTagValue = (WaGetTagValue) ApplicationContextHelper.getBean("waGetTagValue");
@@ -56,6 +59,7 @@ public class DataBaseInit extends QuartzJobBean {
 //            babSettingHistoryService.init(); // handle by HandleUncloseBab.java
             babSensorLoginRecordService.init();
             testService.cleanTests();
+            cellLoginRecordService.cleanTests();
 
             waGetTagValue.updateActiveDOs(); // before resetAlarm
             bF.resetAlarm();
