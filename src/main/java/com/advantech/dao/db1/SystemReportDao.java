@@ -61,6 +61,13 @@ public class SystemReportDao extends BasicDAO {
                 lineTypeId, floorId, startDate, endDate);
     }
 
+    //Cell工時建議details
+    public List<Map> getCellSuggestionWorkTimeDetailExcel(String startDate, String endDate) {
+        return queryProcForMapList(getConn(),
+                "{CALL " + schema + ".usp_Excel_CellPassStationProductivity(?, ?)}",
+                startDate, endDate);
+    }
+            
     //測試工時建議details
     public List<Map> getTestSuggestionWorkTimeDetailExcel(String startDate, String endDate) {
         return queryProcForMapList(getConn(),

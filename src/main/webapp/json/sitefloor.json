@@ -4,13 +4,15 @@
             "floor": 3,
             "section": "M9_3F",
             "lineType": "ASSY/Packing",
-            "testLineType": "Test"
+            "testLineType": "Test",
+            "cellLineType": ""
         },
         {
             "floor": 3,
             "section": "IDS",
             "lineType": "IDS",
-            "testLineType": "IDS"
+            "testLineType": "IDS",
+            "cellLineType": "Cell"
         }
     ],
     "sitefloors_mgr": [

@@ -12,6 +12,9 @@ import com.advantech.model.db1.BabLineProductivityExclude;
 import com.advantech.model.db1.BabLineProductivityExcludeModel;
 import com.advantech.model.db1.BabPassStationRecord;
 import com.advantech.model.db1.BabStandardTimeHistory;
+import com.advantech.model.db1.CellPassStationDetail;
+import com.advantech.model.db1.CellStation;
+import com.advantech.model.db1.CellStationRecord;
 import com.advantech.model.db1.Countermeasure;
 import com.advantech.model.db1.CountermeasureType;
 import com.advantech.model.db1.Floor;
@@ -33,6 +36,8 @@ import com.advantech.model.db1.TestTable;
 import com.advantech.model.db1.Unit;
 import com.advantech.model.db1.User;
 import com.advantech.model.db1.Worktime;
+import com.advantech.service.db1.CellPassStationDetailService;
+import com.advantech.service.db1.CellStationRecordService;
 import com.advantech.service.db1.TestPassStationDetailService;
 import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
@@ -46,6 +51,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.Hibernate;
@@ -100,6 +106,15 @@ public class TestSqlBeans {
         Unit u = user.getUnit();
         assertNotNull(u);
         assertEquals("MFG", u.getName());
+    }
+
+//    @Test
+    public void testCellStationRecord() {
+        CellStation cs = (CellStation) session.get(CellStation.class, 1);
+        assertNotNull(cs);
+        assertEquals("3", cs.getFloor().getName());
+        assertEquals(1, cs.getCellLoginRecords().size());
+        assertEquals(2, cs.getCellStationRecords().size());
     }
 
 //    @Test
@@ -382,22 +397,63 @@ public class TestSqlBeans {
     @Autowired
     private TestPassStationDetailService testPassStationDetailService;
 
+    @Autowired
+    private CellStationRecordService cellStationRecordService;
+
+    @Autowired
+    private CellPassStationDetailService cellPassStationDetailService;
+
 //    @Test
-    @Rollback(false)
+//    @Rollback(false)
+    public void testCellPassStationDetails() {
+        List<CellPassStationDetail> result = new ArrayList();
+
+        List<CellPassStationDetail> dbData = cellPassStationDetailService.findAll();
+
+        DateTime sD = new DateTime("2025-06-14").withTime(8, 30, 0, 0);
+        DateTime eD = sD.plusHours(12);
+        List<CellStationRecord> records = cellStationRecordService.findByDate(sD, eD, false);
+        List<String> jobnumbers = records.stream().map(t -> "'" + t.getUserId() + "'").distinct().collect(Collectors.toList());
+//        dbData = cellPassStationDetailService.findByDate(sD, eD);
+
+        List<Integer> stations = newArrayList(159, 182, 140); // SL,SL1,ASSY1
+
+        stations.forEach(s -> {
+            Section section = (s == 3 ? Section.BAB : Section.TEST);
+            List<CellPassStationDetail> l = rv.getCellPassStationDetails(jobnumbers, section, s, sD, eD, Factory.TWM6);
+            result.addAll(l);
+        });
+
+        assertTrue(!result.isEmpty());
+
+        List<CellPassStationDetail> delData = (List<CellPassStationDetail>) CollectionUtils.subtract(dbData, result);
+        cellPassStationDetailService.delete(delData);
+        System.out.println("Delete data cnt " + delData.size());
+
+        List<CellPassStationDetail> newData = (List<CellPassStationDetail>) CollectionUtils.subtract(result, dbData);
+//        CellPassStationDetail detail = newData.get(0);
+        cellPassStationDetailService.insert(newData);
+        System.out.println("New data cnt " + newData.size());
+
+    }
+
+//    @Test
+//    @Rollback(false)
     public void testPassStationDetails() {
         List<TestPassStationDetail> result = new ArrayList();
 
         List<TestPassStationDetail> dbData = testPassStationDetailService.findAll();
-
+        
         DateTime eD = new DateTime().withTime(8, 0, 0, 0);
         DateTime sD = eD.minusMonths(8).withTime(8, 0, 0, 0);
         List<com.advantech.model.db1.Test> users = testService.findAll();
+        List<String> jobnumbers = users.stream().map(t -> "'" + t.getUserId() + "'").distinct().collect(Collectors.toList());
 
         List<Integer> stations = newArrayList(95, 3, 11, 30, 151);
 
         stations.forEach(s -> {
             Section section = (s == 3 ? Section.BAB : Section.TEST);
-            List<TestPassStationDetail> l = rv.getTestPassStationDetails2(users, section, s, sD, eD, Factory.TWM3);
+            List<TestPassStationDetail> l = rv.getTestPassStationDetails(jobnumbers, section, s, sD, eD, Factory.TWM3);
             result.addAll(l);
         });
 

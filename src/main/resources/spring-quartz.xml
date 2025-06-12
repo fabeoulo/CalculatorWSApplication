@@ -145,6 +145,20 @@
     </bean>
     
     <!--
+        Job6-2 setting
+        把Cell站別狀態記錄到資料庫
+    -->    
+    <bean name="CellStationRecordJob-Job" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.advantech.quartzJob.CellStationRecordJob" />
+        <property name="durability" value="true" />
+    </bean>
+    
+    <bean id="CellStationRecordJob-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="CellStationRecordJob-Job" />
+        <property name="cronExpression" value="0 50 * ? * * *" />
+    </bean>
+    
+    <!--
         Job7 setting
         每日把未回覆異常原因的回覆給幹部
     -->    
@@ -271,6 +285,20 @@
     </bean>
     
     <!--
+        將MES的Cell記錄儲存到DB
+    -->    
+    <bean name="SyncCellPassStationData-Job" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="syncCellPassStationData" />
+        <property name="targetMethod" value="execute"/>  
+        <property name="concurrent" value="false"/>
+    </bean>
+    
+    <bean id="SyncCellPassStationData-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="SyncCellPassStationData-Job" />
+        <property name="cronExpression" value="0 33 8,20 ? * * *" />
+    </bean>
+    
+    <!--
         將PMC排程exce儲存到DB(Assy)
     -->    
     <bean name="SyncPrepareScheduleForAssy-Job" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -387,6 +415,8 @@
                 <ref bean="CleanSensorData-Trig"/>
                 <ref bean="TestLineTypeRecord-Trig"/>
                 <ref bean="SyncTestPassStationData-Trig"/>
+                <ref bean="CellStationRecordJob-Trig"/>
+                <ref bean="SyncCellPassStationData-Trig"/>
                 
                 <ref bean="SyncPrepareScheduleForAssy-Trig"/>
                 <ref bean="SyncPrepareScheduleForPacking-Trig"/>

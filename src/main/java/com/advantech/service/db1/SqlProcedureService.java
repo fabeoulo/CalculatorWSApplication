@@ -141,6 +141,14 @@ public class SqlProcedureService {
         return sqlProcedureDAO.findPreAssyModuleUnexecuted(sD, eD);
     }
 
+    public List<Map> findCellPassStationProductivity(DateTime sD, DateTime eD) {
+        return sqlProcedureDAO.findCellPassStationProductivity(sD, eD);
+    }
+
+    public List<Map> findCellSuggestionWorkTime(DateTime sD, DateTime eD) {
+        return sqlProcedureDAO.findCellSuggestionWorkTime(sD, eD);
+    }
+
     public List<Map> findTestPassStationProductivity(DateTime sD, DateTime eD) {
         return sqlProcedureDAO.findTestPassStationProductivity(sD, eD);
     }

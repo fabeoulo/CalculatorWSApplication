@@ -237,11 +237,29 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .list();
     }
 
+    public List<Map> findCellPassStationProductivity(DateTime sD, DateTime eD) {
+        return super.getSession()
+                .createSQLQuery("{CALL " + schema + ".usp_Excel_CellPassStationProductivity(:sD, :eD)}")
+                .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
+                .setParameter("eD", eD != null ? eD.plusDays(1).withMillisOfDay(0).toDate() : null)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+    }
+
+    public List<Map> findCellSuggestionWorkTime(DateTime sD, DateTime eD) {
+        return super.getSession()
+                .createSQLQuery("{CALL " + schema + ".usp_Excel_CellSuggestionWorkTime(:sD, :eD)}")
+                .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
+                .setParameter("eD", eD != null ? eD.plusDays(1).withMillisOfDay(0).toDate() : null)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+    }
+
     public List<Map> findTestPassStationProductivity(DateTime sD, DateTime eD) {
         return super.getSession()
                 .createSQLQuery("{CALL " + schema + ".usp_Excel_TestPassStationProductivity(:sD, :eD)}")
                 .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
-                .setParameter("eD", eD != null ? eD.withHourOfDay(23).toDate() : null)
+                .setParameter("eD", eD != null ? eD.plusDays(1).withMillisOfDay(0).toDate() : null)
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .list();
     }

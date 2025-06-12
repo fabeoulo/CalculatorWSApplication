@@ -34,7 +34,8 @@ public class UserDAO extends AbstractDao<Integer, User> implements BasicDAO_1<Us
     public User findByJobnumber(String jobnumber) {
         Criteria c = super.createEntityCriteria();
         c.add(Restrictions.eq("jobnumber", jobnumber));
-        return (User) c.uniqueResult();
+        c.addOrder(Order.desc("id"));
+        return (User) c.setMaxResults(1).uniqueResult();
     }
 
     public List<User> findLineOwner(int line_id) {

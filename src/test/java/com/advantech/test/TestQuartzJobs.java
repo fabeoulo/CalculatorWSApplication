@@ -20,9 +20,11 @@ import com.advantech.quartzJob.TestLineTypeRecord;
 import com.advantech.quartzJob.TestLineTypeRecordUnrepliedAlarm;
 import com.advantech.quartzJob.ArrangePrepareScheduleImpl_Assy;
 import com.advantech.quartzJob.ArrangePrepareScheduleImpl_Packing;
+import com.advantech.quartzJob.CellStationRecordJob;
 import com.advantech.quartzJob.CheckTagNode;
 import com.advantech.quartzJob.HandleUncloseBabProcess;
 import com.advantech.quartzJob.PreAssyModuleStandardTimeJob;
+import com.advantech.quartzJob.SyncCellPassStationData;
 import com.advantech.quartzJob.SyncPrepareScheduleForPacking;
 import com.advantech.quartzJob.SyncWorktimeFromRemote;
 import static com.google.common.collect.Lists.newArrayList;
@@ -54,6 +56,17 @@ public class TestQuartzJobs {
     @Autowired
     private SyncTestPassStationData job2;
 
+    @Autowired
+    private SyncCellPassStationData job3;
+
+//    @Test
+//    @Transactional
+//    @Rollback(true)
+    public void testCellStationRecordJob() throws JobExecutionException {
+        CellStationRecordJob tr = new CellStationRecordJob();
+        tr.executeInternal(null);
+    }
+
 //    @Test
     public void testTestLineTypeRecord() throws JobExecutionException {
         TestLineTypeRecord tr = new TestLineTypeRecord();
@@ -61,6 +74,8 @@ public class TestQuartzJobs {
     }
 
 //    @Test //Be careful. it will reset bab and test login immediately.
+    @Transactional
+    @Rollback(true)
     public void testDbInit() throws JobExecutionException {
         DataBaseInit d = new DataBaseInit();
         d.executeInternal(null);
@@ -83,7 +98,7 @@ public class TestQuartzJobs {
 
 //    @Test
 //    @Transactional
-//    @Rollback(false)
+//    @Rollback(true)
     public void testBabDataSaver() throws JobExecutionException {
         HandleUncloseBab b = new HandleUncloseBab();
         b.executeInternal(null);
@@ -91,7 +106,7 @@ public class TestQuartzJobs {
 
 //    @Test
 //    @Transactional
-//    @Rollback(false)
+//    @Rollback(true)
     public void testHandleUncloseBabProcess() throws JobExecutionException {
         HandleUncloseBabProcess b = new HandleUncloseBabProcess();
         b.executeInternal(null);
@@ -134,6 +149,24 @@ public class TestQuartzJobs {
         DateTime eD = sD.plusHours(12);
         while (eD.isBeforeNow()) {
             job2.syncPassStationDetail(sD, eD);
+            sD = eD;
+            eD = sD.plusHours(12);
+        }
+    }
+
+//    @Test
+//    @Transactional
+//    @Rollback(true)
+    public void testSyncCellPassStationData() throws JobExecutionException {
+//        job3.execute();
+
+        DateTime sD = new DateTime("2025-07-02").withTime(8, 30, 0, 0);
+        DateTime eD = sD.plusHours(12);
+        while (sD.isBeforeNow()) {
+            job3.setsD(sD);
+            job3.seteD(eD);
+            job3.syncPassStationDetail();
+
             sD = eD;
             eD = sD.plusHours(12);
         }
@@ -195,6 +228,8 @@ public class TestQuartzJobs {
     private SyncWorktimeFromRemote swr;
 
 //    @Test
+//    @Transactional
+//    @Rollback(true)
     public void testSyncWorktimeFromRemote() throws Exception {
         swr.execute();
     }

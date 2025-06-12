@@ -9,6 +9,7 @@ import com.advantech.helper.HibernateObjectPrinter;
 import com.advantech.model.db1.PassStationRecord;
 import com.advantech.model.db1.TestPassStationDetail;
 import com.advantech.model.db1.TestRecord;
+import com.advantech.model.db1.UserInfoOnMes;
 import com.advantech.model.db1.UserOnMes;
 import com.advantech.service.db1.TestRecordService;
 import com.advantech.service.db1.TestService;
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 import static java.lang.System.out;
 import java.util.List;
 import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -237,13 +239,13 @@ public class WebServiceRVTest {
 
     @Test//245
     public void testGetTestPassStationDetails() {
-        DateTime today = new DateTime("2025-02-24");
+        DateTime today = new DateTime("2025-06-19");
 
         int hr = today.getHourOfDay() >= 20 ? 20 : 8;
         DateTime eD = new DateTime(today).withTime(hr, 30, 0, 0);
         DateTime sD = eD.minusHours(12);//.minusDays(today.getDayOfWeek() == 1 && hr == 8 ? 2 : 0);
 
-        List<String> users = newArrayList("'A-9043'", "'A-5131'", "'A-11018'");
+        List<String> users = newArrayList("'A-10945'");
 
 //        List<TestRecord> records = testRecordService.findByDate(sD, eD, false);
 //        List<String> jobnumbers = records.stream().map(t -> "'" + t.getUserId() + "'").distinct().collect(Collectors.toList());
@@ -266,10 +268,14 @@ public class WebServiceRVTest {
         List l = rv.getUsersInfoOnMes(Factory.TWM3);
         assertTrue(!l.isEmpty());
         HibernateObjectPrinter.print(l.get(0));
-        
-         l = rv.getUsersInfoOnMes(Factory.TWM6);
+
+        l = rv.getUsersInfoOnMes(Factory.TWM6);
         assertTrue(!l.isEmpty());
         HibernateObjectPrinter.print(l.get(0));
+
+        List<UserInfoOnMes> remoteDirectUser = ((List<UserInfoOnMes>) l).stream()
+                .filter(ur -> (ur.getUnitNo() != null && ur.getUserNo().equals("A-8887")))
+                .collect(toList());
     }
 
 //    @Test//245
@@ -280,8 +286,8 @@ public class WebServiceRVTest {
         List l = rv.getRptStationQtys("EKI-1524I-CE", 2, Factory.TWM3);
         assertTrue(!l.isEmpty());
         HibernateObjectPrinter.print(l.get(0));
-        
-         l = rv.getRptStationQtys("IDK-1110WP-50XGA1E", 2, Factory.TWM6);
+
+        l = rv.getRptStationQtys("IDK-1110WP-50XGA1E", 2, Factory.TWM6);
         assertTrue(!l.isEmpty());
         HibernateObjectPrinter.print(l.get(0));
     }

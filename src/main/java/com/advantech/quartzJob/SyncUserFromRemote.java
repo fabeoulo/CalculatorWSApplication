@@ -68,6 +68,10 @@ public class SyncUserFromRemote {
 
     public void execute() throws Exception {
         List<UserInfoOnMes> l = rv.getUsersInfoOnMes(Factory.TWM3);
+
+        List<UserInfoOnMes> l_m6 = rv.getUsersInfoOnMes(Factory.TWM6);
+        l.addAll(l_m6);
+
         List<UserInfoOnMes> remoteDirectUser = l.stream()
                 .filter(ur -> (ur.getUnitNo() != null && ur.getUnitNo().matches("(A|B|T|P)")))
                 .collect(toList());
