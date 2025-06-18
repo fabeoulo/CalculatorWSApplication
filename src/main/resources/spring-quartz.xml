@@ -44,12 +44,12 @@
     
     <bean id="DataBaseInit-Trig-MorningShift" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="DataBaseInit" />
-        <property name="cronExpression" value="0 30 20 ? * MON-SAT *" />
+        <property name="cronExpression" value="0 30 20 ? * * *" />
     </bean>
     
     <bean id="DataBaseInit-Trig-NightShift" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="DataBaseInit" />
-        <property name="cronExpression" value="0 30 8 ? * TUE-SUN *" />
+        <property name="cronExpression" value="0 30 8 ? * * *" />
     </bean>
     
     <!--

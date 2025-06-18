@@ -150,7 +150,7 @@ public class TestQuartzJobs {
         //先設定好當日出勤名單, 才會給予字動排站
         //This is assy schedule
 
-        DateTime d = new DateTime("2025-06-02");
+        DateTime d = new DateTime("2025-07-14");
 
 //        sps.execute(d);
         aps.execute(newArrayList(d));

@@ -1014,7 +1014,11 @@
                 }
 
                 if (lineType != null) {
-                    $("#lineType, #lineType2").find('option:contains(' + lineType + ')').attr("selected", "selected");
+                    $("#lineType, #lineType2").find('option')
+                            .filter(function () {
+                                return $(this).text().toLowerCase() === lineType.toLowerCase();
+                            })
+                            .attr("selected", "selected");
                 }
 
                 var readonly = getQueryVariable("readonly") == null ? false : (getQueryVariable("readonly").toUpperCase() == "TRUE");

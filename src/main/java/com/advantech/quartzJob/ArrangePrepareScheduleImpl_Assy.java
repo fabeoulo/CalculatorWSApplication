@@ -98,7 +98,7 @@ public class ArrangePrepareScheduleImpl_Assy extends PrepareScheduleJob {
 
         //只需要排組裝線別的工單即可
         arrangeLineTypes = lineTypeService.findByPrimaryKeys(1);
-        floors = floorService.findByPrimaryKeys(2);
+        floors = floorService.findByPrimaryKeys(6);
 
     }
 
@@ -164,8 +164,8 @@ public class ArrangePrepareScheduleImpl_Assy extends PrepareScheduleJob {
                 .sorted(comparing(PrepareSchedule::getTimeCost).reversed())
                 .collect(toList());
 
-        List<LineUserReference> users = lineUserRefService.findByLinesAndDate(lines, d);
-        List<LineUserReference> cellUsers = lineUserRefService.findByLinesAndDate(cellLines, d);
+        List<LineUserReference> users = lines.isEmpty() ? new ArrayList<>() : lineUserRefService.findByLinesAndDate(lines, d);
+        List<LineUserReference> cellUsers = cellLines.isEmpty() ? new ArrayList<>() : lineUserRefService.findByLinesAndDate(cellLines, d);
 
         if (users.isEmpty() || cellUsers.isEmpty()) {
             logger.info("User setting preAssy " + cellUsers.size() + " ,assy " + users.size());
@@ -197,8 +197,8 @@ public class ArrangePrepareScheduleImpl_Assy extends PrepareScheduleJob {
         }
 
         restTimes = newArrayList(
-                new Interval(new DateTime(d).withTime(10, 0, 0, 0), new DateTime(d).withTime(10, 10, 0, 0)),
-                new Interval(new DateTime(d).withTime(12, 0, 0, 0), new DateTime(d).withTime(12, 50, 0, 0)),
+                //                new Interval(new DateTime(d).withTime(10, 0, 0, 0), new DateTime(d).withTime(10, 10, 0, 0)),
+                new Interval(new DateTime(d).withTime(12, 0, 0, 0), new DateTime(d).withTime(13, 0, 0, 0)),
                 new Interval(new DateTime(d).withTime(15, 0, 0, 0), new DateTime(d).withTime(15, 10, 0, 0)),
                 new Interval(new DateTime(d).withTime(17, 30, 0, 0), new DateTime(d).withTime(17, 40, 0, 0))
         );
