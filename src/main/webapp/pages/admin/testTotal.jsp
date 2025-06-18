@@ -8,6 +8,7 @@ Auto polling test record page by client.
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -57,7 +58,7 @@ Auto polling test record page by client.
                 var d = new Date();
                 $("#final_time").text(d);//Get the final polling database time.
                 var interval = null;//Polling database variable.
-                var testtables = 34;//測試table數量(空值要塞入null)
+                var testtables = <spring:message code="test.maxTable" />;//測試table數量(空值要塞入null)
 
                 //DataTable sort init.
                 jQuery.fn.dataTableExt.oSort['pct-asc'] = function (x, y) {
