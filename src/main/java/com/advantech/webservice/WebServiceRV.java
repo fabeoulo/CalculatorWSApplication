@@ -9,6 +9,8 @@ import com.advantech.model.db1.CellPassStationDetail;
 import com.advantech.model.db1.CellPassStationDetails;
 import com.advantech.model.db1.MesPassCountRecord;
 import com.advantech.model.db1.MesPassCountRecords;
+import com.advantech.model.db1.PackingPassStationDetail;
+import com.advantech.model.db1.PackingPassStationDetails;
 import com.advantech.model.db1.PassStationRecord;
 import com.advantech.model.db1.PassStationRecords;
 import com.advantech.model.db1.RptStationQty;
@@ -184,53 +186,42 @@ public class WebServiceRV extends SimpleWebServiceRV {
         }
     }
 
+    private String getPassStationDetailQuery(List<String> jobnumbers, Section section, int station, DateTime sD, DateTime eD, final Factory f) {
+
+        super.setWsClient(mClient.getClient(f));
+
+        String jobnumberStr = String.join(",", jobnumbers);
+
+        String queryString
+                = "<root>"
+                + "<METHOD ID='Advantech.EFM.PEF.BLL.QryKPIUserPassStationDetail'/>"
+                + "<RPT404>"
+                + "<UNIT_NO>" + "</UNIT_NO>"
+                + "<STATION_ID>" + station + "</STATION_ID>"
+                + "<USER_NO>" + jobnumberStr + "</USER_NO>"
+                + "<START_DATE>" + fmtDetail.print(sD) + "</START_DATE>"
+                + "<END_DATE>" + fmtDetail.print(eD) + "</END_DATE>"
+                + "<WERKS>" + f.toString() + "</WERKS>"
+                + "</RPT404>"
+                + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT>"
+                + "</root>";
+
+        return queryString;
+    }
+
     public List<CellPassStationDetail> getCellPassStationDetails(List<String> jobnumbers, Section section, int station, DateTime sD, DateTime eD, final Factory f) {
         try {
-            super.setWsClient(mClient.getClient(f));
-
-            String jobnumberStr = String.join(",", jobnumbers);
-
-            String queryString
-                    = "<root>"
-                    + "<METHOD ID='Advantech.EFM.PEF.BLL.QryKPIUserPassStationDetail'/>"
-                    + "<RPT404>"
-                    + "<UNIT_NO>" + "</UNIT_NO>"
-                    + "<STATION_ID>" + station + "</STATION_ID>"
-                    + "<USER_NO>" + jobnumberStr + "</USER_NO>"
-                    + "<START_DATE>" + fmtDetail.print(sD) + "</START_DATE>"
-                    + "<END_DATE>" + fmtDetail.print(eD) + "</END_DATE>"
-                    + "<WERKS>" + f.toString() + "</WERKS>"
-                    + "</RPT404>"
-                    + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT>"
-                    + "</root>";
-
+            String queryString = getPassStationDetailQuery(jobnumbers, section, station, sD, eD, f);
             return super.getMarshalResults(queryString, CellPassStationDetails.class);
         } catch (JAXBException ex) {
             log.error(ex.toString());
             return new ArrayList();
         }
     }
-    
+
     public List<TestPassStationDetail> getTestPassStationDetails(List<String> jobnumbers, Section section, int station, DateTime sD, DateTime eD, final Factory f) {
         try {
-            super.setWsClient(mClient.getClient(f));
-
-            String jobnumberStr = String.join(",", jobnumbers);
-
-            String queryString
-                    = "<root>"
-                    + "<METHOD ID='Advantech.EFM.PEF.BLL.QryKPIUserPassStationDetail'/>"
-                    + "<RPT404>"
-                    + "<UNIT_NO>" + "</UNIT_NO>"
-                    + "<STATION_ID>" + station + "</STATION_ID>"
-                    + "<USER_NO>" + jobnumberStr + "</USER_NO>"
-                    + "<START_DATE>" + fmtDetail.print(sD) + "</START_DATE>"
-                    + "<END_DATE>" + fmtDetail.print(eD) + "</END_DATE>"
-                    + "<WERKS>" + f.toString() + "</WERKS>"
-                    + "</RPT404>"
-                    + "<EXT_DEPT>" + f.getWsDept() + "</EXT_DEPT>"
-                    + "</root>";
-
+            String queryString = getPassStationDetailQuery(jobnumbers, section, station, sD, eD, f);
             return super.getMarshalResults(queryString, TestPassStationDetails.class);
         } catch (JAXBException ex) {
             log.error(ex.toString());
@@ -238,9 +229,14 @@ public class WebServiceRV extends SimpleWebServiceRV {
         }
     }
 
-    public List<TestPassStationDetail> getTestPassStationDetails2(List<Test> users, Section section, int station, DateTime sD, DateTime eD, final Factory f) {
-        List<String> jobnumbers = users.stream().map(t -> "'" + t.getUserId() + "'").collect(Collectors.toList());
-        return getTestPassStationDetails(jobnumbers, section, station, sD, eD, f);
+    public List<PackingPassStationDetail> getPackingPassStationDetails(List<String> jobnumbers, Section section, int station, DateTime sD, DateTime eD, final Factory f) {
+        try {
+            String queryString = getPassStationDetailQuery(jobnumbers, section, station, sD, eD, f);
+            return super.getMarshalResults(queryString, PackingPassStationDetails.class);
+        } catch (JAXBException ex) {
+            log.error(ex.toString());
+            return new ArrayList();
+        }
     }
 
     public List<MesPassCountRecord> getMesPassCountRecords(DateTime sD, DateTime eD, final Factory f) {

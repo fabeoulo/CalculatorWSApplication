@@ -98,6 +98,22 @@ public class BabDAO extends AbstractDao<Integer, Bab> implements BasicDAO_1<Bab>
         return c.list();
     }
 
+    public List<Bab> findByDateAndStation(DateTime sD, DateTime eD, int lineType_id, int floor_id) {
+        Criteria c = super.createEntityCriteria();
+        c.setFetchMode("babSettingHistorys", FetchMode.JOIN);
+        c.add(Restrictions.between("beginTime", sD.toDate(), eD.toDate()));
+        c.createAlias("line", "l");
+        if (lineType_id != -1) {
+            c.add(Restrictions.eq("l.lineType.id", lineType_id));
+        }
+        if (floor_id != -1) {
+            c.add(Restrictions.eq("l.floor.id", floor_id));
+        }
+        
+        c.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return c.list();
+    }
+
     public List<Bab> findProcessing() {
         return super.createEntityCriteria()
                 .createAlias("line", "l")

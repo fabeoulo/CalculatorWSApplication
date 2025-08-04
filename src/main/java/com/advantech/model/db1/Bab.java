@@ -86,6 +86,9 @@ public class Bab implements Serializable {
 //    @JsonIgnore
     private Set<PreAssyModuleType> preAssyModuleTypes = new HashSet<PreAssyModuleType>(0);
 
+    @JsonIgnore
+    private Set<PackingPassStationDetail> packingPassStationDetails = new HashSet<PackingPassStationDetail>(0);
+
     public Bab() {
     }
 
@@ -278,6 +281,15 @@ public class Bab implements Serializable {
         this.babLineProductivityExcludes = babLineProductivityExcludes;
     }
 
+    @Transient
+    public List<BabAvg> getBabAvgs() {
+        return babAvgs;
+    }
+
+    public void setBabAvgs(List<BabAvg> babAvgs) {
+        this.babAvgs = babAvgs;
+    }
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "Bab_PreAssyModuleType_REF", joinColumns = {
         @JoinColumn(name = "bab_id", nullable = false, insertable = false, updatable = false)}, inverseJoinColumns = {
@@ -290,13 +302,13 @@ public class Bab implements Serializable {
         this.preAssyModuleTypes = preAssyModuleTypes;
     }
 
-    @Transient
-    public List<BabAvg> getBabAvgs() {
-        return babAvgs;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bab")
+    public Set<PackingPassStationDetail> getPackingPassStationDetails() {
+        return packingPassStationDetails;
     }
 
-    public void setBabAvgs(List<BabAvg> babAvgs) {
-        this.babAvgs = babAvgs;
+    public void setPackingPassStationDetails(Set<PackingPassStationDetail> packingPassStationDetails) {
+        this.packingPassStationDetails = packingPassStationDetails;
     }
 
     @Override

@@ -67,7 +67,7 @@ public class SystemReportDao extends BasicDAO {
                 "{CALL " + schema + ".usp_Excel_CellPassStationProductivity(?, ?)}",
                 startDate, endDate);
     }
-            
+
     //測試工時建議details
     public List<Map> getTestSuggestionWorkTimeDetailExcel(String startDate, String endDate) {
         return queryProcForMapList(getConn(),
@@ -75,11 +75,18 @@ public class SystemReportDao extends BasicDAO {
                 startDate, endDate);
     }
 
-    //組/包工時建議details
+    //組工時建議details
     public List<Map> getSuggestionWorkTimeDetailExcel(String startDate, String endDate, int lineTypeId) {
         return queryProcForMapList(getConn(),
                 "{CALL " + schema + ".usp_Excel_SuggestionWorkTimeDetail(?, ?, ?, ?, ?, ?, ?, ?)}",
                 null, null, -1, lineTypeId, null, null, startDate, endDate);
+    }
+
+    //包工時建議details
+    public List<Map> getPackingSuggestionWorkTimeDetailExcel(String startDate, String endDate, int lineTypeId) {
+        return queryProcForMapList(getConn(),
+                "{CALL " + schema + ".usp_Excel_PackingPassStationProductivity(?, ?, ?)}",
+                startDate, endDate, lineTypeId);
     }
 
     //異常資料details

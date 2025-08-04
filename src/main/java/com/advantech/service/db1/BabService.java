@@ -125,6 +125,10 @@ public class BabService {
         return babDAO.findByMultipleClause(sD, eD, lineType_id, floor_id, isAboveTenPcs);
     }
 
+    public List<Bab> findByDateAndStation(DateTime sD, DateTime eD, int lineType_id, int floor_id) {
+        return babDAO.findByDateAndStation(sD, eD, lineType_id, floor_id);
+    }
+
     public List<Bab> findProcessing() {
         return babDAO.findProcessing();
     }
@@ -288,7 +292,7 @@ public class BabService {
 
     public void autoCloseNotPre(Bab b, BabSettingHistory setting) {
         if (setting.getStation() > 1) {
-           if (setting.getStation() == b.getPeople()) {
+            if (setting.getStation() == b.getPeople()) {
                 this.closeBabTrigger(b, b.getId());
                 this.changeBabStatusFollowCloseBab(b.getId(), BabStatus.AUTO_CLOSED);
             } else {

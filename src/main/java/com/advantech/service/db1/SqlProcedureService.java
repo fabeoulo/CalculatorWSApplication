@@ -165,6 +165,10 @@ public class SqlProcedureService {
         return sqlProcedureDAO.findPreAssySuggestionWorkTime(sD, eD, lineTypeId, floorId);
     }
 
+    public List<Map> findPackingSuggestionWorkTime(DateTime sD, DateTime eD, int lineTypeId) {
+        return sqlProcedureDAO.findPackingSuggestionWorkTime(sD, eD, lineTypeId);
+    }
+
     public int closeBabDirectly(Bab b) {
         return sqlProcedureDAO.closeBabDirectly(b);
     }
