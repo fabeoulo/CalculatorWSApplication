@@ -25,6 +25,8 @@ import com.advantech.quartzJob.CheckTagNode;
 import com.advantech.quartzJob.HandleUncloseBabProcess;
 import com.advantech.quartzJob.PreAssyModuleStandardTimeJob;
 import com.advantech.quartzJob.SyncCellPassStationData;
+import com.advantech.quartzJob.SyncPackingPassStationData;
+import com.advantech.quartzJob.SyncPreAssyModuleFromRemote;
 import com.advantech.quartzJob.SyncPrepareScheduleForPacking;
 import com.advantech.quartzJob.SyncWorktimeFromRemote;
 import static com.google.common.collect.Lists.newArrayList;
@@ -58,6 +60,9 @@ public class TestQuartzJobs {
 
     @Autowired
     private SyncCellPassStationData job3;
+
+    @Autowired
+    private SyncPackingPassStationData job4;
 
 //    @Test
 //    @Transactional
@@ -172,6 +177,24 @@ public class TestQuartzJobs {
         }
     }
 
+//    @Test
+//    @Transactional
+//    @Rollback(true)
+    public void testSyncPackingPassStationData() throws JobExecutionException {
+//        job4.execute();
+
+        DateTime sD = new DateTime("2025-08-29").withTime(8, 30, 0, 0);
+        DateTime eD = sD.plusHours(12);
+        while (sD.isBeforeNow()) {
+            job4.setsD(sD);
+            job4.seteD(eD);
+            job4.syncPassStationDetail();
+
+            sD = eD;
+            eD = sD.plusHours(12);
+        }
+    }
+
     @Autowired
     private SyncPrepareScheduleForAssy sps;
 
@@ -227,7 +250,7 @@ public class TestQuartzJobs {
     @Autowired
     private SyncWorktimeFromRemote swr;
 
-//    @Test
+    @Test
 //    @Transactional
 //    @Rollback(true)
     public void testSyncWorktimeFromRemote() throws Exception {
@@ -242,5 +265,15 @@ public class TestQuartzJobs {
 //    @Rollback(true)
     public void testPreAssyModuleStandardTimeJob() throws Exception {
         preAssySt.execute();
+    }
+
+    @Autowired
+    private SyncPreAssyModuleFromRemote syncPreAssyModuleFromRemote;
+
+//    @Test
+//    @Transactional
+//    @Rollback(true)
+    public void testSyncPreAssyModuleFromRemote() {
+        syncPreAssyModuleFromRemote.execute();
     }
 }

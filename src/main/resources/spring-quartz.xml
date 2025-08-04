@@ -299,6 +299,20 @@
     </bean>
     
     <!--
+        將MES的Packing記錄儲存到DB
+    -->    
+    <bean name="SyncPackingPassStationData-Job" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="syncPackingPassStationData" />
+        <property name="targetMethod" value="execute"/>  
+        <property name="concurrent" value="false"/>
+    </bean>
+    
+    <bean id="SyncPackingPassStationData-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="SyncPackingPassStationData-Job" />
+        <property name="cronExpression" value="0 33 8,20 ? * * *" />
+    </bean>    
+    
+    <!--
         將PMC排程exce儲存到DB(Assy)
     -->    
     <bean name="SyncPrepareScheduleForAssy-Job" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -367,7 +381,7 @@
         <property name="jobDetail" ref="SyncWorktimeFromRemote-Job" />
         <property name="cronExpression" value="0 0 08 ? * MON-SAT *" />
     </bean>
-
+    
     <!--
         每週計算前置模組工時 UPDATE PreAssyModuleStandardTime table
     -->    
@@ -417,6 +431,7 @@
                 <ref bean="SyncTestPassStationData-Trig"/>
                 <ref bean="CellStationRecordJob-Trig"/>
                 <ref bean="SyncCellPassStationData-Trig"/>
+                <ref bean="SyncPackingPassStationData-Trig"/>
                 
 <!--                <ref bean="SyncPrepareScheduleForAssy-Trig"/>
                 <ref bean="SyncPrepareScheduleForPacking-Trig"/>

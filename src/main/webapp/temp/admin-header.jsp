@@ -156,7 +156,7 @@
                         <li><a href="babLineUsageRate.jsp">線體使用率統計</a></li>
                         <li class="divider"></li>
                             <c:if test="${isIeOper || isBackDoor4876 || isAdmin || isMfgLineOwner || isMfgOper}">
-                            <li><a href="SuggestionWorkTime?lineType=Packing">工時建議</a></li>
+                            <li><a href="PackingSuggestionWorkTime?lineType=Packing">MES包裝工時建議</a></li>
                             <li class="divider"></li>
 <!--                            <li><a href="modelSopRemark.jsp">Sop維護</a></li>
                             <li class="divider"></li>-->

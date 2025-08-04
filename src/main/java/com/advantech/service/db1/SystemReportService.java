@@ -43,13 +43,17 @@ public class SystemReportService {
     public List<Map> getCellSuggestionWorkTimeDetailExcel(String startDate, String endDate) {
         return systemReportDao.getCellSuggestionWorkTimeDetailExcel(startDate, endDate);
     }
-            
+
     public List<Map> getTestSuggestionWorkTimeDetailExcel(String startDate, String endDate) {
         return systemReportDao.getTestSuggestionWorkTimeDetailExcel(startDate, endDate);
     }
 
     public List<Map> getSuggestionWorkTimeDetailExcel(String startDate, String endDate, int lineTypeId) {
         return systemReportDao.getSuggestionWorkTimeDetailExcel(startDate, endDate, lineTypeId);
+    }
+
+    public List<Map> getPackingSuggestionWorkTimeDetailExcel(String startDate, String endDate, int lineTypeId) {
+        return systemReportDao.getPackingSuggestionWorkTimeDetailExcel(startDate, endDate, lineTypeId);
     }
 
     public List<Map> getBabPassStationExceptionReportDetails(String po, String modelName, String startDate, String endDate, int lineTypeId) {

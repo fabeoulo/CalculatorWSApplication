@@ -63,19 +63,19 @@ public class IndexController {
         setLanguage(model, request, response, locale);
         return "pages/admin/cellTotal";
     }
-    
+
     @RequestMapping("/pages/admin/CellPassStationProductivity")
     public String cellPassStationProductivity(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
         setLanguage(model, request, response, locale);
         return "pages/admin/cellPassStationProductivity";
     }
-    
+
     @RequestMapping("/pages/admin/CellSuggestionWorkTime")
     public String cellSuggestionWorkTime(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
         setLanguage(model, request, response, locale);
         return "pages/admin/cellSuggestionWorkTime";
     }
-    
+
     @RequestMapping("/pages/admin/TestTotal")
     public String testTotal(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
         setLanguage(model, request, response, locale);
@@ -177,7 +177,13 @@ public class IndexController {
         setLanguage(model, request, response, locale);
         return "pages/admin/preAssySuggestionWorkTime";
     }
-    
+
+    @RequestMapping("/pages/admin/PackingSuggestionWorkTime")
+    public String packingSuggestionWorkTime(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
+        setLanguage(model, request, response, locale);
+        return "pages/admin/packingSuggestionWorkTime";
+    }
+
     @RequestMapping("/pages/admin/FqcDashBoard")
     public String fqcDashBoard(Model model, HttpServletRequest request, HttpServletResponse response, String locale) {
         setLanguage(model, request, response, locale);

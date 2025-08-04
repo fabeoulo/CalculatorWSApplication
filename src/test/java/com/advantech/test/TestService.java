@@ -8,12 +8,14 @@ package com.advantech.test;
 import com.advantech.facade.BabLineTypeFacade;
 import com.advantech.helper.CustomPasswordEncoder;
 import com.advantech.helper.HibernateObjectPrinter;
+import static com.advantech.helper.StringParser.defaultStringIfNull;
 import com.advantech.model.db1.Bab;
 import com.advantech.model.db1.BabCollectModeChangeEvent;
 import com.advantech.model.db1.BabDataCollectMode;
 import com.advantech.model.db1.BabSettingHistory;
 import com.advantech.model.db1.BabStandardTimeHistory;
 import com.advantech.model.db1.CellLoginRecord;
+import com.advantech.model.db1.CellPassStationDetail;
 import com.advantech.model.db1.CellStation;
 import com.advantech.model.db1.CellStationRecord;
 import com.advantech.model.db1.Floor;
@@ -21,12 +23,14 @@ import com.advantech.model.db1.Fqc;
 import com.advantech.model.db1.FqcLine;
 import com.advantech.model.db1.Line;
 import com.advantech.model.db1.LineType;
+import com.advantech.model.db1.PackingPassStationDetail;
 import com.advantech.model.db1.PreAssyModuleStandardTime;
 import com.advantech.model.db1.PreAssyModuleStandardTimeHistory;
 import com.advantech.model.db1.PreAssyModuleType;
 import com.advantech.model.db1.PrepareSchedule;
 import com.advantech.model.db1.PrepareScheduleEndtimeSetting;
 import com.advantech.model.db1.TagNameComparison;
+import com.advantech.model.db1.TestPassStationDetail;
 import com.advantech.model.db1.TestTable;
 import com.advantech.model.db1.Unit;
 import com.advantech.model.db1.User;
@@ -44,6 +48,7 @@ import com.advantech.service.db1.BabService;
 import com.advantech.service.db1.BabSettingHistoryService;
 import com.advantech.service.db1.BabStandardTimeHistoryService;
 import com.advantech.service.db1.CellLoginRecordService;
+import com.advantech.service.db1.CellPassStationDetailService;
 import com.advantech.service.db1.CellStationRecordService;
 import com.advantech.service.db1.CellStationService;
 import com.advantech.service.db1.FloorService;
@@ -55,6 +60,7 @@ import com.advantech.service.db1.LineService;
 import com.advantech.service.db1.LineTypeService;
 import com.advantech.service.db1.LineUserReferenceService;
 import com.advantech.service.db1.ModelSopRemarkDetailService;
+import com.advantech.service.db1.PackingPassStationDetailService;
 import com.advantech.service.db1.PreAssyModuleStandardTimeHistoryService;
 import com.advantech.service.db1.PreAssyModuleStandardTimeService;
 import com.advantech.service.db1.PreAssyModuleTypeService;
@@ -62,6 +68,7 @@ import com.advantech.service.db1.PrepareScheduleEndtimeSettingService;
 import com.advantech.service.db1.PrepareScheduleService;
 import com.advantech.service.db1.SystemReportService;
 import com.advantech.service.db1.TagNameComparisonService;
+import com.advantech.service.db1.TestPassStationDetailService;
 import com.advantech.service.db1.TestTableService;
 import com.advantech.service.db1.UnitService;
 import com.advantech.service.db1.UserProfileService;
@@ -71,6 +78,7 @@ import com.advantech.service.db1.WorktimeService;
 import com.advantech.service.db3.SqlViewService;
 import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
+import com.advantech.webservice.mes.Section;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
@@ -79,6 +87,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -90,6 +99,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import javax.mail.MessagingException;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -278,6 +288,83 @@ public class TestService {
     private PreAssyModuleStandardTimeService preAssyModuleStandardTimeService;
     @Autowired
     private SystemReportService systemReportService;
+
+//    @Test
+//    @Transactional
+//    @Rollback(true)
+    public void testSyncPreAssyModuleStandardTime() {
+        List<Map> remoteData = sqlViewService.findPreAssyModule();
+        List<PreAssyModuleType> moduleTypes = preAssyModuleTypeService.findAll();
+        lt = lineTypeService.findByPrimaryKey(1);
+        List<PreAssyModuleStandardTime> preAssyModuleSts = preAssyModuleStandardTimeService.findAll();
+        floor = floorService.findByPrimaryKey(7);
+
+        setModuleTypeMap(moduleTypes);
+        setPreAssyModuleStMap(preAssyModuleSts);
+
+        for (Map m : remoteData.subList(10, 20)) {
+//        for (Map m : remoteData.subList(0, 10)) {
+            String moduleName = defaultStringIfNull(m.get("moduleName"), "");
+            String moduleNo = defaultStringIfNull(m.get("moduleNo"), "");
+            String modelName = defaultStringIfNull(m.get("modelName"), "");
+            BigDecimal ct = new BigDecimal(defaultStringIfNull(m.get("ct"), "0"));
+
+            checkModuleType(moduleName, moduleNo);
+            checkPreAssyModuleSt(moduleNo, modelName, ct);
+        }
+    }
+    private Map<String, PreAssyModuleType> moduleTypeMap;
+    private Map<String, PreAssyModuleStandardTime> preAssyModuleStMap;
+    private LineType lt;
+    private Floor floor;
+
+    private void setModuleTypeMap(List<PreAssyModuleType> moduleTypes) {
+        moduleTypeMap = moduleTypes.stream()
+                .filter(m -> m.getLineType().getId() == lt.getId())
+                .collect(Collectors.toMap(PreAssyModuleType::getModuleNo, pmt -> pmt));
+    }
+
+    private void checkModuleType(String moduleName, String moduleNo) {
+        String preassyModuleName = "(前置)" + moduleName;
+        if (moduleTypeMap.containsKey(moduleNo)) {
+            PreAssyModuleType pojo = moduleTypeMap.get(moduleNo);
+            if (!pojo.getName().equals(preassyModuleName)) {
+                pojo.setName(preassyModuleName);
+                preAssyModuleTypeService.update(pojo);
+            }
+        } else {
+            PreAssyModuleType pojo = new PreAssyModuleType(preassyModuleName, lt, moduleNo);
+            preAssyModuleTypeService.insert(pojo);
+            moduleTypeMap.put(moduleNo, pojo);
+        }
+    }
+
+    private void setPreAssyModuleStMap(List<PreAssyModuleStandardTime> preAssyModuleSts) {
+        preAssyModuleStMap = preAssyModuleSts.stream()
+                .collect(Collectors.toMap(pmst -> pmst.getModelName() + "~" + pmst.getPreAssyModuleType().getId(), pmst -> pmst));
+    }
+
+    private void checkPreAssyModuleSt(String moduleNo, String modelName, BigDecimal ct) {
+        PreAssyModuleType mt = moduleTypeMap.get(moduleNo);
+        String preAssyModuleKey = modelName + "~" + mt.getId();
+        if (preAssyModuleStMap.containsKey(preAssyModuleKey)) {
+            PreAssyModuleStandardTime pojo = preAssyModuleStMap.get(preAssyModuleKey);
+            if (pojo.getStandardTimeRemote().compareTo(ct) != 0) {
+                pojo.setStandardTimeRemote(ct);
+                preAssyModuleStandardTimeService.update(pojo);
+            }
+        } else {
+            PreAssyModuleStandardTime pojo = new PreAssyModuleStandardTime();
+            pojo.setModelName(modelName);
+            pojo.setPreAssyModuleType(mt);
+            pojo.setStandardTimeRemote(ct);
+            pojo.setStandardTime(BigDecimal.ZERO);
+            pojo.setFloor(floor);
+            preAssyModuleStandardTimeService.insert(pojo);
+
+            preAssyModuleStMap.put(preAssyModuleKey, pojo);
+        }
+    }
 
 //    @Test
 //    @Transactional
@@ -515,6 +602,141 @@ public class TestService {
     @Autowired
     private WebServiceRV rv;
 
+    @Autowired
+    private com.advantech.service.db1.TestService testService;
+
+    @Autowired
+    private TestPassStationDetailService testPassStationDetailService;
+
+    @Autowired
+    private CellPassStationDetailService cellPassStationDetailService;
+
+    @Autowired
+    private PackingPassStationDetailService packingPassStationDetailService;
+
+//    @Test
+//    @Transactional
+//    @Rollback(true)
+    public void testPackingPassStationDetails() {
+        List<PackingPassStationDetail> result = new ArrayList();
+
+//        List<PackingPassStationDetail> dbData = packingPassStationDetailService.findAll();
+//
+        DateTime sD = new DateTime("2025-08-18").withTime(8, 30, 0, 0);
+        DateTime eD = sD.plusHours(12);
+        List<Bab> babs = babService.findByDateAndStation(sD, eD, 3, -1)
+                .stream().filter(bb -> bb.getIspre() == 0).collect(Collectors.toList());
+
+        Set<BabSettingHistory> settings = babs.stream().flatMap(bb -> bb.getBabSettingHistorys().stream()).collect(Collectors.toSet());
+        List<String> jobnumbers = settings.stream().map(t -> "'" + t.getJobnumber() + "'").distinct().collect(Collectors.toList());
+        List<Integer> stations = newArrayList(28); // PKG
+        stations.forEach(s -> {
+//            Section section = (s == 3 ? Section.PACKAGE : Section.TEST);
+            Section section = Section.PACKAGE;
+            List<PackingPassStationDetail> l = rv.getPackingPassStationDetails(jobnumbers, section, s, sD, eD, Factory.TWM3);
+            result.addAll(l);
+        });
+        
+        assertTrue(!result.isEmpty());
+        
+        Map<String, List<Bab>> poBabMap = babs.stream().collect(Collectors.groupingBy(Bab::getPo));
+
+        List<PackingPassStationDetail> resultFilter = result.stream()
+                .filter(r -> poBabMap.keySet().contains(r.getPo()))
+                .map(r -> {
+//                    if (r.getPo().equals("THPI00388ZA")) {
+//                        String stop = "s";
+//                    }
+                    List<Bab> poBabs = poBabMap.get(r.getPo());
+                    Bab matchBab = poBabs.stream()
+                            .filter(bb -> {
+                                return bb.getBabSettingHistorys().stream().anyMatch(bsh -> bsh.getJobnumber().equals(r.getJobnumber()))
+                                        && new DateTime(bb.getLastUpdateTime()).compareTo(new DateTime(r.getCreateDate())) >= 0;
+                            })
+                            .max(Comparator.comparingInt(Bab::getId)).orElse(null);
+
+                    r.setBab(matchBab);
+                    return r;
+                })
+                .collect(Collectors.toList());
+
+        List<PackingPassStationDetail> dbData = packingPassStationDetailService.findByDate(sD, eD);
+
+        List<PackingPassStationDetail> delData = (List<PackingPassStationDetail>) CollectionUtils.subtract(dbData, resultFilter);
+        packingPassStationDetailService.delete(delData);
+        System.out.println("Delete data cnt " + delData.size());
+
+        List<PackingPassStationDetail> newData = (List<PackingPassStationDetail>) CollectionUtils.subtract(resultFilter, dbData);
+        packingPassStationDetailService.insert(newData);
+        System.out.println("New data cnt " + newData.size());
+    }
+
+//    @Test
+//    @Rollback(false)
+    public void testCellPassStationDetails() {
+        List<CellPassStationDetail> result = new ArrayList();
+
+        List<CellPassStationDetail> dbData = cellPassStationDetailService.findAll();
+
+        DateTime sD = new DateTime("2025-06-14").withTime(8, 30, 0, 0);
+        DateTime eD = sD.plusHours(12);
+        List<CellStationRecord> records = cellStationRecordService.findByDate(sD, eD, false);
+        List<String> jobnumbers = records.stream().map(t -> "'" + t.getUserId() + "'").distinct().collect(Collectors.toList());
+//        dbData = cellPassStationDetailService.findByDate(sD, eD);
+
+        List<Integer> stations = newArrayList(159, 182, 140); // SL,SL1,ASSY1
+
+        stations.forEach(s -> {
+            Section section = (s == 3 ? Section.BAB : Section.TEST);
+            List<CellPassStationDetail> l = rv.getCellPassStationDetails(jobnumbers, section, s, sD, eD, Factory.TWM6);
+            result.addAll(l);
+        });
+
+        assertTrue(!result.isEmpty());
+
+        List<CellPassStationDetail> delData = (List<CellPassStationDetail>) CollectionUtils.subtract(dbData, result);
+        cellPassStationDetailService.delete(delData);
+        System.out.println("Delete data cnt " + delData.size());
+
+        List<CellPassStationDetail> newData = (List<CellPassStationDetail>) CollectionUtils.subtract(result, dbData);
+//        CellPassStationDetail detail = newData.get(0);
+        cellPassStationDetailService.insert(newData);
+        System.out.println("New data cnt " + newData.size());
+
+    }
+
+//    @Test
+//    @Rollback(false)
+    public void testPassStationDetails() {
+        List<TestPassStationDetail> result = new ArrayList();
+
+        List<TestPassStationDetail> dbData = testPassStationDetailService.findAll();
+
+        DateTime eD = new DateTime().withTime(8, 0, 0, 0);
+        DateTime sD = eD.minusMonths(8).withTime(8, 0, 0, 0);
+        List<com.advantech.model.db1.Test> users = testService.findAll();
+        List<String> jobnumbers = users.stream().map(t -> "'" + t.getUserId() + "'").collect(Collectors.toList());
+
+        List<Integer> stations = newArrayList(95, 3, 11, 30, 151);
+
+        stations.forEach(s -> {
+            Section section = (s == 3 ? Section.BAB : Section.TEST);
+            List<TestPassStationDetail> l = rv.getTestPassStationDetails(jobnumbers, section, s, sD, eD, Factory.TWM9);
+            result.addAll(l);
+        });
+
+        assertTrue(!result.isEmpty());
+
+        List<TestPassStationDetail> delData = (List<TestPassStationDetail>) CollectionUtils.subtract(dbData, result);
+        testPassStationDetailService.delete(delData);
+        System.out.println("Delete data cnt " + delData.size());
+
+        List<TestPassStationDetail> newData = (List<TestPassStationDetail>) CollectionUtils.subtract(result, dbData);
+        testPassStationDetailService.insert(newData);
+        System.out.println("New data cnt " + newData.size());
+
+    }
+
 //    @Test
     @Transactional
     @Rollback(true)
@@ -713,6 +935,17 @@ public class TestService {
     @Autowired
     @Qualifier("sqlViewService3")
     private SqlViewService sqlViewService;
+
+//    @Test
+//    @Rollback(true)
+    public void testSyncPreAssyModule() {
+        List l = sqlViewService.findExtras();
+
+        l.forEach(m -> {
+//            w.setId(0);
+//            worktimeService.insert(w);
+        });
+    }
 
 //    @Test
 //    @Rollback(true)

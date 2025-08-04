@@ -58,7 +58,7 @@ public class ExcelExportController {
             HttpServletResponse res) throws IOException {
 
         startDate = startDate.withHourOfDay(0);
-        endDate = endDate.withHourOfDay(23);
+        endDate = endDate.plusDays(1);
 
         String sD = fmt.print(startDate);
         String eD = fmt.print(endDate);
@@ -100,7 +100,7 @@ public class ExcelExportController {
             HttpServletResponse res) throws IOException {
 
         startDate = startDate.withHourOfDay(0);
-        endDate = endDate.withHourOfDay(23);
+        endDate = endDate.plusDays(1);
 
         String sD = fmt.print(startDate);
         String eD = fmt.print(endDate);
@@ -149,10 +149,8 @@ public class ExcelExportController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate,
             HttpServletResponse res) throws IOException {
 
-        endDate = endDate.plusDays(1);
-
         String sD = fmt.print(startDate);
-        String eD = fmt.print(endDate);
+        String eD = fmt.print(endDate.plusDays(1));
 
         List<Map> data = reportService.getCellSuggestionWorkTimeDetailExcel(sD, eD);
         quickGenerateExcel(data, res, 8);
@@ -165,10 +163,8 @@ public class ExcelExportController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate,
             HttpServletResponse res) throws IOException {
 
-        endDate = endDate.plusDays(1);
-
         String sD = fmt.print(startDate);
-        String eD = fmt.print(endDate);
+        String eD = fmt.print(endDate.plusDays(1));
 
         List<Map> data = reportService.getTestSuggestionWorkTimeDetailExcel(sD, eD);
         quickGenerateExcel(data, res, 8);
@@ -182,13 +178,26 @@ public class ExcelExportController {
             @RequestParam int lineTypeId,
             HttpServletResponse res) throws IOException {
 
-        endDate = endDate.plusDays(1);
-
         String sD = fmt.print(startDate);
-        String eD = fmt.print(endDate);
+        String eD = fmt.print(endDate.plusDays(1));
 
         List<Map> data = reportService.getSuggestionWorkTimeDetailExcel(sD, eD, lineTypeId);
         quickGenerateExcel(data, res, 7, 9);
+    }
+
+    @RequestMapping(value = "/getPackingSuggestionWorkTimeDetailExcel", method = {RequestMethod.GET})
+    @ResponseBody
+    protected void getPackingSuggestionWorkTimeDetailExcel(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate,
+            @RequestParam int lineTypeId,
+            HttpServletResponse res) throws IOException {
+
+        String sD = fmt.print(startDate);
+        String eD = fmt.print(endDate.plusDays(1));
+
+        List<Map> data = reportService.getPackingSuggestionWorkTimeDetailExcel(sD, eD, lineTypeId);
+        quickGenerateExcel(data, res, 9);
     }
 
     private void quickGenerateExcel(List<Map> data, HttpServletResponse res, Integer... i) throws IOException {
