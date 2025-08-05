@@ -95,12 +95,12 @@
                 btn_search = {
                     text: filterOptions[filterState].text,
                     action: function (e, dt, node, config) {
-                        
+
                         const flagIndex = dt.columns().indexes().length - 2;
                         const searchKey = filterOptions[filterState].search;
-                        dt.column(flagIndex).search(searchKey).draw();   
-                        
-                        const len_options = Object.keys(filterOptions).length;                                             
+                        dt.column(flagIndex).search(searchKey).draw();
+
+                        const len_options = Object.keys(filterOptions).length;
                         filterState = (filterState + 1) % len_options;
                         $(node).text(filterOptions[filterState].text);
                     }
@@ -194,6 +194,7 @@
 
                 setCustomButton();
 
+//                for debug
 //                $('#ffin').val(moment("2025-03-06").format('YYYY-MM-DD'));
 //                $('#fini').val(moment("2025-03-06").format('YYYY-MM-DD'));
             });
@@ -242,6 +243,7 @@
                         {data: "factor", title: "係數"},
                         {data: "timeCostSum", title: "累計工時", visible: false},
                         {data: "standardTime", title: "標工"},
+                        {data: "extraTime", title: "線外工時", visible: false},
                         {data: "opTimeAdjust", title: "建議工時"},
                         {data: "diffTime", title: "差異", visible: false},
                         {data: "diffTimeFactor", title: "差異X係數", visible: false},
@@ -253,7 +255,7 @@
                     "columnDefs": [
                         {
                             "type": "html",
-                            "targets": [4, 6, 7, 8],
+                            "targets": [7],
                             'render': function (data, type, full, meta) {
                                 if (data == null) {
                                     return 'n/a';
@@ -274,7 +276,6 @@
                             "targets": [-2],
                             'render': function (data, type, full, meta) {
                                 return data == 1 ? "下修" :
-//                                        data == -1 ? "上修" :
                                         "";
                             }
                         },
@@ -285,7 +286,6 @@
                             'render': function (data, type, full, meta) {
                                 let triangleClass =
                                         data == 1 ? "red-down-triangle-pseudo" :
-//                                        data == -1 ? "green-up-triangle-pseudo" :
                                         "";
                                 return '<span class="' + triangleClass + '"></span>';
                             }

@@ -9,6 +9,7 @@ import com.advantech.dao.db3.SqlViewDAO;
 import com.advantech.model.db1.Worktime;
 import com.advantech.model.view.db1.UserInfoRemote;
 import com.advantech.model.view.db3.WorktimeCobots;
+import com.advantech.model.db1.WorktimeExtras;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,6 +34,10 @@ public class SqlViewService {
 
     public List<WorktimeCobots> findCobots(List<String> modelNames) {
         return sqlViewDAO.findCobots(modelNames);
+    }
+
+    public List<WorktimeExtras> findExtras() {
+        return sqlViewDAO.findExtras();
     }
 
 }
