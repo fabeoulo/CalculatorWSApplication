@@ -375,13 +375,15 @@ public class TestDAO {
     }
 
     @Autowired
-    @Qualifier("sqlViewDAO3")
     private com.advantech.dao.db3.SqlViewDAO sqlViewDAO3;
 
 //    @Test
     @Transactional("tx3")
     @Rollback(true)
     public void testFindWorktimeFromRemote() {
+        List list0 = sqlViewDAO3.findExtras();
+        
+        
         List list = sqlViewDAO3.findWorktime();
 
         HibernateObjectPrinter.print(list.get(0));
@@ -447,8 +449,8 @@ public class TestDAO {
         List list = sqlViewDAO7.findWorktime();
 
         HibernateObjectPrinter.print(list.get(0));
-        
-         list = sqlViewDAO7.findWorktimeM6();
+
+        list = sqlViewDAO7.findWorktimeM6();
 
         HibernateObjectPrinter.print(list.get(0));
 

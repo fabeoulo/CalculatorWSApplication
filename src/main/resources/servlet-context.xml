@@ -320,8 +320,8 @@
         com.advantech.api
     " />
     
-    <!-- 要使用 @Transactional 時需要 -->
-    <!--<tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager"/>-->
+    <!-- 使用 @Transactional 時的預設值 -->
+    <tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager"/>
     
     <tx:annotation-driven />   
 
