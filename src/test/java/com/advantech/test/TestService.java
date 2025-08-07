@@ -716,6 +716,18 @@ public class TestService {
 
 //    @Test
 //    @Rollback(true)
+    public void testSqlViewService3() {
+        List l = sqlViewService.findExtras();
+        List<Map> l2 = sqlViewService.findPreAssyModule();
+
+        l.forEach(m -> {
+//            w.setId(0);
+//            worktimeService.insert(w);
+        });
+    }
+
+//    @Test
+//    @Rollback(true)
     public void testSyncWorktime() {
         List<Worktime> l = sqlViewService.findWorktime();
 

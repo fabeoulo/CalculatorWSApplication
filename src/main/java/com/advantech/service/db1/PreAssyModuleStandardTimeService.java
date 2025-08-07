@@ -10,6 +10,7 @@ import com.advantech.model.db1.Bab;
 import com.advantech.model.db1.Floor;
 import com.advantech.model.db1.PreAssyModuleStandardTime;
 import static com.google.common.base.Preconditions.checkArgument;
+import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class PreAssyModuleStandardTimeService {
     public List<PreAssyModuleStandardTime> findAll() {
         return dao.findAll();
     }
-    
+
     public List<PreAssyModuleStandardTime> findAllWithTypes() {
         return dao.findAllWithTypes();
     }
@@ -54,11 +55,12 @@ public class PreAssyModuleStandardTimeService {
     public int insertBySeries(String baseModelName, String targetModelName, Floor f) throws CloneNotSupportedException {
         List<PreAssyModuleStandardTime> l = dao.findByModelName(baseModelName);
         checkArgument(!l.isEmpty(), "Can't find data with modelName: " + baseModelName);
-        
+
         for (PreAssyModuleStandardTime p : l) {
             PreAssyModuleStandardTime clone = p.clone();
             clone.setModelName(targetModelName);
             clone.setId(0);
+            clone.setStandardTime(BigDecimal.ZERO);
             dao.insert(clone);
         }
         return 1;

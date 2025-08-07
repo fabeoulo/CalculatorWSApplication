@@ -17,6 +17,7 @@ import com.advantech.dao.db1.SqlViewDAO;
 import com.advantech.dao.db1.TagNameComparisonDAO;
 import com.advantech.helper.DateTimeGapFinder;
 import com.advantech.helper.HibernateObjectPrinter;
+import static com.advantech.helper.StringParser.defaultStringIfNull;
 import com.advantech.model.db1.Bab;
 import com.advantech.model.db1.BabPreAssyPcsRecord;
 import com.advantech.model.db1.BabSettingHistory;
@@ -31,6 +32,7 @@ import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import static com.google.common.collect.Lists.newArrayList;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -380,10 +383,20 @@ public class TestDAO {
 //    @Test
     @Transactional("tx3")
     @Rollback(true)
-    public void testFindWorktimeFromRemote() {
-        List list0 = sqlViewDAO3.findExtras();
-        
-        
+    public void testWorktimeSqlViewDAO() {
+//        List list0 = sqlViewDAO3.findExtras();
+
+        List<Map> list1 = sqlViewDAO3.findPreAssyModule();
+
+        for (Map m : list1.subList(0, 10)) {
+            String moduleName = defaultStringIfNull(m.get("moduleName"), "");
+            String moduleNo = defaultStringIfNull(m.get("moduleNo"), "");
+            String modelName = defaultStringIfNull(m.get("modelName"), "");
+            BigDecimal ct = new BigDecimal(defaultStringIfNull(m.get("ct"), "0"));
+
+            HibernateObjectPrinter.print(moduleName, moduleNo, modelName, ct);
+        }
+
         List list = sqlViewDAO3.findWorktime();
 
         HibernateObjectPrinter.print(list.get(0));

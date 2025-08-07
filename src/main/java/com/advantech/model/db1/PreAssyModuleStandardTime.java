@@ -39,6 +39,7 @@ public class PreAssyModuleStandardTime implements Serializable, Cloneable {
     private Date standardTimeModifyDate;
     private Integer totalOpTime;
     private Integer totalPcs;
+    private BigDecimal standardTimeRemote;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -139,6 +140,15 @@ public class PreAssyModuleStandardTime implements Serializable, Cloneable {
 
     public void setTotalPcs(Integer totalPcs) {
         this.totalPcs = totalPcs;
+    }
+
+    @Column(name = "standardTimeRemote", nullable = false, precision = 10, scale = 2)
+    public BigDecimal getStandardTimeRemote() {
+        return standardTimeRemote;
+    }
+
+    public void setStandardTimeRemote(BigDecimal standardTimeRemote) {
+        this.standardTimeRemote = standardTimeRemote;
     }
 
 }

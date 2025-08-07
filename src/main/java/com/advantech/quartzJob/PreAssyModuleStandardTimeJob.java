@@ -14,9 +14,12 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +29,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PreAssyModuleStandardTimeJob {
+
+    private static final Logger logger = LoggerFactory.getLogger(PreAssyModuleStandardTimeJob.class);
 
     @Autowired
     private PreAssyModuleStandardTimeService preAssyModuleStandardTimeService;
@@ -58,8 +63,8 @@ public class PreAssyModuleStandardTimeJob {
                         return false;
                     }
 
-                    int totalOpTime = p.getTotalOpTime() == null ? 0 : p.getTotalOpTime();
-                    int totalPcs = p.getTotalPcs() == null ? 0 : p.getTotalPcs();
+                    int totalOpTime = Optional.ofNullable(p.getTotalOpTime()).orElse(0);
+                    int totalPcs = Optional.ofNullable(p.getTotalPcs()).orElse(0);
                     String key = p.getModelName() + "_"
                             + p.getPreAssyModuleType().getName() + "_"
                             + p.getPreAssyModuleType().getLineType().getName();
@@ -86,6 +91,7 @@ public class PreAssyModuleStandardTimeJob {
 
         logHistory(toUpdate);
         preAssyModuleStandardTimeService.update(toUpdate);
+        logger.info("Update size: " + toUpdate.size());
     }
 
     private void logHistory(List<PreAssyModuleStandardTime> toUpdate) {
