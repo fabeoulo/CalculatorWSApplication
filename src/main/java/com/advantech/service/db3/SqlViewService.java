@@ -11,6 +11,7 @@ import com.advantech.model.view.db1.UserInfoRemote;
 import com.advantech.model.view.db3.WorktimeCobots;
 import com.advantech.model.db1.WorktimeExtras;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -40,4 +41,7 @@ public class SqlViewService {
         return sqlViewDAO.findExtras();
     }
 
+    public List<Map> findPreAssyModule() {
+        return sqlViewDAO.findPreAssyModule();
+    }
 }

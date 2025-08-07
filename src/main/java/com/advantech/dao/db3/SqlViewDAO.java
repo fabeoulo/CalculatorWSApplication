@@ -9,6 +9,7 @@ import com.advantech.model.db1.Worktime;
 import com.advantech.model.view.db3.WorktimeCobots;
 import com.advantech.model.db1.WorktimeExtras;
 import java.util.List;
+import java.util.Map;
 import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
@@ -44,6 +45,14 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
                 .createSQLQuery("SELECT model_name modelName, floor_id floorId, work_center workCenter, unit_no unitNo, ct "
                         + "FROM vw_Atmc_M9ie_WorktimeExtra ")
                 .setResultTransformer(Transformers.aliasToBean(WorktimeExtras.class))
+                .list();
+    }
+
+    public List<Map> findPreAssyModule() {
+        return super.getSession()
+                .createSQLQuery("SELECT model_name modelName, module_no moduleNo, work_center workCenter, module_item_name moduleName, ct "
+                        + "FROM vw_Atmc_M9ie_WorktimePreAssyModeule ")
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .list();
     }
 

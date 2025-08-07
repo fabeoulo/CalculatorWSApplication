@@ -383,6 +383,20 @@
     </bean>
     
     <!--
+        將M9工時大表的PreAssyModule標工記錄儲存到DB
+    -->    
+    <bean name="SyncPreAssyModuleFromRemote-Job" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="syncPreAssyModuleFromRemote" />
+        <property name="targetMethod" value="execute"/>  
+        <property name="concurrent" value="false"/>
+    </bean>
+    
+    <bean id="SyncPreAssyModuleFromRemote-Trig" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="SyncPreAssyModuleFromRemote-Job" />
+        <property name="cronExpression" value="0 0 08 ? * MON-SAT *" />
+    </bean>
+    
+    <!--
         每週計算前置模組工時 UPDATE PreAssyModuleStandardTime table
     -->    
     <bean name="PreAssyModuleStandardTimeJob-Job" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -438,6 +452,7 @@
                 <ref bean="SyncLineUserReference-Trig"/>-->
                 <ref bean="SyncUserFromRemote-Trig"/>
                 <ref bean="SyncWorktimeFromRemote-Trig"/>
+                <ref bean="SyncPreAssyModuleFromRemote-Trig"/>
                 
                 <!--<ref bean="SaveMesCountRecord-Trig"/>--> 
                 <!--<ref bean="CountermeasureAlarm-Trig"/>-->                

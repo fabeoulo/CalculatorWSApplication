@@ -27,6 +27,7 @@ public class PreAssyModuleType implements java.io.Serializable {
     private int id;
     private String name;
     private LineType lineType;
+    private String moduleNo;
 
     @JsonIgnore
     private Set<PreAssyModuleStandardTime> preAssyModuleStandardTimes = new HashSet<>(0);
@@ -37,9 +38,10 @@ public class PreAssyModuleType implements java.io.Serializable {
     public PreAssyModuleType() {
     }
 
-    public PreAssyModuleType(int id, String name) {
-        this.id = id;
+    public PreAssyModuleType(String name, LineType lineType, String moduleNo) {
         this.name = name;
+        this.lineType = lineType;
+        this.moduleNo = moduleNo;
     }
 
     @Id
@@ -62,6 +64,15 @@ public class PreAssyModuleType implements java.io.Serializable {
         this.name = name;
     }
 
+    @Column(name = "[moduleNo]", length = 20)
+    public String getModuleNo() {
+        return moduleNo;
+    }
+
+    public void setModuleNo(String moduleNo) {
+        this.moduleNo = moduleNo;
+    }
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "preAssyModuleType")
     public Set<PreAssyModuleStandardTime> getPreAssyModuleStandardTimes() {
         return preAssyModuleStandardTimes;
@@ -80,8 +91,6 @@ public class PreAssyModuleType implements java.io.Serializable {
     public void setLineType(LineType lineType) {
         this.lineType = lineType;
     }
-    
-    
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "Bab_PreAssyModuleType_REF", joinColumns = {

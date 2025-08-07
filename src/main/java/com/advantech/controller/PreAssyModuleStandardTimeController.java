@@ -10,6 +10,7 @@ import com.advantech.datatable.DataTableResponse;
 import com.advantech.helper.SecurityPropertiesUtils;
 import com.advantech.model.db1.PreAssyModuleStandardTime;
 import com.advantech.model.db1.User;
+import com.advantech.quartzJob.SyncPreAssyModuleFromRemote;
 import com.advantech.service.db1.PreAssyModuleStandardTimeService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,9 @@ public class PreAssyModuleStandardTimeController {
 
     @Autowired
     private PreAssyModuleStandardTimeService service;
+
+    @Autowired
+    private SyncPreAssyModuleFromRemote syncJob;
 
     @RequestMapping(value = "/findAll", method = {RequestMethod.GET})
     @ResponseBody
@@ -65,6 +69,13 @@ public class PreAssyModuleStandardTimeController {
     protected String delete(@RequestParam int id) {
         PreAssyModuleStandardTime pojo = service.findByPrimaryKey(id);
         service.delete(pojo);
+        return "success";
+    }
+
+    @RequestMapping(value = "/syncPreAssyModule", method = {RequestMethod.POST})
+    @ResponseBody
+    protected String syncPreAssyModule() {
+        syncJob.execute();
         return "success";
     }
 

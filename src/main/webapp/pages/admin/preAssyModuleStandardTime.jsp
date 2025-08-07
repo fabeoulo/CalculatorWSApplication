@@ -62,7 +62,7 @@
                 var tableRow, typeTableRow;
                 var typeOptions = [];
                 var lineTypeOptions = [];
-                var standardTimeEditable = '${isAdmin || isMfgOper || isBackDoor4876 || isIeOper}';
+                var standardTimeEditable = ${isAdmin || isMfgOper || isBackDoor4876 || isIeOper};
                 var typeMap = new Map();
                 setTypeOptions();
                 setLineTypeOptions();
@@ -76,6 +76,7 @@
                     //validate that name and last name were entered
 
                     var modelName = $("#modelName").val();
+                    var standardTimeRemote = $("#standardTimeRemote").val();
                     var standardTime = $("#standardTime").val();
                     var moduleId = $("#preAssyModuleType\\.id").val();
                     var errorMsg = "";
@@ -88,9 +89,12 @@
                     }
 
                     if (!standardTime) {
-//                        errorMsg += "\n* enter the standardTime";
                         standardTime = 0;
                     }
+                    if (!standardTimeRemote) {
+                        standardTimeRemote = 0;
+                    }
+
 
                     var stModifyDate;
                     if (tableRow && tableRow.standardTimeModifyDate) {
@@ -111,6 +115,7 @@
                             data: {
                                 id: $("#currentID").val(),
                                 modelName: modelName,
+                                standardTimeRemote: standardTimeRemote,
                                 standardTime: standardTime,
                                 "preAssyModuleType.id": moduleId,
                                 sopName: $("#sopName").val(),
@@ -119,7 +124,7 @@
                                 standardTimeModifyDate: stModifyDate
                             },
                             success: function (response) {
-                                if (response == "success") {
+                                if (response === "success") {
                                     table.ajax.reload(); //refresh the datatable to reflect the changes    
                                     $('#addEditRemark').modal('hide'); //hide the popup window
                                     alert(response);
@@ -156,7 +161,7 @@
                                 targetModelName: $("#targetModelName").val()
                             },
                             success: function (response) {
-                                if (response == "success") {
+                                if (response === "success") {
                                     table.ajax.reload(); //refresh the datatable to reflect the changes    
                                     $('#addEditRemark2').modal('hide'); //hide the popup window
                                     alert(response);
@@ -190,10 +195,11 @@
                             data: {
                                 id: $("#currentID2").val(),
                                 name: name,
-                                "lineType.id": $("#lineType\\.id").val()
+                                "lineType.id": $("#lineType\\.id").val(),
+                                "moduleNo": $("#moduleNo").val()
                             },
                             success: function (response) {
-                                if (response == "success") {
+                                if (response === "success") {
                                     typeTable.ajax.reload(); //refresh the datatable to reflect the changes    
                                     $('#addEditRemark3').modal('hide'); //hide the popup window
                                     alert(response);
@@ -210,6 +216,7 @@
                     var data = table.row($(this).parents('tr')).data();
                     clearForm($("#addEditRemark"));
                     $("#modelName").val(data.modelName);
+                    $("#standardTimeRemote").val(data.standardTimeRemote);
                     $("#standardTime").val(data.standardTime);
                     $("#currentID").val(data.id);
                     $("#preAssyModuleType\\.id").val(data.preAssyModuleType.id);
@@ -226,13 +233,16 @@
                     $("#currentID2").val(data.id);
                     $("#preAssyModuleType\\.name").val(data.name);
                     $("#lineType\\.id").val(data.lineType.id);
+                    $("#moduleNo").val(data.moduleNo);
                     $('#addEditRemark3').modal('show');
 
                     typeTableRow = data;
                 });
-                if (standardTimeEditable == 'false') {
-                    $("#standardTimeField").hide().attr("disabled", true);
+
+                if (standardTimeEditable === false) {
+                    $("#syncPreAssy").hide().attr("disabled", true);
                 }
+                $(".disableField").find("*").attr("disabled", true);
 
                 function clearForm(dialog) {//blank the add/edit popup form
                     dialog.find(":text, textarea, input[type='number']").val("");
@@ -305,8 +315,14 @@
                                 }
                             },
                             {
+                                "targets": [4],
+                                'render': function (data, type, full, meta) {
+                                    return (data / 60).toFixed(2);
+                                }
+                            },
+                            {
                                 "type": "html",
-                                "targets": 6,
+                                "targets": 7,
                                 "width": "10%",
                                 'render': function (data, type, row) {
                                     if (data != null)
@@ -320,7 +336,8 @@
                             {data: "id", title: "id", visible: false},
                             {data: "modelName", title: "機種"},
                             {data: "preAssyModuleType.id", title: "模組種類"},
-                            {data: "standardTime", title: "標工(秒)"},
+                            {data: "standardTimeRemote", title: "標工"},
+                            {data: "standardTime", title: "平均工時"},
                             {data: "sopName", title: "文件編號"},
                             {data: "sopPage", title: "頁數"},
                             {data: "standardTimeModifyDate", title: "工時更新"},
@@ -328,13 +345,14 @@
                                 "data": "id",
                                 "width": "20%",
                                 "title": "action",
+                                visible: standardTimeEditable,
                                 "render": function (data, type, full, meta) { //this column is redefinied to show the action buttons
                                     return '<div class="btn-toolbar"><button class="btn btn-sm btn-primary EditButton">Edit</button><button class="btn btn-sm btn-danger DeleteButton">Delete</button></div>';
                                 }
                             }
                         ],
                         "pageLength": 20,
-                        "order": [[6, 'desc'], [1, 'asc'], [2, 'asc']]
+                        "order": [[7, 'desc'], [1, 'asc'], [2, 'asc']]
                     });
                     typeTable = $('#preAssyModuleType-info').DataTable({
                         dom: 'Bfrtip',
@@ -373,10 +391,12 @@
                             {data: "id", title: "id", visible: false},
                             {data: "name", title: "模組"},
                             {data: "lineType.id", title: "製程"},
+                            {data: "moduleNo", title: "模組代號"},
                             {
                                 "data": "id",
                                 "width": "20%",
                                 "title": "action",
+                                visible: standardTimeEditable,
                                 "render": function (data, type, full, meta) { //this column is redefinied to show the action buttons
                                     return '<div class="btn-toolbar"><button class="btn btn-sm btn-primary EditButton">Edit</button><button class="btn btn-sm btn-danger DeleteButton">Delete</button></div>';
                                 }
@@ -488,7 +508,7 @@
                                 id: data.id
                             },
                             success: function (response) {
-                                if (response == "success") {
+                                if (response === "success") {
                                     table.ajax.reload();
                                     alert("Record deleted successfully.");
                                 }
@@ -514,9 +534,30 @@
                                 id: data.id
                             },
                             success: function (response) {
-                                if (response == "success") {
+                                if (response === "success") {
                                     typeTable.ajax.reload();
                                     alert("Record deleted successfully.");
+                                }
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                alert(xhr.responseText);
+                            }
+                        });
+                    }
+                });
+
+                $("#syncPreAssy").click(function () {
+                    if (confirm('Sync now?')) {
+                        $.ajax({
+                            method: "POST",
+                            url: "<c:url value="/PreAssyModuleStandardTimeController/syncPreAssyModule" />",
+                            dataType: "html",
+                            data: {},
+                            success: function (response) {
+                                if (response === "success") {
+                                    table.ajax.reload();
+                                    typeTable.ajax.reload();
+                                    alert("Sync successfully.");
                                 }
                             },
                             error: function (xhr, ajaxOptions, thrownError) {
@@ -531,7 +572,9 @@
     <body>
         <c:import url="/temp/admin-header.jsp" />
         <div id="wigetCtrl" class="container">
-
+            <div class="btn-toolbar">
+                <button id="syncPreAssy" class="btn btn-sm btn-info EditButton">Sync PreAssy Module</button>
+            </div>
             <div class="row">
                 <div class="alert">
                     <h3>Model前置模組工時維護</h3>
@@ -575,8 +618,14 @@
                                             <select id="preAssyModuleType.id" name="preAssyModuleType.id" class="form-control"></select>
                                         </td>
                                     </tr>
-                                    <tr id="standardTimeField">
+                                    <tr class="disableField">
                                         <td>標工</td>
+                                        <td>
+                                            <input type="number" id="standardTimeRemote" name="standardTimeRemote" class="form-control">
+                                        </td>
+                                    </tr>
+                                    <tr class="disableField">
+                                        <td>平均工時</td>
                                         <td>
                                             <input type="number" id="standardTime" name="standardTime" class="form-control">
                                         </td>
@@ -664,6 +713,12 @@
                                         <td>製程</td>
                                         <td>
                                             <select id="lineType.id" name="lineType.id" class="form-control"></select>
+                                        </td>
+                                    </tr>
+                                    <tr  class="disableField">
+                                        <td>模組代號</td>
+                                        <td>
+                                            <input id="moduleNo" name="moduleNo" class="form-control"></input>
                                         </td>
                                     </tr>
                                 </table>       

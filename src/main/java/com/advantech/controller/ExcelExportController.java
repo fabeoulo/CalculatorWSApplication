@@ -132,7 +132,7 @@ public class ExcelExportController {
     @ResponseBody
     protected void getPreAssyModuleStandardTimeSetting(HttpServletResponse res) throws IOException {
         List<Map> data = reportService.getPreAssyModuleStandardTimeSetting();
-        quickGenerateExcel(data, res);
+        quickGenerateExcel(data, res, 3, 4);
     }
 
     @RequestMapping(value = "/getAssyModelSopStandardTimeSetting", method = {RequestMethod.GET})
@@ -155,7 +155,7 @@ public class ExcelExportController {
         List<Map> data = reportService.getCellSuggestionWorkTimeDetailExcel(sD, eD);
         quickGenerateExcel(data, res, 8);
     }
-    
+
     @RequestMapping(value = "/getTestSuggestionWorkTimeDetailExcel", method = {RequestMethod.GET})
     @ResponseBody
     protected void getTestSuggestionWorkTimeDetailExcel(
