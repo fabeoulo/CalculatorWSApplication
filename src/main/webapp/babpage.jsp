@@ -179,7 +179,7 @@
                 });
 
                 $("select, :text, :button").addClass("form-control");
-                $("#reSearch, #people, #firstStationWiget, #otherStationWiget, #saveNotice").hide();
+                $("#reSearch, #people, #firstStationWiget, #otherStationWiget, #saveNotice, #pre-moduleType").hide();
 
                 var userInfoCookie = $.cookie(userInfoCookieName);
                 var isUserInfoExist = (userInfoCookie != null);
@@ -282,7 +282,7 @@
                     }
                 });
 
-                $("#ispre").on("change, click", function () {
+                $("#ispre").on("change", function () {
                     var sel = $("#pre-moduleType");
                     var modelName = $("#modelName").val();
                     if ($(this).prop("checked") && modelName != "" && modelName != serverModelNameNotFoundMessage) {
@@ -295,10 +295,9 @@
                     }
                 });
 
-                $("#pre-moduleType").hide();
-
                 //Step 2 event
-                $("#po").on("keyup", function () {
+                $("#po").on("change", function () {
+                    $("#step2").block({message: "Please wait..."});
                     getModel($(this).val(), $("#modelName"));
                 });
 
@@ -651,27 +650,31 @@
             function getModel(text, obj) {
                 var reg = "^[0-9a-zA-Z]+$";
                 if (text != "" && text.match(reg)) {
-                    window.clearTimeout(hnd);
-                    hnd = window.setTimeout(function () {
-                        $.ajax({
-                            type: "GET",
-                            url: "ModelController/findModelNameByPo",
-                            data: {
-                                po: text.trim()
-                            },
-                            dataType: "html",
-                            success: function (response) {
-                                obj.val(response);
-                                $("#reSearch").show();
-                                $("#ispre").prop("checked", false);
-                            },
-                            error: function () {
-                                showMsg(serverErrorConnMessage);
-                            }
-                        });
-                    }, 1000);
+                    $.ajax({
+                        type: "GET",
+                        url: "ModelController/findModelNameBySap",
+                        data: {
+                            po: text.trim()
+                        },
+                        dataType: "html",
+                        success: function (response) {
+                            obj.val(response);
+                            $("#reSearch").show();
+                            $("#ispre").prop("checked", false).change();
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            obj.val("");
+                            console.log(xhr.responseText);
+                            console.log(ajaxOptions); //ajaxOptions==status?
+                            showMsg(serverErrorConnMessage);
+                        },
+                        complete: function (xhr, status) {
+                            $("#step2").unblock();
+                        }
+                    });
                 } else {
                     obj.val("");
+                    $("#step2").unblock();
                 }
             }
 

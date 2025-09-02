@@ -31,6 +31,15 @@ import static com.advantech.helper.ShiftScheduleUtils.*;
 import com.advantech.webservice.atmc.AtmcEmployeeUtils;
 import com.advantech.webservice.mes.UploadType;
 import com.google.common.base.CharMatcher;
+import com.sap.conn.jco.JCoDestination;
+import com.sap.conn.jco.JCoDestinationManager;
+import com.sap.conn.jco.JCoException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Properties;
 import static oracle.security.pki.resources.OraclePKICmd.p;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.Period;
@@ -58,7 +67,65 @@ public class TestClass {
 
     List<StopWatch> temp_L = new ArrayList();
 
-    @Test
+//    @Test
+    public void testFilePath() throws JCoException, URISyntaxException {
+        String fileName = "SAPMES" + ".jcoDestination";
+
+        File destCfg = new File(fileName);
+        if (destCfg.exists()) {
+            log.info("找到設定檔 " + fileName);
+            try {
+                log.info("file: '" + destCfg.getAbsolutePath() + "' getAbsolutePath");
+                log.info("file: '" + destCfg.getCanonicalPath() + "' getCanonicalPath");
+            } catch (Exception e) {
+                log.error("Fail at configFile.getCanonicalPath(). ");
+                log.error(e.getMessage(), e);
+            }
+        } else {
+            String t = "!configFile.exists(";
+        }
+
+        URL resourceUrl = getClass().getClassLoader().getResource(fileName);
+        try {
+            File configFile = new File(resourceUrl.toURI());
+            if (configFile.exists()) {
+                log.info("file: '" + configFile.getAbsolutePath() + "' getAbsolutePath");
+                log.info("file: '" + configFile.getCanonicalPath() + "' getCanonicalPath");
+            } else {
+                try ( FileOutputStream fos = new FileOutputStream(configFile, false)) {
+                    Properties connectProperties = getDefaultPropertiesSettings();
+                    connectProperties.store(fos, "sap client test");
+                }
+                log.info("file: '" + configFile.getAbsolutePath() + "' written");
+            }
+        } catch (URISyntaxException | IOException e) {
+            throw new RuntimeException("Unable to create the destination files", e);
+        }
+
+        JCoDestination connection = JCoDestinationManager.getDestination(fileName);
+
+//        if (resourceUrl != null) {
+//            File configFile = new File(resourceUrl.toURI());
+//            if (configFile.exists()) {
+//                // 可以正常使用 File
+//            }
+//        }
+    }
+
+    private Properties getDefaultPropertiesSettings() {
+        Properties jcoPropeties = new Properties();
+        jcoPropeties.setProperty("jco.client.ashost", "172.20.3.6");// 服务器
+        jcoPropeties.setProperty("jco.client.sysnr", "06"); // 系统编号
+        jcoPropeties.setProperty("jco.client.client", "168"); // SAP集团
+        jcoPropeties.setProperty("jco.client.user", "MES.ACL"); // SAP用户名
+        jcoPropeties.setProperty("jco.client.passwd", "MESMES"); // 密码
+        jcoPropeties.setProperty("jco.client.lang", "ZF"); // 登录语言:ZH EN
+        jcoPropeties.setProperty("jco.destination.pool_capacity", "3"); // 最大连接数
+        jcoPropeties.setProperty("jco.destination.peak_limit", "10"); // 最大连接线程
+        return jcoPropeties;
+    }
+
+//    @Test
     public void test() {
         DateTime currentTime = new DateTime();
         currentTime = currentTime.withMillisOfDay(0);
@@ -88,7 +155,7 @@ public class TestClass {
         System.out.println(key);
     }
 
-    @Test
+//    @Test
     public void testEnum() {
         UploadType ut = UploadType.UPDATE;
         System.out.println(ut.toString());
@@ -110,7 +177,7 @@ public class TestClass {
     @Autowired
     private AtmcEmployeeUtils employeeUtils;
 
-    @Test
+//    @Test
     public void testEz() throws Exception {
         String json = employeeUtils.getUser("A-10376");
         JSONArray jsonArray = new JSONArray(json);
@@ -232,7 +299,7 @@ public class TestClass {
         return rest.getStart().compareTo(d) * d.compareTo(rest.getEnd()) >= 0;
     }
 
-    @Test
+//    @Test
     public void testMap() throws Exception {
         String url = "http://172.22.250.120:7878/v1/Employee/" + "A-7568";
         String url2 = "http://172.22.250.120:7878/v1/Employee/login";
@@ -334,7 +401,7 @@ public class TestClass {
         });
     }
 
-    @Test
+//    @Test
     public void testShiftScheduleUtils2() {
         DatetimeGenerator ge = new DatetimeGenerator("yyyy-MM-dd HH:mm");
         DateTime now = DateTime.now().withTime(8, 30, 0, 0);
@@ -344,7 +411,7 @@ public class TestClass {
         System.out.printf("%s %s to %s \r\n ", shift.toString(), ge.dateFormatToString(sd), ge.dateFormatToString(ed));
     }
 
-    @Test
+//    @Test
     public void testPattern() {
         String testString = "45F";
         String testString2 = "5F";

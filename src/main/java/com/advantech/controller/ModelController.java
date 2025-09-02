@@ -7,6 +7,7 @@
 package com.advantech.controller;
 
 import com.advantech.converter.FactoryControllerConverter;
+import com.advantech.sap.SapService;
 import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
 import java.util.regex.Matcher;
@@ -37,9 +38,24 @@ public class ModelController {
     @Autowired
     private WebServiceRV rv;
 
+    @Autowired
+    private SapService sapService;
+
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
         dataBinder.registerCustomEditor(Factory.class, new FactoryControllerConverter());
+    }
+
+    @RequestMapping(value = "/findModelNameBySap", method = {RequestMethod.GET})
+    @ResponseBody
+    protected String findModelNameBySap(@RequestParam String po) {
+        String modelName = "";
+        try {
+            modelName = sapService.retrievePoModel(po);
+        } catch (Exception e) {
+            return MODELNAME_NOT_FOUND_MESSAGE;
+        }
+        return modelName;
     }
 
     //Default find M3's modelName when user not present factory name

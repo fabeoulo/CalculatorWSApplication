@@ -1,0 +1,10 @@
+#sap client test
+#Tue Sep 02 16:05:07 CST 2025
+jco.client.lang=ZF
+jco.destination.peak_limit=10
+jco.client.client=168
+jco.client.passwd=MESMES
+jco.client.user=MES.ACL
+jco.client.sysnr=06
+jco.destination.pool_capacity=3
+jco.client.ashost=172.20.3.6
