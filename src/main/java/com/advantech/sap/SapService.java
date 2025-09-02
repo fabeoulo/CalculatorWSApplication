@@ -1,0 +1,141 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.advantech.sap;
+
+import com.advantech.webservice.Factory;
+import com.google.common.base.CharMatcher;
+import com.sap.conn.jco.JCoException;
+import com.sap.conn.jco.JCoFunction;
+import com.sap.conn.jco.JCoTable;
+import java.math.BigDecimal;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+/**
+ *
+ * @author Wei.Cheng
+ */
+@Service
+public class SapService {
+
+    @Autowired
+    private SapQueryPort port;
+
+    public String retrievePoModel(String po) throws JCoException, URISyntaxException {
+
+        JCoFunction function = port.getMaterialInfo(po, null);
+
+        JCoTable masterTable = function.getTableParameterList().getTable("ZWOMASTER");
+
+        String modelName = masterTable.getString("MATNR").trim();
+        return CharMatcher.is('0').trimLeadingFrom(modelName);
+    }
+
+    public List<SapMaterialInfo> retrieveSapMaterialInfos(String po, String... materialNumbers) throws JCoException, URISyntaxException {
+
+        List<SapMaterialInfo> result = new ArrayList();
+
+        JCoFunction function = port.getMaterialInfo(po, null);
+        JCoTable masterTable = function.getTableParameterList().getTable("ZWOMASTER");//调用接口返回结果
+        JCoTable detailTable = function.getTableParameterList().getTable("ZWODETAIL");//调用接口返回结果
+
+        if (detailTable.getNumRows() == 0) {
+            return result;
+        }
+
+        String modelName = detailTable.getString("BAUGR").trim();
+        modelName = CharMatcher.is('0').trimLeadingFrom(modelName);
+
+        //Retrieve model name info
+        for (int i = 0; i < detailTable.getNumRows(); i++) {
+            detailTable.setRow(i);
+
+            String materialNumber = detailTable.getString("MATNR");
+            materialNumber = CharMatcher.is('0').trimLeadingFrom(materialNumber);
+
+            if (Arrays.stream(materialNumbers).anyMatch(materialNumber::equals)) {
+
+                SapMaterialInfo pojo = new SapMaterialInfo();
+                pojo.setPo(po);
+                pojo.setModelName(modelName);
+                pojo.setMaterialNumber(materialNumber);
+                pojo.setAmount(new BigDecimal(detailTable.getString("BDMNG").trim()));
+                pojo.setStorageSpaces(detailTable.getString("STORLOC_BIN").trim());
+
+                pojo.setWerk(detailTable.getString("WERKS").trim());
+                Factory f = Factory.valueOf(detailTable.getString("WERKS").trim());
+
+                JCoFunction function2 = port.getMaterialPrice(materialNumber, f);
+                BigDecimal unitPrice = this.retrievePriceFromTable(function2.getTableParameterList().getTable("LE_ZSD_COST"));
+                pojo.setUnitPrice(unitPrice);
+                pojo.setPoQty(new BigDecimal(masterTable.getString("GSMNG")));
+                result.add(pojo);
+            }
+        }
+
+        return result;
+    }
+
+    private BigDecimal retrievePriceFromTable(JCoTable table) {
+        for (int i = 0; i < table.getNumRows(); i++) {
+            table.setRow(i);
+            return new BigDecimal(table.getString("PE_STPRS"));
+        }
+        return BigDecimal.ZERO;
+    }
+//
+//    public Map<String, BigDecimal> getStockMap(List<Requisition> l) throws Exception {
+//        JCoFunction function = port.getMaterialStock(l);
+//        JCoTable output = function.getTableParameterList().getTable("ZMARD_OUTPUT");
+//        Map<String, BigDecimal> stockMap = new HashMap<>();
+//        for (int i = 0; i < output.getNumRows(); i++) {
+//            output.setRow(i);
+//            String mat = removeLeadingZeros(output.getString("MATNR"));
+//            stockMap.merge(mat, new BigDecimal(output.getString("LABST")), BigDecimal::add);
+//        }
+//        return stockMap;
+//    }
+
+    private String removeLeadingZeros(String str) {
+        return str.replaceAll("^0+", "");
+    }
+//
+//    public Map<String, BigDecimal> getStockMapWithGoodLgort(List<Requisition> l) throws Exception {
+//        port.setLgortGood();
+//        return getStockMap(l);
+//    }
+//
+//    public Map<String, String> getMrpCodeMap(List<Requisition> rl) throws Exception {
+//        List<SapMrpTbl> input = rl.stream()
+//                .map(l -> new SapMrpTbl(l.getMaterialNumber(), l.getWerk()))
+//                .collect(Collectors.toList());
+//        return getMrpCodeByTblin(input);
+//    }
+//
+//    public Map<String, String> getMrpCodeByTblin(List<SapMrpTbl> input) throws Exception {
+//
+//        JCoFunction function = port.getMrpCode(input);
+//        JCoTable output = function.getTableParameterList().getTable("TBLOUT");
+//
+//        Map<String, String> MrpMap = new HashMap<>();
+//        for (int i = 0; i < output.getNumRows(); i++) {
+//            output.setRow(i);
+//            String mat = removeLeadingZeros(output.getString("MATNR"));
+//            String key = mat + "," + output.getString("WERKS");
+//            MrpMap.merge(key, output.getString("DISPO"), (oldValue, newValue) -> {
+//                return oldValue;
+//            });
+//        }
+//        return MrpMap;
+//    }
+}

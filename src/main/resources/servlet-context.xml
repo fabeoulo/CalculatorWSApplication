@@ -317,7 +317,8 @@
         com.advantech.facade,
         com.advantech.webservice,
         com.advantech.quartzJob,
-        com.advantech.api
+        com.advantech.api,
+        com.advantech.sap
     " />
     
     <!-- 使用 @Transactional 時的預設值 -->

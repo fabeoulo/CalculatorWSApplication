@@ -4,7 +4,7 @@
 
     <groupId>com.advantech</groupId>
     <artifactId>CalculatorWSApplication</artifactId>
-    <version>3.14.6</version>
+    <version>3.14.7</version>
     <packaging>war</packaging>
     
     <pluginRepositories>
@@ -217,7 +217,12 @@
             <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
-        
+        <dependency>
+            <groupId>com.sap.conn.jco</groupId>
+            <artifactId>sapjco3</artifactId>
+            <version>3.0.14</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
