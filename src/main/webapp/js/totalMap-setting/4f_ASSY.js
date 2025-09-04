@@ -3,16 +3,18 @@ var pYa = -0;
 
 var mapInfo = {
     titleName: "M棟4樓",
-    x: 30,
-    y: 415
+    x: 755,
+    y: 0
 };
 
 var titleGroup = [
-    {lineName: "L2", x: 50, y: 120},
-    {lineName: "LF", x: 870, y: 120},
-    {lineName: "L3", x: 150, y: 160},
-    {lineName: "L4", x: 150, y: 250},
-    {lineName: "LJ", x: 870, y: 180}
+    {lineName: "Pre_1", x: 0, y: 350},
+    {lineName: "Pre_2", x: 0, y: 410},
+    {lineName: "P_L1", x: 870, y: 160},
+    {lineName: "P_L2", x: 980, y: 160},
+    {lineName: "P_L3", x: 1045, y: 290},
+    {lineName: "P_L4", x: 1045, y: 360},
+    {lineName: "P_L5", x: 1045, y: 430}
 ];
 
 var testGroup = [
@@ -34,11 +36,13 @@ var testGroup = [
 ];
 
 var babGroup = [
-    {people: 6, x: 160, y: 120, lineName: "L2"},
-    {people: 3, x: 975, y: 120, lineName: "LF"},
-    {people: 6, x: 250, y: 170, lineName: "L3"},
-    {people: 6, x: 250, y: 270, lineName: "L4"},
-    {people: 3, x: 940, y: 180, lineName: "LJ"}
+    {people: 7, x: 100, y: 365, lineName: "Pre_1", reverse: true},
+    {people: 7, x: 100, y: 425, lineName: "Pre_2", reverse: true},
+    {people: 3, x: 850, y: 230, lineName: "P_L1", reverse: true},
+    {people: 3, x: 980, y: 230, lineName: "P_L2", reverse: true},
+    {people: 4, x: 885, y: 310, lineName: "P_L3", reverse: true},
+    {people: 3, x: 920, y: 380, lineName: "P_L4", reverse: true},
+    {people: 3, x: 920, y: 440, lineName: "P_L5", reverse: true}
 ];
 
 var fqcGroup = [
@@ -46,7 +50,5 @@ var fqcGroup = [
 
 var minTestTableNo = 1;
 var maxTestTableNo = 42; // no use now
-var omitTestTableNo = [];
-var nextTestTableNo;
 
 var sitefloor = 4;

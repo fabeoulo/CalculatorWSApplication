@@ -31,6 +31,7 @@ public class Worktime implements Serializable {
     private BigDecimal preAssy;
     private BigDecimal cleanPanel;
     private BigDecimal assy;
+    private BigDecimal t0;
     private BigDecimal t1;
     private BigDecimal t2;
     private BigDecimal t3;
@@ -121,6 +122,15 @@ public class Worktime implements Serializable {
 
     public void setAssy(BigDecimal assy) {
         this.assy = assy;
+    }
+
+    @Column(name = "t0")
+    public BigDecimal getT0() {
+        return t0;
+    }
+
+    public void setT0(BigDecimal t0) {
+        this.t0 = t0;
     }
 
     @Column(name = "t1")

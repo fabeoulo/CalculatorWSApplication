@@ -150,9 +150,9 @@
                 //Get values from cookie and setting html objects.
                 if (cellCookie != null) {
                     var cookieInfo = $.parseJSON(cellCookie);
-                    if (cookieInfo.floor == $("#userSitefloorSelect").val()) {
+                    $("#table").val(cookieInfo.tableNo);
+                    if (cookieInfo.floor == $("#userSitefloorSelect").val() && $("#table").val() && cookieInfo.tableNo > -1) {
                         $("#user_number").val(cookieInfo.jobnumber);
-                        $("#table").val(cookieInfo.tableNo);
                         lockWhenUserIsLogin();
                         $("#cookieinfo").html(cookieInfoDataSavedMessage);
                         $("#userInfo").html("<td>" + $("#table option:selected").text() + "</td>" + "<td>" + cookieInfo.jobnumber + "</td>");
@@ -401,19 +401,19 @@
                     </h4>
                 </div>
             </div>
-<!--            <div class="Div0">
-                <div id="userNotLoginArea" class="Div1">
-                    <fmt:message key="test.label.step4.notLoginMessageTitle" />
-                </div>
-                <div class="Div2">
-                    <p>
-                    <h3>
-                        <fmt:message key="cell.label.step4.title" />
-                    </h3>
-                    <fmt:message key="cell.label.step4.content" />
-                    </p>
-                </div>
-            </div>-->
+            <!--            <div class="Div0">
+                            <div id="userNotLoginArea" class="Div1">
+            <fmt:message key="test.label.step4.notLoginMessageTitle" />
+        </div>
+        <div class="Div2">
+            <p>
+            <h3>
+            <fmt:message key="cell.label.step4.title" />
+        </h3>
+            <fmt:message key="cell.label.step4.content" />
+            </p>
+        </div>
+    </div>-->
             <div class="Div0">
                 <div id="cookieinfo" class="Div1"></div>
                 <div class="Div2">

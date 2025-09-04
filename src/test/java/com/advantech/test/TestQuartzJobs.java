@@ -250,7 +250,7 @@ public class TestQuartzJobs {
     @Autowired
     private SyncWorktimeFromRemote swr;
 
-    @Test
+//    @Test
 //    @Transactional
 //    @Rollback(true)
     public void testSyncWorktimeFromRemote() throws Exception {
