@@ -272,6 +272,9 @@
                             if ('straight' in groupStatus) {
                                 style.width = "10px";
                             }
+                            if ('displayed' in groupStatus) {
+                                style.display = "none";
+                            }
                             $("#testArea>div")
                                     .eq(i)
                                     .append("<div></div>")
@@ -356,10 +359,6 @@
                                         .tooltipster({updateAnimation: null});
                                 loopCount++;
                             });
-                        }
-
-                        if (omitTestTableNo.includes(loopCount)) {
-                            loopCount = nextTestTableNo;
                         }
                     });
                 }

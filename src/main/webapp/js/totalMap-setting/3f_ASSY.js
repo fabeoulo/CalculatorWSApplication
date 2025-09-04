@@ -22,12 +22,15 @@ var testGroup = [
     {people: 6, x: 525, y: 125}, // group 1-6
     {people: 6, x: 525, y: 200}, // group 7-12
     {people: 4, x: 890, y: 360}, // group 13-16
+    {people: 4, x: 960, y: 440, displayed: false}, // group 17-20
     {people: 4, x: 960, y: 440}, // group 21-24
     {people: 2, x: 855, y: 235, straight: true, reverse: true},
     {people: 2, x: 855, y: 165, straight: true, reverse: true},
     {people: 2, x: 855, y: 90, straight: true, reverse: true},
     {people: 2, x: 1029, y: 360}, // group 31-32
-    {people: 2, x: 890, y: 440} // group 33-34
+    {people: 2, x: 890, y: 440}, // group 33-34
+    {people: 1, x: 1110, y: 385, displayed: false}, // group 35
+    {people: 2, x: 1110, y: 385, straight: true, reverse: true} // group 36-37
 ];
 
 var babGroup = [
@@ -44,8 +47,6 @@ var fqcGroup = [
 
 var minTestTableNo = 1;
 var maxTestTableNo = 30; // no use now
-var omitTestTableNo = [17, 18, 19, 20];
-var nextTestTableNo = 21;
 
 var sitefloor = 3; //for test table
 

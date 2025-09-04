@@ -54,7 +54,5 @@ var fqcGroup = [
 
 var minTestTableNo = 31;
 var maxTestTableNo = 36; // no use now
-var omitTestTableNo = [];
-var nextTestTableNo;
 
 var sitefloor = 3; //for test table

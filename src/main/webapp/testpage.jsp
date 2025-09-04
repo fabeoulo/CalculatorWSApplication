@@ -158,9 +158,9 @@
                 //Get values from cookie and setting html objects.
                 if (testLineTypeCookie != null) {
                     var cookieInfo = $.parseJSON(testLineTypeCookie);
-                    if (cookieInfo.floor == $("#userSitefloorSelect").val()) {
+                    $("#table").val(cookieInfo.tableNo);
+                    if (cookieInfo.floor == $("#userSitefloorSelect").val() && $("#table").val() && cookieInfo.tableNo > -1) {
                         $("#user_number").val(cookieInfo.jobnumber);
-                        $("#table").val(cookieInfo.tableNo);
                         lockWhenUserIsLogin();
                         $("#cookieinfo").html(cookieInfoDataSavedMessage);
                         $("#userInfo").html("<td>" + $("#table option:selected").text() + "</td>" + "<td>" + cookieInfo.jobnumber + "</td>");
