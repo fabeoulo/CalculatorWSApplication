@@ -239,6 +239,7 @@
                     },
                     "columns": [
                         {data: "modelName", title: "機種"},
+                        {data: "name", title: "模組"},
                         {data: "totalCnt", title: "累計數量"},
                         {data: "timeCostSum", title: "平均工時"},
                         {data: "standardTime", title: "標工"},
@@ -252,7 +253,7 @@
                     "columnDefs": [
                         {
                             "type": "html",
-                            "targets": [2, 3, 5, 6, 7],
+                            "targets": [4, 3, 8, 6, 7],
                             'render': function (data, type, full, meta) {
                                 if (data == null) {
                                     return 'n/a';
@@ -263,7 +264,7 @@
                         },
                         {
                             "type": "html",
-                            "targets": [4],
+                            "targets": [5],
                             'render': function (data, type, full, meta) {
                                 return data == null ? 'n/a' : getPercent(data);
                             }
