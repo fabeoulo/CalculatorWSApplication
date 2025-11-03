@@ -16,6 +16,8 @@ import com.advantech.model.db1.ReplyStatus;
 import com.advantech.model.db1.TagNameComparison;
 import com.advantech.model.view.db1.BabAvg;
 import com.advantech.model.view.db1.BabProcessDetail;
+import com.advantech.webapi.VlmApiClient;
+import com.advantech.webapi.model.VlmStation;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,6 +87,9 @@ public class BabService {
 
     @Autowired
     private SqlProcedureService procService;
+
+    @Autowired
+    private VlmApiClient vlmApiClient;
 
     @PostConstruct
     private void init() {
@@ -319,6 +324,9 @@ public class BabService {
             if (setting.getStation() == 2 && prev.getLastUpdateTime() == null) {
                 prev.setLastUpdateTime(now);
                 babSettingHistoryService.update(prev);
+
+                VlmLogOut(prev);
+
             } else {
                 checkArgument(prev.getLastUpdateTime() != null, "關閉失敗，請檢查上一站是否關閉(Fail. Please check preStation.)");
             }
@@ -327,8 +335,15 @@ public class BabService {
         setting.setLastUpdateTime(now);
         babSettingHistoryService.update(setting);
 
+        VlmLogOut(setting);
+
         return 1;
 
+    }
+
+    private void VlmLogOut(BabSettingHistory setting) {
+        VlmStation dto = new VlmStation(setting.getBab().getPo(), setting.getJobnumber(), setting.getTagName().getName(), 1, setting.getBab().getIspre() == 1);
+        vlmApiClient.sendLogoutAsync(dto);
     }
 
     // Manual and auto close

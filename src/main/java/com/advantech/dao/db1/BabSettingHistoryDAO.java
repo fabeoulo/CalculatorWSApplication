@@ -19,6 +19,7 @@ import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 import static com.advantech.helper.ShiftScheduleUtils.*;
+import org.hibernate.FetchMode;
 
 /**
  *
@@ -80,12 +81,16 @@ public class BabSettingHistoryDAO extends AbstractDao<Integer, BabSettingHistory
 
     public List<BabSettingHistory> findByBab(Bab b) {
         return super.createEntityCriteria()
+                .setFetchMode("tagName", FetchMode.JOIN)
+                .setFetchMode("bab", FetchMode.JOIN)
                 .add(Restrictions.eq("bab.id", b.getId()))
                 .list();
     }
 
     public BabSettingHistory findByBabAndStation(Bab b, int station) {
         return (BabSettingHistory) super.createEntityCriteria()
+                .setFetchMode("tagName", FetchMode.JOIN)
+                .setFetchMode("bab", FetchMode.JOIN)
                 .add(Restrictions.eq("bab.id", b.getId()))
                 .add(Restrictions.eq("station", station))
                 .uniqueResult();
@@ -97,8 +102,17 @@ public class BabSettingHistoryDAO extends AbstractDao<Integer, BabSettingHistory
                 .list();
     }
 
+    public List<BabSettingHistory> findProcessingWithBabAndTagName() {
+        return super.createEntityCriteria()
+                .setFetchMode("tagName", FetchMode.JOIN)
+                .setFetchMode("bab", FetchMode.JOIN)
+                .add(Restrictions.isNull("lastUpdateTime"))
+                .list();
+    }
+
     public BabSettingHistory findFirstProcessingByTagName(SensorTransform tagName) {
         return (BabSettingHistory) super.createEntityCriteria()
+                .setFetchMode("bab", FetchMode.JOIN)
                 .add(Restrictions.eq("tagName", tagName))
                 .add(Restrictions.isNull("lastUpdateTime"))
                 .setMaxResults(1)

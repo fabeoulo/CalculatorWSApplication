@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
 import static com.advantech.helper.ShiftScheduleUtils.*;
+import com.advantech.helper.ThreadUtil;
 import com.advantech.webservice.atmc.AtmcEmployeeUtils;
 import com.advantech.webservice.mes.UploadType;
 import com.google.common.base.CharMatcher;
@@ -66,6 +67,21 @@ public class TestClass {
     private static final Logger log = LoggerFactory.getLogger(TestClass.class);
 
     List<StopWatch> temp_L = new ArrayList();
+
+//    @Test
+    public void testMethodName() {
+
+        String methodName = ThreadUtil.currentMethod();
+
+        String methodNameO = new Object() {
+        }.getClass().getEnclosingMethod().getName();
+
+        String methodName3 = currentMethod();
+    }
+
+    private static String currentMethod() {
+        return Thread.currentThread().getStackTrace()[2].getMethodName(); // [2] means caller.
+    }
 
 //    @Test
     public void testFilePath() throws JCoException, URISyntaxException {

@@ -18,6 +18,8 @@ import com.advantech.service.db1.BabService;
 import com.advantech.service.db1.PreAssyModuleTypeService;
 import com.advantech.service.db1.TagNameComparisonService;
 import com.advantech.service.db1.UserService;
+import com.advantech.webapi.VlmApiClient;
+import com.advantech.webapi.model.VlmStation;
 import static com.google.common.base.Preconditions.*;
 import java.util.HashSet;
 import java.util.List;
@@ -70,6 +72,9 @@ public class BabFirstStationController {
     @Autowired
     private Endpoint6 ep6;
 
+    @Autowired
+    private VlmApiClient vlmApiClient;
+
     @RequestMapping(value = "/insert", method = {RequestMethod.POST})
     @ResponseBody
     protected String insert(
@@ -120,8 +125,15 @@ public class BabFirstStationController {
 //        } catch (MessagingException e) {
 //            log.error(e.getMessage());
 //        }
+//
+        VlmLogIn(new VlmStation(bab.getPo(), jobnumber, tagName, bab.getPeople(), bab.getIspre() == 1));
+
         ep6.syncAndEcho();
         return "success";
+    }
+
+    private void VlmLogIn(VlmStation dto) {
+        vlmApiClient.sendLoginAsync(dto);
     }
 
     private void sendMailAfterBabRunIn(Bab bab) throws MessagingException {

@@ -58,7 +58,7 @@ public class HandleUncloseBabProcess extends QuartzJobBean {
 
     private void saveUnclosedBab() {
         List<Bab> processingBabs = babService.findProcessing();
-        List<BabSettingHistory> processingBabSettings = babSettingHistoryService.findProcessing();
+        List<BabSettingHistory> processingBabSettings = babSettingHistoryService.findProcessingWithBabAndTagName();
 
         processingBabs.forEach((bab) -> {
             int babId = bab.getId();

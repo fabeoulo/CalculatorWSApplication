@@ -12,6 +12,7 @@ import java.util.Enumeration;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import reactor.core.scheduler.Schedulers;
 
 /**
  * See
@@ -50,7 +51,13 @@ public class DriverContextListener implements ServletContextListener {
                 event.getServletContext().log("Not deregistering JDBC driver " + driver + " as it does not belong to this webapp's ClassLoader");
             }
         }
-        
+
+        shutdownMySQL(event);
+
+        shutdownReactor(event);
+    }
+
+    private void shutdownMySQL(ServletContextEvent event) {
         // MySQL driver leaves a thread in bean pool. This static method cleans it up.
         try {
             AbandonedConnectionCleanupThread.checkedShutdown();
@@ -61,4 +68,9 @@ public class DriverContextListener implements ServletContextListener {
         }
     }
 
+    private void shutdownReactor(ServletContextEvent event) {
+        // fix memory leak : thread named [parallel-1]
+        Schedulers.shutdownNow(); // 關閉 Reactor 的全域 scheduler
+        event.getServletContext().log("reactor.core.scheduler.Schedulers Cleanup.");
+    }
 }

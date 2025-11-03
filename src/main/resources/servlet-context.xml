@@ -474,6 +474,16 @@
         <property name="password" value=""/>
     </bean>                        
     
+    <bean id="vlmApiClient" class="com.advantech.webapi.VlmApiClient">
+        <property name="webapiUrl" value="http://172.22.239.52:8002/"/>
+    </bean>
+    
+    <!--
+    spring manage ReactorResourceFactory auto calling destroy method.
+    fix memory leak : thread named [reactor-http-nio-*] and [webflux-http-nio-*]
+    -->
+    <bean id="reactorResourceFactory" class="org.springframework.http.client.reactive.ReactorResourceFactory" />
+    
     <!--Other file import-->
     <import resource="classpath:spring-security.xml"/>
     <import resource="classpath:spring-quartz.xml"/>

@@ -74,6 +74,6 @@ public class HandleUncloseBab extends QuartzJobBean {
     }
 
     private List getUnclosedSettings() {
-        return babSettingHistoryService.findProcessing();
+        return babSettingHistoryService.findProcessingWithBabAndTagName();
     }
 }

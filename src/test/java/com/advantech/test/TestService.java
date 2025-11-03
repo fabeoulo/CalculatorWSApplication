@@ -76,6 +76,8 @@ import com.advantech.service.db1.UserService;
 import com.advantech.service.db1.WorktimeM6Service;
 import com.advantech.service.db1.WorktimeService;
 import com.advantech.service.db3.SqlViewService;
+import com.advantech.webapi.VlmApiClient;
+import com.advantech.webapi.model.VlmStation;
 import com.advantech.webservice.Factory;
 import com.advantech.webservice.WebServiceRV;
 import com.advantech.webservice.mes.Section;
@@ -174,6 +176,28 @@ public class TestService {
 
     @Autowired
     private BabCollectModeChangeEventService babCollectModeChangeEventService;
+
+    @Autowired
+    private VlmApiClient vlmApiClient;
+
+//    @Test
+    public void testVlmApiClient() {
+
+        Bab b = babService.findByPrimaryKey(226977);
+        String tagName = "L4-S-3";
+        String jobnumber = "A-10376";
+
+        VlmStation dto = new VlmStation(b.getPo(), jobnumber, tagName, b.getPeople(), true);
+        vlmApiClient.sendLoginAsync(dto);
+
+        BabSettingHistory setting = babSettingHistoryService.findFirstProcessingByTagName(tagName);
+        BabSettingHistory prev = babSettingHistoryService.findByBabAndStation(b, setting.getStation() - 1);
+
+        dto = new VlmStation(prev.getBab().getPo(), prev.getJobnumber(), prev.getTagName().getName(), 1, true);
+        vlmApiClient.sendLogoutAsync(dto);
+        dto = new VlmStation(setting.getBab().getPo(), setting.getJobnumber(), setting.getTagName().getName(), 1, true);
+        vlmApiClient.sendLogoutAsync(dto);
+    }
 
 //    @Test
     @Transactional
@@ -459,8 +483,8 @@ public class TestService {
     @Transactional
     @Rollback(true)
     public void testBabServiceCloseBab() {
-        Bab b = babService.findByPrimaryKey(188982);
-        BabSettingHistory setting = babSettingHistoryService.findFirstProcessingByTagName("L2-S-2");
+        Bab b = babService.findByPrimaryKey(226977);
+        BabSettingHistory setting = babSettingHistoryService.findFirstProcessingByTagName("L4-S-3");
 //        BabSettingHistory setting = babSettingHistoryService.findByBabAndStation(b, 2);
 
         babService.stationComplete(b, setting);
@@ -636,9 +660,9 @@ public class TestService {
             List<PackingPassStationDetail> l = rv.getPackingPassStationDetails(jobnumbers, section, s, sD, eD, Factory.TWM3);
             result.addAll(l);
         });
-        
+
         assertTrue(!result.isEmpty());
-        
+
         Map<String, List<Bab>> poBabMap = babs.stream().collect(Collectors.groupingBy(Bab::getPo));
 
         List<PackingPassStationDetail> resultFilter = result.stream()
