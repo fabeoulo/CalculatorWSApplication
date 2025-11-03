@@ -5,11 +5,18 @@
  */
 package com.advantech.helper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +26,18 @@ import org.json.JSONObject;
  * @author Wei.Cheng
  */
 public class JsonHelper {
+
+    private static final ObjectMapper mapper;
+
+    static {
+        mapper = new ObjectMapper();
+        Hibernate5Module hbm = new Hibernate5Module();
+        hbm.enable(Hibernate5Module.Feature.SERIALIZE_IDENTIFIER_FOR_LAZY_NOT_LOADED_OBJECTS);
+        mapper.registerModule(hbm);
+        mapper.registerModule(new JodaModule());
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    }
+
     public static Object toJSON(Object object) throws JSONException {
         if (object instanceof Map) {
             JSONObject json = new JSONObject();
@@ -73,6 +92,22 @@ public class JsonHelper {
             return toList((JSONArray) json);
         } else {
             return json;
+        }
+    }
+
+    public static String getJsonString(Object obj) {
+        try {
+            return mapper.writeValueAsString(obj);
+        } catch (JsonProcessingException ex) {
+            return "";
+        }
+    }
+
+    public static <C> C getJsonToObj(String st, Class<C> clazz) {
+        try {
+            return mapper.readValue(st, clazz);
+        } catch (JsonProcessingException ex) {
+            return null;
         }
     }
 }

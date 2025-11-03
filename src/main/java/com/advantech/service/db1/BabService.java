@@ -294,7 +294,6 @@ public class BabService {
         if (setting.getStation() > 1) {
             if (setting.getStation() == b.getPeople()) {
                 this.closeBabTrigger(b, b.getId());
-                this.changeBabStatusFollowCloseBab(b.getId(), BabStatus.AUTO_CLOSED);
             } else {
                 this.stationComplete(b, setting);
             }
