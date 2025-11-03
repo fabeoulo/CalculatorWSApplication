@@ -190,6 +190,7 @@
                             <li class="divider"></li>
                             <li><a href="modelSopRemark.jsp">Sop維護</a></li>
                             <li class="divider"></li>
+                            <li><a href="PreAssyModuleStandardTime">前置模組工時維護</a></li>
                             </c:if>
                         <li class="hide-when-auto"><a href="BabPassStationRecord?lineType=IDS">Barcode過站紀錄</a></li>
                         <li><a href="BabPreAssyProductivity?lineType=IDS&sitefloor=3">前置資料查詢</a></li>

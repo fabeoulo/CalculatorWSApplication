@@ -8,6 +8,7 @@ import com.advantech.helper.ApplicationContextHelper;
 import com.advantech.helper.PropertiesReader;
 import com.advantech.model.db1.Bab;
 import com.advantech.model.db1.BabSettingHistory;
+import com.advantech.model.db1.BabStatus;
 import com.advantech.service.db1.BabService;
 import com.advantech.service.db1.BabSettingHistoryService;
 import com.advantech.service.db1.SqlViewService;
@@ -60,8 +61,10 @@ public class HandleUncloseBabProcess extends QuartzJobBean {
         List<BabSettingHistory> processingBabSettings = babSettingHistoryService.findProcessing();
 
         processingBabs.forEach((bab) -> {
+            int babId = bab.getId();
+
             List<BabSettingHistory> babSettings = processingBabSettings.stream()
-                    .filter(rec -> rec.getBab().getId() == bab.getId()).collect(toList());
+                    .filter(rec -> rec.getBab().getId() == babId).collect(toList());
 
             int babLineId = bab.getLine().getId();
             int babPeople = bab.getPeople();
@@ -75,7 +78,11 @@ public class HandleUncloseBabProcess extends QuartzJobBean {
                     int settingStation = setting.getStation();
 
                     if (bab.getIspre() != 1 && unclosedMap.containsKey(tagName) && settingStation > 2) {
-                        babService.autoCloseNotPre(bab, setting);
+                        babService.autoCloseNotPre(bab, setting); // need to call public method from other class to flush session.
+
+                        if (settingStation == babPeople) {
+                            babService.changeBabStatusFollowCloseBab(babId, BabStatus.AUTO_CLOSED); // change status after flush.
+                        }
                     }
                 });
             }

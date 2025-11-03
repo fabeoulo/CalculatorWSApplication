@@ -6,6 +6,7 @@ package com.advantech.test;
 
 import com.advantech.facade.BabLineTypeFacade;
 import com.advantech.facade.TestLineTypeFacade;
+import com.advantech.helper.JsonHelper;
 import com.advantech.model.db1.AlarmBabAction;
 import com.advantech.model.db1.AlarmDO;
 import com.advantech.model.db1.AlarmTestAction;
@@ -209,6 +210,15 @@ public class TestWebAccess {
     public void testGetJsonString() {
         String[] testValues = {"a", "b", "c", "d"};
         String result = waGetTagValue.getJsonString(Arrays.asList(testValues));
+        String result2 = JsonHelper.getJsonString(testValues);
+        String result3 = JsonHelper.getJsonString(Arrays.asList(testValues));
+
+        //set requestBody
+        List<WaTagNode> requestModels = new ArrayList<>();
+        Arrays.asList(testValues).forEach((entry)
+                -> requestModels.add(new WaTagNode(entry, 0)));
+
+        String json = String.format("{\"Tags\":%s}", JsonHelper.getJsonString(requestModels));
         System.out.println(result);
     }
 }
