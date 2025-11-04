@@ -278,6 +278,15 @@ public class SqlViewController {
         return new DataTableResponse(procSerice.findCellSuggestionWorkTime(startDate, endDate));
     }
 
+    @RequestMapping(value = "/findCellUpwardWorkTime", method = {RequestMethod.POST})
+    @ResponseBody
+    protected DataTableResponse findCellUpwardWorkTime(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate) {
+
+        return new DataTableResponse(procSerice.findCellUpwardWorkTime(startDate, endDate));
+    }
+
     @RequestMapping(value = "/findTestPassStationProductivity", method = {RequestMethod.GET})
     @ResponseBody
     protected DataTableResponse findTestPassStationProductivity(
@@ -297,6 +306,15 @@ public class SqlViewController {
         return new DataTableResponse(procSerice.findTestSuggestionWorkTime(startDate, endDate));
     }
 
+    @RequestMapping(value = "/findTestUpwardWorkTime", method = {RequestMethod.POST})
+    @ResponseBody
+    protected DataTableResponse findTestUpwardWorkTime(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate) {
+
+        return new DataTableResponse(procSerice.findTestUpwardWorkTime(startDate, endDate));
+    }
+
     @RequestMapping(value = "/findSuggestionWorkTime", method = {RequestMethod.POST})
     @ResponseBody
     protected DataTableResponse findSuggestionWorkTime(
@@ -305,6 +323,16 @@ public class SqlViewController {
             @RequestParam int lineTypeId) {
 
         return new DataTableResponse(procSerice.findSuggestionWorkTime(startDate, endDate, lineTypeId));
+    }
+
+    @RequestMapping(value = "/findUpwardWorkTime", method = {RequestMethod.POST})
+    @ResponseBody
+    protected DataTableResponse findUpwardWorkTime(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate,
+            @RequestParam int lineTypeId) {
+
+        return new DataTableResponse(procSerice.findUpwardWorkTime(startDate, endDate, lineTypeId));
     }
 
     @RequestMapping(value = "/findPreAssySuggestionWorkTime", method = {RequestMethod.POST})
@@ -318,6 +346,17 @@ public class SqlViewController {
         return new DataTableResponse(procSerice.findPreAssySuggestionWorkTime(startDate, endDate, lineTypeId, floorId));
     }
 
+    @RequestMapping(value = "/findPreAssyUpwardWorkTime", method = {RequestMethod.POST})
+    @ResponseBody
+    protected DataTableResponse findPreAssyUpwardWorkTime(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate,
+            @RequestParam int lineTypeId,
+            @RequestParam int floorId) {
+
+        return new DataTableResponse(procSerice.findPreAssyUpwardWorkTime(startDate, endDate, lineTypeId, floorId));
+    }
+
     @RequestMapping(value = "/findPackingSuggestionWorkTime", method = {RequestMethod.POST})
     @ResponseBody
     protected DataTableResponse findPackingSuggestionWorkTime(
@@ -326,6 +365,16 @@ public class SqlViewController {
             @RequestParam int lineTypeId) {
 
         return new DataTableResponse(procSerice.findPackingSuggestionWorkTime(startDate, endDate, lineTypeId));
+    }
+
+    @RequestMapping(value = "/findPackingUpwardWorkTime", method = {RequestMethod.POST})
+    @ResponseBody
+    protected DataTableResponse findPackingUpwardWorkTime(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime startDate,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") DateTime endDate,
+            @RequestParam int lineTypeId) {
+
+        return new DataTableResponse(procSerice.findPackingUpwardWorkTime(startDate, endDate, lineTypeId));
     }
 
     @RequestMapping(value = "/findBabModuleUsageRate", method = {RequestMethod.GET})

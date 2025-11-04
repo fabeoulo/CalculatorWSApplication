@@ -15,49 +15,8 @@
         <link rel="stylesheet" href="<c:url value="/css/fixedHeader.dataTables.min.css"/>">
         <link rel="stylesheet" href="<c:url value="/css/buttons.dataTables.min.css"/>">
         <link rel="stylesheet" href="<c:url value="/webjars/jquery-ui-themes/1.12.1/redmond/jquery-ui.min.css" />" >
-        <style>
-            body{
-                font-size: 16px;
-                padding-top: 70px;
-            }
-            .wiget-ctrl{
-                width: 98%;
-                margin: 5px auto;
-            }
-            table th{
-                text-align: center;
-            }
-            .alarm{
-                color:red;
-            }
-            .title, .subTitle{
-                display: inline !important;
-            }
-            .subTitle{
-                color: red;
-            }
-            table td{
-                text-align: center;
-            }
-            .red-down-triangle-pseudo::after {
-                content: "";
-                position: relative;
-                bottom: -20px;
-                left: 0;
-                border-left: 10px solid transparent;
-                border-right: 10px solid transparent;
-                border-top: 20px solid red;
-            }
-            .green-up-triangle-pseudo::after {
-                content: "";
-                position: relative;
-                top: -20px;
-                left: 0;
-                border-left: 10px solid transparent;
-                border-right: 10px solid transparent;
-                border-bottom: 20px solid green;
-            }
-        </style>
+        <link rel="stylesheet" href="<c:url value="/css/ie-worktime.css"/>">
+
         <script src="<c:url value="/webjars/jquery/1.12.4/jquery.min.js" />"></script>
         <script src="<c:url value="/webjars/momentjs/2.18.1/moment.js" /> "></script>
         <script src="<c:url value="/js/bootstrap-datetimepicker.min.js" />"></script>
@@ -77,36 +36,9 @@
         <script src="<c:url value="/js/jquery_pivot.js" />"></script>
         <script src="<c:url value="/js/jquery.fileDownload.js" />"></script>
         <script src="<c:url value="/js/jquery-ui-1.10.0.custom.min.js" />"></script>
+        <script src="<c:url value="/js/ie-worktime.js"/>"></script>
 
         <script>
-            var btn_search;
-
-            function setCustomButton() {
-                setDtSearchBtn();
-            }
-
-            function setDtSearchBtn() {
-                const filterOptions = {
-                    0: {text: "查下修", search: "下修"},
-                    1: {text: "查全部", search: ""}
-                };
-                var filterState = 0;
-
-                btn_search = {
-                    text: filterOptions[filterState].text,
-                    action: function (e, dt, node, config) {
-
-                        const flagIndex = dt.columns().indexes().length - 2;
-                        const searchKey = filterOptions[filterState].search;
-                        dt.column(flagIndex).search(searchKey).draw();
-
-                        const len_options = Object.keys(filterOptions).length;
-                        filterState = (filterState + 1) % len_options;
-                        $(node).text(filterOptions[filterState].text);
-                    }
-                };
-            }
-
             var generateExcel = function (e) {
                 var startDate = $('#fini').val();
                 var endDate = $('#ffin').val();
@@ -201,25 +133,16 @@
 
             function getDetail() {
                 $("#send").attr("disabled", true);
+                setTb1();
+                setTb2();
+            }
 
+            function setTb1() {
+                var tableName = '工時下修';
                 $('#tb1').DataTable({
                     dom: 'Bfrtip',
                     buttons: [
-                        {
-                            extend: 'copy',
-                            text: 'copy',
-                            exportOptions: {
-                                columns: ':not(.not-export-col):visible, .export-col:hidden'
-                            }
-                        },
-                        {
-                            extend: 'excelHtml5',
-                            footer: true,
-                            exportOptions: {
-                                columns: ':not(.not-export-col):visible, .export-col:hidden'
-                            }
-                        },
-                        btn_search
+                        getDtCopyBtn(), getDtExcelBtn(tableName), btn_search
                     ],
                     fixedHeader: {
                         headerOffset: 50
@@ -301,13 +224,29 @@
                     "initComplete": function (settings, json) {
                         $("#send").attr("disabled", false);
                         $("#send").data("isProcessing", false);
+                        setTableCaption($('#tb1'), tableName);
                     },
                     filter: true,
                     destroy: true,
 //                    paginate: false,
                     "order": []
                 });
+            }
 
+            function setTb2() {
+                var ajax = {
+                    "url": "<c:url value="/SqlViewController/findUpwardWorkTime" />",
+                    "type": "Post",
+                    data: {
+                        startDate: $('#fini').val(),
+                        endDate: $('#ffin').val(),
+                        lineTypeId: lineTypeId
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert(xhr.responseText);
+                    }
+                };
+                setTb2DataTable($('#tb2'), ajax);
             }
 
             function formatDate(dateString) {
@@ -351,9 +290,16 @@
                 </div>
             </div>
 
-            <div class="row">
-                <table id="tb1" class="table table-striped">
-                </table>
+            <div class="container_table">
+                <div class="row box_table">
+                    <table id="tb1" class="table table-striped">
+                    </table>
+                </div>
+
+                <div class="row box_table">
+                    <table id="tb2" class="table table-striped">
+                    </table>
+                </div>
             </div>
         </div>
 
