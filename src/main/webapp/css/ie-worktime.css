@@ -1,0 +1,61 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 2025年11月4日, 下午3:22:30
+    Author     : Justin.Yeh
+*/
+
+body{
+    font-size: 16px;
+    padding-top: 70px;
+}
+.wiget-ctrl{
+    width: 98%;
+    margin: 5px auto;
+}
+table th{
+    text-align: center;
+}
+table td{
+    text-align: center;
+}
+.alarm{
+    color:red;
+}
+.title, .subTitle{
+    display: inline !important;
+}
+.subTitle{
+    color: red;
+}
+.red-down-triangle-pseudo::after {
+    content: "";
+    position: relative;
+    bottom: -20px;
+    left: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 20px solid red;
+}
+.green-up-triangle-pseudo::after {
+    content: "";
+    position: relative;
+    top: -20px;
+    left: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 20px solid green;
+}
+.container_table {
+    display: grid;
+    gap: 20px;
+}
+.box_table {
+    /*background-color: lightcyan;*/
+    padding: 10px;
+}
+.caption_table {
+    font-size: 24px;
+}

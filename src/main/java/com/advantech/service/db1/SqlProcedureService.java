@@ -149,6 +149,10 @@ public class SqlProcedureService {
         return sqlProcedureDAO.findCellSuggestionWorkTime(sD, eD);
     }
 
+    public List<Map> findCellUpwardWorkTime(DateTime sD, DateTime eD) {
+        return sqlProcedureDAO.findCellUpwardWorkTime(sD, eD);
+    }
+
     public List<Map> findTestPassStationProductivity(DateTime sD, DateTime eD) {
         return sqlProcedureDAO.findTestPassStationProductivity(sD, eD);
     }
@@ -157,16 +161,32 @@ public class SqlProcedureService {
         return sqlProcedureDAO.findTestSuggestionWorkTime(sD, eD);
     }
 
+    public List<Map> findTestUpwardWorkTime(DateTime sD, DateTime eD) {
+        return sqlProcedureDAO.findTestUpwardWorkTime(sD, eD);
+    }
+
     public List<Map> findSuggestionWorkTime(DateTime sD, DateTime eD, int lineTypeId) {
         return sqlProcedureDAO.findSuggestionWorkTime(sD, eD, lineTypeId);
+    }
+
+    public List<Map> findUpwardWorkTime(DateTime sD, DateTime eD, int lineTypeId) {
+        return sqlProcedureDAO.findUpwardWorkTime(sD, eD, lineTypeId);
     }
 
     public List<Map> findPreAssySuggestionWorkTime(DateTime sD, DateTime eD, int lineTypeId, int floorId) {
         return sqlProcedureDAO.findPreAssySuggestionWorkTime(sD, eD, lineTypeId, floorId);
     }
 
+    public List<Map> findPreAssyUpwardWorkTime(DateTime sD, DateTime eD, int lineTypeId, int floorId) {
+        return sqlProcedureDAO.findPreAssyUpwardWorkTime(sD, eD, lineTypeId, floorId);
+    }
+
     public List<Map> findPackingSuggestionWorkTime(DateTime sD, DateTime eD, int lineTypeId) {
         return sqlProcedureDAO.findPackingSuggestionWorkTime(sD, eD, lineTypeId);
+    }
+
+    public List<Map> findPackingUpwardWorkTime(DateTime sD, DateTime eD, int lineTypeId) {
+        return sqlProcedureDAO.findPackingUpwardWorkTime(sD, eD, lineTypeId);
     }
 
     public int closeBabDirectly(Bab b) {

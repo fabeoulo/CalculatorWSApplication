@@ -255,6 +255,15 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .list();
     }
 
+    public List<Map> findCellUpwardWorkTime(DateTime sD, DateTime eD) {
+        return super.getSession()
+                .createSQLQuery("{CALL " + schema + ".usp_Excel_CellUpwardWorkTime(:sD, :eD)}")
+                .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
+                .setParameter("eD", eD != null ? eD.plusDays(1).withMillisOfDay(0).toDate() : null)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+    }
+
     public List<Map> findTestPassStationProductivity(DateTime sD, DateTime eD) {
         return super.getSession()
                 .createSQLQuery("{CALL " + schema + ".usp_Excel_TestPassStationProductivity(:sD, :eD)}")
@@ -273,9 +282,28 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .list();
     }
 
+    public List<Map> findTestUpwardWorkTime(DateTime sD, DateTime eD) {
+        return super.getSession()
+                .createSQLQuery("{CALL " + schema + ".usp_Excel_TestUpwardWorkTime(:sD, :eD)}")
+                .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
+                .setParameter("eD", eD != null ? eD.plusDays(1).withMillisOfDay(0).toDate() : null)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+    }
+
     public List<Map> findSuggestionWorkTime(DateTime sD, DateTime eD, int lineTypeId) {
         return super.getSession()
                 .createSQLQuery("{CALL " + schema + ".usp_Excel_SuggestionWorkTime(:sD, :eD, :lineType_id)}")
+                .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
+                .setParameter("eD", eD != null ? eD.plusDays(1).withMillisOfDay(0).toDate() : null)
+                .setParameter("lineType_id", lineTypeId)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+    }
+
+    public List<Map> findUpwardWorkTime(DateTime sD, DateTime eD, int lineTypeId) {
+        return super.getSession()
+                .createSQLQuery("{CALL " + schema + ".usp_Excel_BabUpwardWorkTime(:sD, :eD, :lineType_id)}")
                 .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
                 .setParameter("eD", eD != null ? eD.plusDays(1).withMillisOfDay(0).toDate() : null)
                 .setParameter("lineType_id", lineTypeId)
@@ -294,6 +322,17 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .list();
     }
 
+    public List<Map> findPreAssyUpwardWorkTime(DateTime sD, DateTime eD, int lineTypeId, int floorId) {
+        return super.getSession()
+                .createSQLQuery("{CALL " + schema + ".usp_Excel_PreAssyUpwardWorkTime(:sD, :eD, :lineType_id, :floor_id)}")
+                .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
+                .setParameter("eD", eD != null ? eD.plusDays(1).withMillisOfDay(0).toDate() : null)
+                .setParameter("lineType_id", lineTypeId)
+                .setParameter("floor_id", floorId)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+    }
+
     public List<Map> findPackingSuggestionWorkTime(DateTime sD, DateTime eD, int lineTypeId) {
         return super.getSession()
                 .createSQLQuery("{CALL " + schema + ".usp_Excel_PackingSuggestionWorkTime(:sD, :eD, :lineType_id)}")
@@ -303,7 +342,17 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
                 .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
                 .list();
     }
-    
+
+    public List<Map> findPackingUpwardWorkTime(DateTime sD, DateTime eD, int lineTypeId) {
+        return super.getSession()
+                .createSQLQuery("{CALL " + schema + ".usp_Excel_PackingUpwardWorkTime(:sD, :eD, :lineType_id)}")
+                .setParameter("sD", sD != null ? sD.withHourOfDay(0).toDate() : null)
+                .setParameter("eD", eD != null ? eD.plusDays(1).withMillisOfDay(0).toDate() : null)
+                .setParameter("lineType_id", lineTypeId)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                .list();
+    }
+
     public int closeBabDirectly(Bab b) {
         super.getSession()
                 .createSQLQuery("{CALL " + schema + ".usp_CloseBabDirectly(:bab_id)}")
