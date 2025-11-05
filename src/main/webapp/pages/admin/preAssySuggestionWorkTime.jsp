@@ -248,7 +248,7 @@
                         alert(xhr.responseText);
                     }
                 };
-                setTb2DataTable($('#tb2'), ajax);
+                setTb2DataTable($('#tb2'), ajax, '工時不足', true);
             }
 
             function formatDate(dateString) {
