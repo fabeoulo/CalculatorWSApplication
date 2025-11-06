@@ -187,6 +187,9 @@
                             <c:if test="${isIeOper || isBackDoor4876 || isAdmin || isMfgLineOwner || isMfgOper}">
                             <li><a href="CellPassStationProductivity">MES(Cell)過站效率</a></li>
                             <li><a href="CellSuggestionWorkTime">MES(Cell)工時建議</a></li>
+                            <li><a href="PreAssySuggestionWorkTime">前置工時建議</a></li>
+                            <li><a href="SuggestionWorkTime?lineType=IDS">組裝工時建議</a></li>
+                            <li><a href="PackingSuggestionWorkTime?lineType=IDS">MES包裝工時建議</a></li>
                             <li class="divider"></li>
                             <li><a href="modelSopRemark.jsp">Sop維護</a></li>
                             <li class="divider"></li>

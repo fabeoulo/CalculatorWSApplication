@@ -8,7 +8,8 @@ var mapInfo = {
 };
 
 var titleGroup = [
-    {lineName: "IDS-L1", lineNameHtml: "ASSY", x: 250, y: 375},
+    {lineName: "IDS-L1", lineNameHtml: "L1", x: 195, y: 380},
+    {lineName: "IDS-L2", lineNameHtml: "L2", x: 345, y: 380},
     {lineName: "IDS-PKG_L1", lineNameHtml: "PKG_L1", x: 125, y: 85},
     {lineName: "IDS-PKG_L2", lineNameHtml: "PKG_L2", x: 335, y: 85}
 ];
@@ -20,10 +21,8 @@ var testGroup = [
 ];
 
 var babGroup = [
-    {people: 1, x: 215, y: 345, lineName: "IDS-L1"},
-    {people: 1, x: 215, y: 315, lineName: "IDS-L2"},
-    {people: 1, x: 340, y: 345, lineName: "IDS-L3"},
-    {people: 1, x: 340, y: 315, lineName: "IDS-L4"},
+    {people: 2, x: 215, y: 315, lineName: "IDS-L1", straight: true},
+    {people: 2, x: 340, y: 315, lineName: "IDS-L2", straight: true},
     {people: 3, x: 215, y: 150, lineName: "IDS-PKG_L1", straight: true},
     {people: 3, x: 330, y: 150, lineName: "IDS-PKG_L2", straight: true},
     {people: 1, x: 530, y: 375, lineName: "IDS_CR1"},
