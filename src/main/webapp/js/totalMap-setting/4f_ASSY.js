@@ -10,6 +10,7 @@ var mapInfo = {
 var titleGroup = [
     {lineName: "Pre_1", x: 0, y: 350},
     {lineName: "Pre_2", x: 0, y: 410},
+    {lineName: "B_L7", x: 365, y: 145},
     {lineName: "P_L1", x: 870, y: 160},
     {lineName: "P_L2", x: 980, y: 160},
     {lineName: "P_L3", x: 1045, y: 290},
@@ -38,6 +39,7 @@ var testGroup = [
 var babGroup = [
     {people: 7, x: 100, y: 365, lineName: "Pre_1", reverse: true},
     {people: 7, x: 100, y: 425, lineName: "Pre_2", reverse: true},
+    {people: 4, x: 330, y: 210, lineName: "B_L7", reverse: true},
     {people: 3, x: 850, y: 230, lineName: "P_L1", reverse: true},
     {people: 3, x: 980, y: 230, lineName: "P_L2", reverse: true},
     {people: 4, x: 885, y: 310, lineName: "P_L3", reverse: true},
