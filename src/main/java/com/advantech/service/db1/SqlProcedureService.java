@@ -193,8 +193,8 @@ public class SqlProcedureService {
         return sqlProcedureDAO.closeBabDirectly(b);
     }
 
-    public int closeBabWithSaving(Bab b) {
-        return sqlProcedureDAO.closeBabWithSaving(b);
+    public int closeBabWithSaving(Bab b, int babSign) {
+        return sqlProcedureDAO.closeBabWithSaving(b, babSign);
     }
 
     public int closeBabWithSavingWithBarcode(Bab b) {

@@ -86,6 +86,8 @@ public class BabService {
     @Autowired
     private SqlProcedureService procService;
 
+    private BabStatus babStatus = BabStatus.CLOSED;
+	
     @PostConstruct
     private void init() {
         isResultWriteToOldDatabase = p.getIsResultWriteToOldDatabase();
@@ -282,28 +284,23 @@ public class BabService {
         return babDAO.update(pojo);
     }
 
-    public void autoCloseNotPreByJob(Bab b, List<BabSettingHistory> settings) {
+    public void autoCloseNotPreByJob(Bab b, List<BabSettingHistory> settings, BabStatus babSign) {
         for (BabSettingHistory setting : settings) {
             if (setting.getLastUpdateTime() == null) {
-                this.autoCloseNotPre(b, setting);
+                this.autoCloseNotPre(b, setting, babSign);
             }
         }
     }
 
-    public void autoCloseNotPre(Bab b, BabSettingHistory setting) {
+    public void autoCloseNotPre(Bab b, BabSettingHistory setting, BabStatus babSign) {
         if (setting.getStation() > 1) {
             if (setting.getStation() == b.getPeople()) {
-                this.closeBabTrigger(b, b.getId());
+                this.closeBabTrigger(b, b.getId(), babSign);
             } else {
                 this.stationComplete(b, setting);
             }
         }
-    }
 
-    public void changeBabStatusFollowCloseBab(int babId, BabStatus status) {
-        Bab savedBab = this.findByPrimaryKey(babId);
-        savedBab.setBabStatus(status);
-        this.update(savedBab);
     }
 
     // Manual and auto close
@@ -332,7 +329,8 @@ public class BabService {
     }
 
     // Manual and auto close
-    public void closeBabTrigger(Bab b, int bab_id) {
+    public void closeBabTrigger(Bab b, int bab_id, BabStatus babSign) {
+        babStatus = babSign;
         this.closeBab(b);
 
         BabAlarmHistory bah = babAlarmHistoryService.findByBab(bab_id);
@@ -393,7 +391,7 @@ public class BabService {
     private int closeBabWithSaving(Bab b) {
         switch (mode) {
             case AUTO:
-                procService.closeBabWithSaving(b);
+                procService.closeBabWithSaving(b, babStatus.token());
                 break;
             case MANUAL:
                 procService.closeBabWithSavingWithBarcode(b);

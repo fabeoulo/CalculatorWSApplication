@@ -361,10 +361,11 @@ public class SqlProcedureDAO extends AbstractDao<Integer, Object> {
         return 1;
     }
 
-    public int closeBabWithSaving(Bab b) {
+    public int closeBabWithSaving(Bab b, int babSign) {
         super.getSession()
-                .createSQLQuery("{CALL " + schema + ".usp_CloseBabWithSaving(:bab_id)}")
+                .createSQLQuery("{CALL " + schema + ".usp_CloseBabWithSaving_V1(:bab_id, :bab_sign)}")
                 .setParameter("bab_id", b.getId())
+                .setParameter("bab_sign", babSign)
                 .executeUpdate();
         return 1;
     }

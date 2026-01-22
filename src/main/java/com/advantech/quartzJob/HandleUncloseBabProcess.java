@@ -78,11 +78,7 @@ public class HandleUncloseBabProcess extends QuartzJobBean {
                     int settingStation = setting.getStation();
 
                     if (bab.getIspre() != 1 && unclosedMap.containsKey(tagName) && settingStation > 2) {
-                        babService.autoCloseNotPre(bab, setting); // need to call public method from other class to flush session.
-
-                        if (settingStation == babPeople) {
-                            babService.changeBabStatusFollowCloseBab(babId, BabStatus.AUTO_CLOSED); // change status after flush.
-                        }
+                        babService.autoCloseNotPre(bab, setting, BabStatus.AUTO_CLOSED);
                     }
                 });
             }

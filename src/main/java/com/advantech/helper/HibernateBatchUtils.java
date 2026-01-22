@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class HibernateBatchUtils {
 
     private static Integer batchSize;
-    
+
     @Value("${HIBERNATE.JDBC.BATCHSIZE}")
     public void setBatchSize(Integer b) {
         batchSize = b;
