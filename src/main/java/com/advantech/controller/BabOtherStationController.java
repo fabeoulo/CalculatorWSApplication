@@ -11,6 +11,7 @@ import com.advantech.endpoint.Endpoint6;
 import com.advantech.model.db1.Bab;
 import com.advantech.model.db1.BabPreAssyPcsRecord;
 import com.advantech.model.db1.BabSettingHistory;
+import com.advantech.model.db1.BabStatus;
 import com.advantech.service.db1.BabPreAssyPcsRecordService;
 import com.advantech.service.db1.BabSensorLoginRecordService;
 import com.advantech.service.db1.BabSettingHistoryService;
@@ -88,7 +89,7 @@ public class BabOtherStationController {
                 babPreAssyPcsRecordService.insert(pcsRecords);
             }
 
-            babService.closeBabTrigger(b, bab_id);
+            babService.closeBabTrigger(b, bab_id, BabStatus.CLOSED);
 
             //If not preAssy, refresh endpoint data when user finished the job
             if (b.getIspre() == 0) {

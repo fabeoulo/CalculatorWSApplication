@@ -31,7 +31,7 @@ public abstract class AbstractDao<PK extends Serializable, T> extends HibernateQ
         super.setSessionFactory(sessionFactory);
     }
 
-    public String getSessionSchema() {
+    protected String getSessionSchema() {
         Object schema = null;
         String defaultSchema = "dbo";
         schema = sessionFactory.getProperties().get("hibernate.default_schema");

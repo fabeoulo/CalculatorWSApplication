@@ -61,10 +61,9 @@ public class HandleUncloseBab extends QuartzJobBean {
             } else {
                 List<BabSettingHistory> babSettings = allBabSettings.stream()
                         .filter(setting -> setting.getBab().getId() == babId).collect(Collectors.toList());
-                babService.autoCloseNotPreByJob(bab, babSettings);
+                babService.autoCloseNotPreByJob(bab, babSettings, BabStatus.UNFINSHED);
             }
 
-            babService.changeBabStatusFollowCloseBab(babId, BabStatus.UNFINSHED);
             log.info("Close autoSave bab status success");
         }
     }
