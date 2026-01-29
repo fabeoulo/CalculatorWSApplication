@@ -55,7 +55,7 @@ public class CheckTagNode extends QuartzJobBean {
         }
     }
 
-    private Map<String, Integer> getDIDOValueMap() {
+    private Map<String, Float> getDIDOValueMap() {
         List<Map> sensorDIDOs = sqlViewService.findSensorDIDONames();
         String didoKey = sqlViewService.getVwDiDoColumn();
         String sysTagKey = sqlViewService.getVwSysTagName();
@@ -74,7 +74,7 @@ public class CheckTagNode extends QuartzJobBean {
     @Override
     public void executeInternal(JobExecutionContext jec) throws JobExecutionException {
 
-        Map<String, Integer> map = getDIDOValueMap();
+        Map<String, Float> map = getDIDOValueMap();
         Set<String> currentTagNames = map.keySet();
 
         leakTagNames = getDiffNames(liveTagNames, currentTagNames);
@@ -84,7 +84,7 @@ public class CheckTagNode extends QuartzJobBean {
                 liveTagNames = currentTagNames;
                 sendMail();
 
-                Map<String, Integer> mapDO = map.entrySet().parallelStream()
+                Map<String, Float> mapDO = map.entrySet().parallelStream()
                         .filter(e -> e.getKey().contains("DO"))
                         .collect(Collectors.toConcurrentMap(
                                 e -> e.getKey(),

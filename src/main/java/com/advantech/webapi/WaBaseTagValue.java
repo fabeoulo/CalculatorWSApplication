@@ -71,7 +71,7 @@ public abstract class WaBaseTagValue {
     }
 
     // POST method
-    protected String postJson(String url, String json) {
+    protected String postJson(String json) {
         HttpEntity<String> request = new HttpEntity<>(json, this.headers);
         try {
             ResponseEntity<String> responseEntity = createRestTemplateWithTimeouts()

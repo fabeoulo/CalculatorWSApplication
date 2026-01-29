@@ -11,13 +11,13 @@ package com.advantech.webapi.model;
 public class WaTagNode {
 
     private String Name;
-    private int Value;
+    private float Value;
     private int Quality;
 
     public WaTagNode() {
     }
 
-    public WaTagNode(String Name, int Value) {
+    public WaTagNode(String Name, float Value) {
         this.Name = Name;
         this.Value = Value;
     }
@@ -30,11 +30,11 @@ public class WaTagNode {
         this.Name = Name;
     }
 
-    public int getValue() {
+    public float getValue() {
         return Value;
     }
 
-    public void setValue(int Value) {
+    public void setValue(float Value) {
         this.Value = Value;
     }
 
