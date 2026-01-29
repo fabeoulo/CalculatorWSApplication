@@ -30,7 +30,7 @@ public class WaGetTagValue extends WaBaseTagValue {
 
     private String urlGetTagValue;
 
-    private Map<String, Integer> map = new HashMap<>();
+    private Map<String, Float> map = new HashMap<>();
 
     @Autowired
     private AlarmDOService alarmDOService;
@@ -51,26 +51,26 @@ public class WaGetTagValue extends WaBaseTagValue {
         this.urlGetTagValue = urlGetTagValue;
     }
 
-    public Map<String, Integer> getMap() {
+    public Map<String, Float> getMap() {
         return map;
     }
 
-    public void setMap(Map<String, Integer> map) {
+    public void setMap(Map<String, Float> map) {
         this.map = map;
     }
 
-    public Map<String, Integer> getMapByTagNames(List<String> tagNames) {
+    public Map<String, Float> getMapByTagNames(List<String> tagNames) {
         String json = getJsonString(tagNames);
         return getMapByTag(getResponseBodys(json));
     }
 
     private WaGetTagResponseModel getResponseBodys(String json) {
-        String jsonResponse = super.postJson(urlGetTagValue, json);
+        String jsonResponse = super.postJson(json);
         return super.jsonToObj(jsonResponse, WaGetTagResponseModel.class);
     }
 
-    private Map<String, Integer> getMapByTag(WaGetTagResponseModel responseBodys) {
-        Map<String, Integer> tempMap = new HashMap<>();
+    private Map<String, Float> getMapByTag(WaGetTagResponseModel responseBodys) {
+        Map<String, Float> tempMap = new HashMap<>();
         if (responseBodys != null) {
             tempMap = responseBodys.getValues().stream()
                     .filter(f -> (f.getValue() == 0 || f.getValue() == 1))

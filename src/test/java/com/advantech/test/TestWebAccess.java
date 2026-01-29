@@ -142,9 +142,9 @@ public class TestWebAccess {
         List<String> allDIDO = _DIDONamesMaps.stream()
                 .map(m -> (String) m.getOrDefault(key, ""))
                 .collect(Collectors.toList());
-        Map<String, Integer> map = waGetTagValue.getMapByTagNames(allDIDO);
+        Map<String, Float> map = waGetTagValue.getMapByTagNames(allDIDO);
 
-        Map<String, Integer> mapDO = map.entrySet().parallelStream()
+        Map<String, Float> mapDO = map.entrySet().parallelStream()
                 .filter(e -> e.getKey().contains("DO"))
                 .collect(Collectors.toConcurrentMap(e -> e.getKey(), e -> e.getValue()));
         waGetTagValue.setMap(mapDO);
