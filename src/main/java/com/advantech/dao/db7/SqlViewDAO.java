@@ -6,6 +6,7 @@
 package com.advantech.dao.db7;
 
 import com.advantech.model.db1.Worktime;
+import com.advantech.model.db1.WorktimeExtras;
 import com.advantech.model.db1.WorktimeM6;
 import java.util.List;
 import org.hibernate.transform.Transformers;
@@ -38,6 +39,14 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
                         + ", bondedSealingFrame assy1, seal sl, seal1 sl1 "
                         + "from Sheet_Main_view")
                 .setResultTransformer(Transformers.aliasToBean(WorktimeM6.class))
+                .list();
+    }
+
+    public List<WorktimeExtras> findExtras() {
+        return super.getSession()
+                .createSQLQuery("SELECT model_name modelName, floor_id floorId, work_center workCenter, unit_no unitNo, CAST (ct AS float) ct, station_id stationId,  station "
+                        + "FROM Vw_WorktimeExtra ")
+                .setResultTransformer(Transformers.aliasToBean(WorktimeExtras.class))
                 .list();
     }
 }

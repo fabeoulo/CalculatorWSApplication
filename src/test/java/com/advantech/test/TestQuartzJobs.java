@@ -6,6 +6,7 @@
 package com.advantech.test;
 
 import com.advantech.helper.HibernateObjectPrinter;
+import com.advantech.model.db1.PackingPassStationDetail;
 import com.advantech.quartzJob.CleanSensorData;
 import com.advantech.quartzJob.CountermeasureAlarm;
 import com.advantech.quartzJob.HandleUncloseBab;
@@ -29,7 +30,9 @@ import com.advantech.quartzJob.SyncPackingPassStationData;
 import com.advantech.quartzJob.SyncPreAssyModuleFromRemote;
 import com.advantech.quartzJob.SyncPrepareScheduleForPacking;
 import com.advantech.quartzJob.SyncWorktimeFromRemote;
+import com.advantech.webservice.Factory;
 import static com.google.common.collect.Lists.newArrayList;
+import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -176,19 +179,27 @@ public class TestQuartzJobs {
             eD = sD.plusHours(12);
         }
     }
-
-//    @Test
+//
+    @Test
 //    @Transactional
 //    @Rollback(true)
     public void testSyncPackingPassStationData() throws JobExecutionException {
 //        job4.execute();
 
-        DateTime sD = new DateTime("2025-08-29").withTime(8, 30, 0, 0);
+        DateTime sD = new DateTime("2026-01-22").withTime(8, 30, 0, 0);
         DateTime eD = sD.plusHours(12);
         while (sD.isBeforeNow()) {
             job4.setsD(sD);
             job4.seteD(eD);
-            job4.syncPassStationDetail();
+
+            List<PackingPassStationDetail> remoteDataFiltered1 = job4.syncPassStationDetail(3, Factory.TWM3);
+            List<PackingPassStationDetail> remoteDataFiltered2 = job4.syncPassStationDetail(11, Factory.TWM6);
+            
+            List<PackingPassStationDetail> remoteDataFiltered = newArrayList();
+            remoteDataFiltered.addAll(remoteDataFiltered1);
+            remoteDataFiltered.addAll(remoteDataFiltered2);
+
+            job4.syncPackingPassStationDetail(remoteDataFiltered);
 
             sD = eD;
             eD = sD.plusHours(12);

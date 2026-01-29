@@ -26,6 +26,8 @@ public class WorktimeExtras implements Serializable {
     private int floorId;
     private String unitNo;
     private Double ct;
+    private int stationId;
+    private String station;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -76,6 +78,23 @@ public class WorktimeExtras implements Serializable {
 
     public void setCt(Double ct) {
         this.ct = ct;
+    }
+
+    @Column(name = "station_id")
+    public int getStationId() {
+        return stationId;
+    }
+
+    public void setStationId(int stationId) {
+        this.stationId = stationId;
+    }
+
+    public String getStation() {
+        return station;
+    }
+
+    public void setStation(String station) {
+        this.station = station;
     }
 
 }

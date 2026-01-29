@@ -48,8 +48,6 @@ public class SyncPackingPassStationData {
 
     private final List<Integer> stations = newArrayList(28);
     private DateTime sD, eD;
-    private final Factory factory = Factory.TWM3;
-    private final int _floorId = 6;
 
     public void setsD(DateTime sD) {
         this.sD = sD;
@@ -69,25 +67,28 @@ public class SyncPackingPassStationData {
         eD = new DateTime(today).withTime(hr, 30, 0, 0);
         sD = eD.minusHours(12);
 
-        syncPassStationDetail();
+        List<PackingPassStationDetail> remoteDataFiltered1 = syncPassStationDetail(3, Factory.TWM3);
+        List<PackingPassStationDetail> remoteDataFiltered2 = syncPassStationDetail(11, Factory.TWM6);
+
+        List<PackingPassStationDetail> remoteDataFiltered = newArrayList();
+        remoteDataFiltered.addAll(remoteDataFiltered1);
+        remoteDataFiltered.addAll(remoteDataFiltered2);
+
+        syncPackingPassStationDetail(remoteDataFiltered);
     }
 
-    public void syncPassStationDetail() {
-        List<Bab> babs = babService.findByDateAndStation(sD, eD, 3, -1)
+    public List<PackingPassStationDetail> syncPassStationDetail(int lineTypeId, Factory factory) {
+        List<Bab> babs = babService.findByDateAndStation(sD, eD, lineTypeId, -1)
                 .stream().filter(bb -> bb.getIspre() == 0).collect(Collectors.toList());
         List<String> jobnumbers = findJobnumberForQuery(babs);
         if (jobnumbers.isEmpty()) {
-            return;
+            return newArrayList();
         }
 
         List<PackingPassStationDetail> remoteData = findRvPassStationDetails(jobnumbers, factory);
         List<PackingPassStationDetail> remoteDataFiltered = this.filterRemoteDataByBab(remoteData, babs);
-        if (remoteDataFiltered.isEmpty()) {
-            return;
-        }
 
-        List<PackingPassStationDetail> dbData = packingPassStationDetailService.findByDate(sD, eD);
-        syncPackingPassStationDetail(dbData, remoteDataFiltered);
+        return remoteDataFiltered;
     }
 
     private List<String> findJobnumberForQuery(List<Bab> babs) {
@@ -126,6 +127,11 @@ public class SyncPackingPassStationData {
                 })
                 .collect(Collectors.toList());
         return resultFilter;
+    }
+
+    public void syncPackingPassStationDetail(List<PackingPassStationDetail> remoteData) {
+        List<PackingPassStationDetail> dbData = packingPassStationDetailService.findByDate(sD, eD);
+        syncPackingPassStationDetail(dbData, remoteData);
     }
 
     private void syncPackingPassStationDetail(List<PackingPassStationDetail> dbData, List<PackingPassStationDetail> remoteData) {

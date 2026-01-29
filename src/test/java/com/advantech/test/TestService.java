@@ -73,6 +73,7 @@ import com.advantech.service.db1.TestTableService;
 import com.advantech.service.db1.UnitService;
 import com.advantech.service.db1.UserProfileService;
 import com.advantech.service.db1.UserService;
+import com.advantech.service.db1.WorktimeExtrasService;
 import com.advantech.service.db1.WorktimeM6Service;
 import com.advantech.service.db1.WorktimeService;
 import com.advantech.service.db3.SqlViewService;
@@ -179,6 +180,14 @@ public class TestService {
 
     @Autowired
     private VlmApiClient vlmApiClient;
+
+    @Autowired
+    private WorktimeExtrasService worktimeExtrasService;
+
+//    @Test
+    public void testWorktimeExtrasService() {
+        List l = worktimeExtrasService.findAll();
+    }
 
 //    @Test
     public void testVlmApiClient() {

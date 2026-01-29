@@ -42,7 +42,7 @@ public class SqlViewDAO extends AbstractDao<Integer, Object> {
 
     public List<WorktimeExtras> findExtras() {
         return super.getSession()
-                .createSQLQuery("SELECT model_name modelName, floor_id floorId, work_center workCenter, unit_no unitNo, ct "
+                .createSQLQuery("SELECT model_name modelName, floor_id floorId, work_center workCenter, unit_no unitNo, ct, station_id stationId, station "
                         + "FROM vw_Atmc_M9ie_WorktimeExtra ")
                 .setResultTransformer(Transformers.aliasToBean(WorktimeExtras.class))
                 .list();

@@ -77,6 +77,7 @@ public class SyncWorktimeFromRemote {
         logger.info("Sync WorktimeExtras start ");
         List<WorktimeExtras> remoteData = new ArrayList<>();
         remoteData.addAll(sqlViewServiceM3.findExtras());
+        remoteData.addAll(sqlViewServiceM6.findExtras());
 
         worktimeExtrasService.deleteAll();
         worktimeExtrasService.insert(remoteData);
