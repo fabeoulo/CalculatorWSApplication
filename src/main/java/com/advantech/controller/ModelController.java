@@ -46,24 +46,22 @@ public class ModelController {
         dataBinder.registerCustomEditor(Factory.class, new FactoryControllerConverter());
     }
 
-    @RequestMapping(value = "/findModelNameBySap", method = {RequestMethod.GET})
-    @ResponseBody
-    protected String findModelNameBySap(@RequestParam String po) {
-        String modelName = "";
-        try {
-            modelName = sapService.retrievePoModel(po);
-        } catch (Exception e) {
-            return MODELNAME_NOT_FOUND_MESSAGE;
-        }
-        return modelName;
-    }
-
     //Default find M3's modelName when user not present factory name
     //
     @RequestMapping(value = "/findModelNameByPo", method = {RequestMethod.GET})
     @ResponseBody
     protected String findModelNameByPo(@RequestParam String po) {
-        return this.findModelName(po, Factory.TWM3, Factory.TWM6, Factory.TWM9);
+        String modelName = this.findModelName(po, Factory.TWM3, Factory.TWM6, Factory.TWM9);
+
+        if (MODELNAME_NOT_FOUND_MESSAGE.equals(modelName)) {
+            try {
+                modelName = sapService.retrievePoModel(po);
+            } catch (Exception e2) {
+                modelName = MODELNAME_NOT_FOUND_MESSAGE;
+            }
+        }
+
+        return modelName;
     }
 
     @RequestMapping(value = "/findModelNameByPoAndFactory", method = {RequestMethod.GET})
