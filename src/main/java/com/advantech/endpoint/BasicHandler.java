@@ -6,6 +6,7 @@
 package com.advantech.endpoint;
 
 import com.advantech.helper.CronTrigMod;
+import com.google.common.collect.Lists;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,33 +47,51 @@ public abstract class BasicHandler {
 
         /* Send the new rate to all open WebSocket sessions */
         ArrayList<WebSocketSession> closedSessions = new ArrayList<>();
-        sessions.forEach((session) -> {
-            try {
-                if (!session.isOpen()) {
-                    closedSessions.add(session);
-                } else {
-                    synchronized (session) {
+        synchronized (sessions) {
+            sessions.forEach((session) -> {
+                try {
+                    if (!session.isOpen()) {
+                        closedSessions.add(session);
+                    } else {
                         TextMessage t = new TextMessage(msg);
                         session.sendMessage(t);
                     }
+                } catch (IOException ex) {
+                    log.error("Error cause on session id " + session.getId(), ex);
+                    removeIfSessionReachErrorCount(session);
                 }
-            } catch (IOException ex) {
-                log.error("Error cause on session id " + session.getId(), ex);
-                removeIfSessionReachErrorCount(session);
-            }
-        });
+            });
+        }
         sessions.removeAll(closedSessions);
     }
 
     //Remove not exist client session in sessions
     //https://bbs.csdn.net/topics/392066158
     private void removeIfSessionReachErrorCount(WebSocketSession session) {
-        Integer errorCount = errroCounter.get(session);
-        if (errorCount != null && ++errorCount == 3) {
+        Integer errorCount = errroCounter.getOrDefault(session, 0) + 1;
+        if (errorCount >= 1) {
+            closeSession(Lists.newArrayList(session));
             sessions.remove(session);
+            errroCounter.remove(session); // avoid memory leak
             log.info("Error session removed, now have " + sessions.size() + " in the sessions(static collection).");
         } else {
-            errroCounter.put(session, errorCount == null ? 0 : errorCount);
+            errroCounter.put(session, errorCount);
+        }
+    }
+
+    private void closeSession(ArrayList<WebSocketSession> errorSessions) {
+        for (WebSocketSession session : errorSessions) {
+            try {
+                if (session.isOpen()) {
+                    session.close();
+                    log.info("Close session id " + session.getId() + " SUCCESS : ");
+                } else {
+
+                    log.info("Not opened session id " + session.getId());
+                }
+            } catch (IOException ex) {
+                log.error("Close session id " + session.getId() + " FAIL : ", ex.getMessage());
+            }
         }
     }
 
