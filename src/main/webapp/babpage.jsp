@@ -652,7 +652,7 @@
                 if (text != "" && text.match(reg)) {
                     $.ajax({
                         type: "GET",
-                        url: "ModelController/findModelNameBySap",
+                        url: "ModelController/findModelNameByPo",
                         data: {
                             po: text.trim()
                         },
