@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
     <contextName>Logback Demo</contextName>
-    <property name="LOG_HOME" value="D:/logs/CalculatorWSApplication" />
+    <property name="LOG_HOME" value="C:/logs/CalculatorWSApplication" />
     <property name="CHARSET" value="UTF-8" />
     <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n" />
     <!-- 控制台輸出 -->

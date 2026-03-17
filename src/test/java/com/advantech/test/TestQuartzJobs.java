@@ -84,11 +84,6 @@ public class TestQuartzJobs {
     public void testDbInit() throws JobExecutionException {
         DataBaseInit d = new DataBaseInit();
         d.executeInternal(null);
-
-//        CheckTagNode b = new CheckTagNode();
-//        b.executeInternal(null);
-//        
-//        d.executeInternal(null);
     }
 
 //    @Test
